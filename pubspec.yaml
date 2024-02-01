@@ -10,6 +10,9 @@ environment:
 dependencies:
   cupertino_icons: ^1.0.2
   easy_localization: ^3.0.3
+  firebase_auth: ^4.17.2
+  firebase_core: ^2.25.2
+  firebase_storage: ^11.6.3
   flutter:
     sdk: flutter
   flutter_riverpod: ^2.4.9
@@ -26,4 +29,3 @@ flutter:
   assets:
     - assets/img/
     - assets/translations/
-
