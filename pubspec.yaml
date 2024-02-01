@@ -1,0 +1,29 @@
+name: reper
+description: "A new Flutter project."
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.2.3 <4.0.0'
+
+dependencies:
+  cupertino_icons: ^1.0.2
+  easy_localization: ^3.0.3
+  flutter:
+    sdk: flutter
+  flutter_riverpod: ^2.4.9
+  go_router: ^13.0.1
+  google_fonts: ^6.1.0
+
+dev_dependencies:
+  flutter_lints: ^2.0.0
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/img/
+    - assets/translations/
+
