@@ -16,16 +16,21 @@ class AppTheme {
       useMaterial3: true,
 
       //THEME COLORS
-      brightness: isDarkMode ? Brightness.dark : Brightness.light,
-      colorSchemeSeed: Colors.red,
       canvasColor: isDarkMode ? backgroundDark : backgroundLight,
       scaffoldBackgroundColor: isDarkMode ? backgroundDark : backgroundLight,
-      disabledColor: isDarkMode ? disabledDark : disabledLight,
-      cardColor: isDarkMode ? background2Dark : background2Light,
-      dividerColor: isDarkMode ? disabledDark : disabledLight,
+      disabledColor: disabled,
+      dividerColor: muted,
+      cardColor: isDarkMode ? cardDark : cardLight,
+
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: primaryDark,
+        brightness: isDarkMode ? Brightness.dark : Brightness.light,
+        background: isDarkMode ? backgroundDark : backgroundLight,
+        error: error,
+      ),
 
       //FONTS
-      textTheme: GoogleFonts.baiJamjureeTextTheme(
+      textTheme: GoogleFonts.urbanistTextTheme(
         isDarkMode ? ThemeData.dark().textTheme : ThemeData.light().textTheme,
       ),
 
@@ -33,12 +38,22 @@ class AppTheme {
       //APP BAR
       appBarTheme: AppBarTheme(
         color: isDarkMode ? backgroundDark : backgroundLight,
-        titleTextStyle: GoogleFonts.baiJamjuree()
+        titleTextStyle: GoogleFonts.urbanist(),
       ),
 
-      dividerTheme: DividerThemeData(
-        color: isDarkMode ? disabledDark : disabledLight,
-      )
+      //DIVIDER
+      dividerTheme: const DividerThemeData(
+        color: muted,
+      ),
+
+      //CARD
+      cardTheme: CardTheme(
+        elevation: 0,
+        color: isDarkMode ? cardDark : cardLight,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+      ),
     );
   }
 
