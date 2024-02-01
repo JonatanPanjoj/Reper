@@ -9,11 +9,22 @@ class HomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       body: Center(
-        child: TextButton(
-          child: Text('Cambiar Tema'),
-          onPressed: () {
-            ref.read(themeNotifierProvider.notifier).toggleDarkMode();
-          },
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Card(
+              child: Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text('Hola como estas?'),
+              ),
+            ),
+            TextButton(
+              child: const Text('Cambiar Tema'),
+              onPressed: () {
+                ref.read(themeNotifierProvider.notifier).toggleDarkMode();
+              },
+            ),
+          ],
         ),
       ),
     );
