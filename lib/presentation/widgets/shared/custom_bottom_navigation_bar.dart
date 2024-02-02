@@ -38,8 +38,8 @@ class CustomBottomNavigationBar extends StatelessWidget {
       labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
       destinations: const [
         NavigationDestination(icon: Icon(Icons.home_rounded), label: 'Home'),
-        NavigationDestination(icon: Icon(Icons.search), label: 'Busqueda'),
-        NavigationDestination(icon: Icon(Icons.add_a_photo), label: 'Add Post'),
+        NavigationDestination(icon: Icon(Icons.album), label: 'Albumes'),
+        NavigationDestination(icon: Icon(Icons.notifications), label: 'Notifications'),
         NavigationDestination(icon: Icon(Icons.person), label: 'Profile'),
       ],
     );

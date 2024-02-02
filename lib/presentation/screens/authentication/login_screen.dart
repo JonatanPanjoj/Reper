@@ -1,12 +1,18 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
+
 import 'package:go_router/go_router.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:reper/presentation/providers/auth/auth_repository_provider.dart';
+
 import 'package:reper/presentation/widgets/widgets.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends ConsumerWidget {
   const LoginScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final colors = Theme.of(context);
     return Scaffold(
       body: CustomScrollView(
@@ -40,7 +46,13 @@ class LoginScreen extends StatelessWidget {
                       height: 30,
                       width: 30,
                     ),
-                    onTap: () {},
+                    onTap: () async {
+                      final res =
+                          await ref.read(authProvider).loginWithGoogle();
+                      if (!res.hasError) {
+                        context.replace('/home/0');
+                      }
+                    },
                   ),
                 ],
               ),

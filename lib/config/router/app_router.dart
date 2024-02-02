@@ -9,18 +9,17 @@ final appRouter = GoRouter(
     GoRoute(
       path: '/home/:page',
       builder: (context, state) {
-        return const LoginScreen();
-        // final pageIndex = int.parse(state.pathParameters['page'] ?? '0');
+        final pageIndex = int.parse(state.pathParameters['page'] ?? '0');
 
-        // return StreamBuilder<User?>(
-        //     stream: FirebaseAuth.instance.authStateChanges(),
-        //     builder: (context, snapshot) {
-        //       if (snapshot.hasData) {
-        //         return HomeScreen(pageIndex: pageIndex);
-        //       } else {
-        //         return const LoginScreen();
-        //       }
-        //     });
+        return StreamBuilder<User?>(
+            stream: FirebaseAuth.instance.authStateChanges(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return HomeScreen(pageIndex: pageIndex);
+              } else {
+                return const LoginScreen();
+              }
+            });
       },
     ),
     GoRoute(
