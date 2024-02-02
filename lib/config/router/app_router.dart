@@ -29,5 +29,17 @@ final appRouter = GoRouter(
         return const LoginScreen();
       },
     ),
+    GoRoute(
+      path: '/login-by-email',
+      builder: (context, state) {
+        return const LoginByEmailScreen();
+      },
+    ),
+    GoRoute(
+      path: '/register-by-email',
+      builder: (context, state) {
+        return const RegisterByEmailScreen();
+      },
+    ),
   ],
 );
