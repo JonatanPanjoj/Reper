@@ -27,6 +27,11 @@ class AuthRepositoryImpl extends AuthRepository {
   }
 
   @override
+  Future<ResponseStatus> loginWithGoogle() {
+    return datasource.loginWithGoogle();
+  }
+
+  @override
   Future<void> signOut() {
     return datasource.signOut();
   }

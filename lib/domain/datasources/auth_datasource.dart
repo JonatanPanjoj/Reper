@@ -12,5 +12,7 @@ abstract class AuthDatasource {
     required String password,
   });
 
+  Future<ResponseStatus> loginWithGoogle();
+
   Future<void> signOut();
 }

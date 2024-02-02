@@ -5,6 +5,10 @@ abstract class UserDatasource {
     required String nickname,
   });
 
+  Future<ResponseStatus> validateGoogleUser({
+    required String id,
+  });
+
   Future<ResponseStatus> createUser({
     required AppUser user,
     required String uid,

@@ -8,9 +8,10 @@ class AuthSliverAppBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final colors = Theme.of(context);
+    final screenSize = (size.height * 0.45);
 
     return SliverAppBar(
-      expandedHeight: size.height * 0.45,
+      expandedHeight: screenSize.round().toDouble(),
       flexibleSpace: FlexibleSpaceBar(
         titlePadding: const EdgeInsets.all(0),
         title: Stack(

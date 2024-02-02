@@ -15,7 +15,7 @@ final appRouter = GoRouter(
             stream: FirebaseAuth.instance.authStateChanges(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                return HomeView();
+                return HomeScreen(pageIndex: pageIndex);
               } else {
                 return const LoginScreen();
               }

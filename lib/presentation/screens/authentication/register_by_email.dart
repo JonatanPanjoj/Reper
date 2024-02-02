@@ -21,6 +21,16 @@ class RegisterByEmailScreenState extends ConsumerState<RegisterByEmailScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
   bool obscureText = true;
+  bool isLoading = false;
+
+  @override
+  void dispose() {
+    _nicknameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +63,8 @@ class RegisterByEmailScreenState extends ConsumerState<RegisterByEmailScreen> {
               const SizedBox(height: 60),
               _buildLoginButton(),
               const SizedBox(height: 25),
-              _buildFormHaveAnAccount()
+              _buildFormHaveAnAccount(),
+              const SizedBox(height: 20),
             ],
           ),
         ),
@@ -145,6 +156,7 @@ class RegisterByEmailScreenState extends ConsumerState<RegisterByEmailScreen> {
 
   Widget _buildLoginButton() {
     return CustomFilledButton(
+      isLoading: isLoading,
       text: 'Ingresar',
       onTap: () {
         _register();
@@ -176,19 +188,28 @@ class RegisterByEmailScreenState extends ConsumerState<RegisterByEmailScreen> {
   /// FUNCTIONS
   void _register() async {
     if (_formKey.currentState!.validate()) {
+      isLoading = true;
+      setState(() {});
       final ResponseStatus res =
           await ref.read(authProvider).registerByEmailAndPassword(
                 nickname: _nicknameController.text,
                 email: _emailController.text,
                 password: _passwordController.text, 
               );
+      isLoading = false;
+      setState(() {});
       if (res.hasError) {
         showSnackbarResponse(
           context: context,
           response: res,
         );
       } else {
-        context.replace('/home/0');
+        showSnackbarResponse(
+          context: context,
+          response: res,
+        );
+        ref.read(authProvider).signOut();
+        context.replace('/login-by-email');
       }
     }
   }

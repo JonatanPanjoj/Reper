@@ -19,6 +19,14 @@ class LoginByEmailScreenState extends ConsumerState<LoginByEmailScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool obscureText = true;
+  bool isLoading = false;
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,14 +55,14 @@ class LoginByEmailScreenState extends ConsumerState<LoginByEmailScreen> {
               const SizedBox(height: 60),
               _buildLoginButton(),
               const SizedBox(height: 25),
-              _buildFormHaveAnAccount()
+              _buildFormHaveAnAccount(),
+              const SizedBox(height: 20),
             ],
           ),
         ),
       ),
     );
   }
-
 
   /// COMPONENTS
   Widget _buildEmailInput() {
@@ -99,6 +107,7 @@ class LoginByEmailScreenState extends ConsumerState<LoginByEmailScreen> {
 
   Widget _buildLoginButton() {
     return CustomFilledButton(
+      isLoading: isLoading,
       text: 'Ingresar',
       onTap: () {
         _login();
@@ -127,15 +136,18 @@ class LoginByEmailScreenState extends ConsumerState<LoginByEmailScreen> {
     );
   }
 
-
   /// FUNCTIONS
   void _login() async {
     if (_formKey.currentState!.validate()) {
+      isLoading = true;
+      setState(() {});
       final ResponseStatus res =
           await ref.read(authProvider).loginByEmailAndPassword(
                 email: _emailController.text,
                 password: _passwordController.text,
               );
+      isLoading = false;
+      setState(() {});
       if (res.hasError) {
         showSnackbarResponse(
           context: context,

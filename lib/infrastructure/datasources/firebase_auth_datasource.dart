@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 import 'package:reper/domain/datasources/auth_datasource.dart';
 import 'package:reper/domain/entities/entities.dart';
@@ -60,8 +61,10 @@ class FirebaseAuthDataSource extends AuthDatasource {
           joinedAt: Timestamp.now(),
         ),
       );
-      return ResponseStatus(message: 'success', hasError: false);
-      
+      return ResponseStatus(
+        message: 'Usuario Registrado con Éxito',
+        hasError: false,
+      );
     } on FirebaseAuthException catch (e) {
       return _validateRegisterFirebaseError(e);
     } catch (e) {
@@ -74,6 +77,7 @@ class FirebaseAuthDataSource extends AuthDatasource {
 
   @override
   Future<void> signOut() async {
+    GoogleSignIn().signOut();
     _auth.signOut();
   }
 
@@ -88,6 +92,44 @@ class FirebaseAuthDataSource extends AuthDatasource {
           hasError: true);
     } else {
       return ResponseStatus(hasError: true, message: e.code.toUpperCase());
+    }
+  }
+
+  @override
+  Future<ResponseStatus> loginWithGoogle() async {
+    try {
+      GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+      GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
+
+      AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth?.accessToken,
+        idToken: googleAuth?.idToken,
+      );
+
+      await _auth.signInWithCredential(credential);
+      final UserCredential cred = await _auth.signInWithCredential(credential);
+
+      if (googleUser != null) {
+        final userRes =
+            await userDatasource.validateGoogleUser(id: googleUser.id);
+        //NO ESTÁ CREADO EL USUARIO
+        if (!userRes.hasError) {
+          userDatasource.createUser(
+            user: AppUser(
+              uid: cred.user!.uid,
+              name: googleUser.displayName ?? 'No name',
+              email: googleUser.email,
+              joinedAt: Timestamp.now(),
+              googleId: googleUser.id
+            ),
+            uid: cred.user!.uid,
+          );
+        }
+      }
+      return ResponseStatus(message: 'success', hasError: false);
+    } catch (e) {
+      return ResponseStatus(message: e.toString(), hasError: true);
     }
   }
 }
