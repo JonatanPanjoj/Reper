@@ -12,14 +12,15 @@ final appRouter = GoRouter(
         final pageIndex = int.parse(state.pathParameters['page'] ?? '0');
 
         return StreamBuilder<User?>(
-            stream: FirebaseAuth.instance.authStateChanges(),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return HomeScreen(pageIndex: pageIndex);
-              } else {
-                return const LoginScreen();
-              }
-            });
+          stream: FirebaseAuth.instance.authStateChanges(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return HomeScreen(pageIndex: pageIndex);
+            } else {
+              return const LoginScreen();
+            }
+          },
+        );
       },
     ),
     GoRoute(
@@ -38,6 +39,12 @@ final appRouter = GoRouter(
       path: '/register-by-email',
       builder: (context, state) {
         return const RegisterByEmailScreen();
+      },
+    ),
+    GoRoute(
+      path: '/create-group',
+      builder: (context, state) {
+        return const CreateGroupScreen();
       },
     ),
   ],

@@ -16,7 +16,7 @@ class AppTheme {
       useMaterial3: true,
 
       //THEME COLORS
-      canvasColor: isDarkMode ? backgroundDark : backgroundLight,
+      canvasColor: isDarkMode ? canvasDark : canvasLight,
       scaffoldBackgroundColor: isDarkMode ? backgroundDark : backgroundLight,
       disabledColor: disabled,
       dividerColor: muted,
@@ -38,7 +38,11 @@ class AppTheme {
       //APP BAR
       appBarTheme: AppBarTheme(
         color: isDarkMode ? backgroundDark : backgroundLight,
-        titleTextStyle: GoogleFonts.urbanist(),
+        titleSpacing: 25,
+        titleTextStyle: GoogleFonts.urbanist(
+          fontSize: 30,
+          fontWeight: FontWeight.bold,
+        ),
       ),
 
       //DIVIDER
