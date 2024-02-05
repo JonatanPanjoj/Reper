@@ -13,4 +13,8 @@ abstract class UserRepository {
     required AppUser user,
     required String uid,
   });
+
+  Future<AppUser?> getUserById({
+    required String uid,
+  });
 }

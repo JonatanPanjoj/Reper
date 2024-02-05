@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:reper/presentation/providers/auth/auth_repository_provider.dart';
 
-class AlbumsView extends StatelessWidget {
+class AlbumsView extends ConsumerWidget {
   const AlbumsView({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Scaffold(
       body: Center(
-        child: Text('Albums View'),
+        child: TextButton(
+          onPressed: () {
+            ref.read(authProvider).signOut();
+          },
+          child: Text('sign out'),
+        ),
       ),
     );
   }

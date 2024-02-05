@@ -1,16 +1,36 @@
-import 'package:flutter/material.dart';
-import 'package:gallery_picker/gallery_picker.dart';
+import 'dart:typed_data';
 
-Future<MediaFile?> pickImage(BuildContext context) async {
-  final MediaFile? sigleMedia;
-  final mediaList =
-      await GalleryPicker.pickMedia(context: context, singleMedia: true);
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:image_picker/image_picker.dart';
 
-  if (mediaList != null || mediaList!.isNotEmpty) {
-    sigleMedia = mediaList.first;
-  }else{
-    sigleMedia = null;
+final FirebaseStorage _storage = FirebaseStorage.instance;
+
+Future<dynamic> pickImage(ImageSource source) async {
+  final ImagePicker imagePicker = ImagePicker();
+
+  final XFile? file = await imagePicker.pickImage(source: source);
+
+  if (file != null) {
+    return file.readAsBytes();
   }
+}
 
-  return sigleMedia;
+Future<String> uploadImageToStorage({
+  required String fileName,
+  required String childName,
+  required Uint8List mediaFile,
+}) async {
+
+  final Reference ref = _storage.ref().child(childName).child(fileName);
+
+  final UploadTask uploadTask = ref.putData(
+    mediaFile,
+    SettableMetadata(contentType: 'image/png'),
+  );
+
+  final TaskSnapshot snap = await uploadTask;
+
+  final String downloadUrl = await snap.ref.getDownloadURL();
+
+  return downloadUrl;
 }

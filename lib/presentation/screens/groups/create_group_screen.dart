@@ -1,82 +1,147 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:gallery_picker/gallery_picker.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:reper/config/theme/app_font_styles.dart';
 import 'package:reper/config/utils/utils.dart';
+import 'package:reper/domain/entities/entities.dart';
+import 'package:reper/presentation/providers/database/group_list_provider.dart';
 import 'package:reper/presentation/widgets/widgets.dart';
 
-class CreateGroupScreen extends StatefulWidget {
+class CreateGroupScreen extends ConsumerStatefulWidget {
   const CreateGroupScreen({super.key});
 
   @override
-  State<CreateGroupScreen> createState() => _CreateGroupScreenState();
+  CreateGroupScreenState createState() => CreateGroupScreenState();
 }
 
-class _CreateGroupScreenState extends State<CreateGroupScreen> {
+class CreateGroupScreenState extends ConsumerState<CreateGroupScreen> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _nameGroupController = TextEditingController();
+  Uint8List? selectedImage;
+  bool isLoading = false;
 
-  MediaFile? selectedImage;
+  @override
+  void dispose() {
+    _nameGroupController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context);
-    final size = MediaQuery.of(context).size;
 
     return Scaffold(
       appBar: AppBar(),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
-            children: [
-              const Text('Crea tu Grupo!', style: bold24),
-              const SizedBox(height: 10),
-              Text(
-                'Aquí puedes comenzar a crear reportorios y visualizarlo junto con tus amigos',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: colors.dividerColor,
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                const Text('Crea tu Grupo!', style: bold24),
+                const SizedBox(height: 10),
+                Text(
+                  'Aquí puedes comenzar a crear reportorios y visualizarlo junto con tus amigos',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: colors.dividerColor,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 25),
-              CustomInput(
-                controller: _nameGroupController,
-                label: 'Nombre del Servidor',
-              ),
-              const SizedBox(height: 25),
-              Container(
-                height: 250,
-                decoration: BoxDecoration(
-                  color: colors.canvasColor,
+                const SizedBox(height: 25),
+                CustomInput(
+                  controller: _nameGroupController,
+                  label: 'Nombre del Servidor',
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Nombra a tu grupo';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 25),
+                ClipRRect(
                   borderRadius: BorderRadius.circular(10),
-                ),
-                child: Expanded(
-                  child: selectedImage == null
-                      ? Center(
+                  child: Container(
+                    height: 250,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: colors.canvasColor,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Stack(
+                      alignment: Alignment.center,
+                      fit: StackFit.expand,
+                      children: [
+                        if (selectedImage != null)
+                          Image.memory(
+                            selectedImage!,
+                          ),
+                        Center(
                           child: IconButton(
+                            iconSize: 35,
                             icon: const Icon(
                               Icons.image,
                             ),
                             onPressed: () async {
-                              selectedImage = await pickImage(context);
+                              selectedImage = await pickImage(ImageSource.gallery);
                               if (selectedImage == null) return;
                               setState(() {});
                             },
                           ),
-                        )
-                      : ThumbnailMedia(
-                          media: selectedImage!,
                         ),
+                      ],
+                    ),
+                  ),
                 ),
-              ),
-              const SizedBox(height: 25),
-              const CustomFilledButton(text: 'Crea el grupo'),
-            ],
+                const SizedBox(height: 25),
+                CustomFilledButton(
+                  text: 'Crea el grupo',
+                  isLoading: isLoading,
+                  onTap: () {
+                    _createGroup();
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
+  }
+
+  void _createGroup() async {
+    if (_formKey.currentState!.validate()) {
+      if (selectedImage == null) {
+        showSnackbarResponse(
+          context: context,
+          response: ResponseStatus(
+            message: 'Selecciona una imagen',
+            hasError: true,
+          ),
+        );
+        return;
+      }
+      isLoading = true;
+      setState(() {});
+      final res = await ref.read(groupListProvider.notifier).addGroup(
+            groupName: _nameGroupController.text,
+            mediaFile: selectedImage!,
+          );
+      isLoading = false;
+      setState(() {});
+      showSnackbarResponse(
+        context: context,
+        response: res,
+      );
+      if (!res.hasError) {
+        context.pop();
+      }
+    }
   }
 }

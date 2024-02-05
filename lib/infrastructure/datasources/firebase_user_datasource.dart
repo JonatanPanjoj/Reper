@@ -11,7 +11,7 @@ class FirebaseUserDatasource extends UserDatasource {
     required String uid,
   }) async {
     try {
-      await database.collection('users').add(user.copyWith(uid: uid).toJson());
+      await database.collection('users').doc(uid).set(user.toJson());
       return ResponseStatus(
           message: 'Usuario Creado con Éxito', hasError: false);
     } on FirebaseException catch (e) {
@@ -52,5 +52,13 @@ class FirebaseUserDatasource extends UserDatasource {
         hasError: true,
       );
     }
+  }
+  
+  @override
+  Future<AppUser?> getUserById({required String uid}) async {
+    final snapshot = await database.collection('users').doc(uid).get();
+    return snapshot.data() == null
+        ? null
+        : AppUser.fromJson(snapshot.data()!..addAll({'uid': snapshot.id}));
   }
 }

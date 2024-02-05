@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:reper/config/theme/theme.dart';
-import 'package:reper/presentation/providers/auth/auth_repository_provider.dart';
 import 'package:reper/presentation/widgets/widgets.dart';
 
 class HomeView extends ConsumerStatefulWidget {
@@ -20,7 +18,7 @@ class HomeViewState extends ConsumerState<HomeView>
     return Scaffold(
         body: CustomScrollView(
       slivers: [
-        SliverAppBar(
+        const SliverAppBar(
           title: Text('Tus Grupos'),
         ),
         SliverToBoxAdapter(

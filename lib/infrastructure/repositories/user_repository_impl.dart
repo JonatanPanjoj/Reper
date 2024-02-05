@@ -26,4 +26,9 @@ class UserRepositoryImpl extends UserRepository {
   Future<ResponseStatus> validateGoogleUser({required String id}) {
     return datasource.validateGoogleUser(id: id);
   }
+  
+  @override
+  Future<AppUser?> getUserById({required String uid}) {
+    return datasource.getUserById(uid: uid);
+  }
 }
