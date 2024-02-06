@@ -52,7 +52,7 @@ class HomeViewState extends ConsumerState<HomeView>
                       onPressed: () {
                         context.push('/create-group');
                       },
-                      child: Text('Agregar Grupo'),
+                      child: const Text('Agregar Grupo'),
                     )
                   ],
                 );

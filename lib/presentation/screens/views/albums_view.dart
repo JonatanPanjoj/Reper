@@ -13,7 +13,7 @@ class AlbumsView extends ConsumerWidget {
           onPressed: () {
             ref.read(authProvider).signOut();
           },
-          child: Text('sign out'),
+          child: const Text('sign out'),
         ),
       ),
     );
