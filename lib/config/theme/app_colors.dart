@@ -16,19 +16,21 @@ const Color error = Color(0xFFFF4B4B);
 
 const List<LinearGradient> gradients = [
   LinearGradient(
+    begin: Alignment.bottomLeft,
+    end: Alignment.topRight,
+    colors: [
+      Color.fromARGB(255, 108, 213, 234),
+      Color(0xFFB16CEA),
+      Color(0xFF6C5DD3),
+      Color.fromARGB(255, 3, 33, 132),
+    ],
+  ),
+  LinearGradient(
     colors: [
       Color(0xFFB16CEA),
       Color(0xFFFF5E69),
       Color(0xFFFF8A56),
       Color(0xFFFFA84B),
-    ],
-  ),
-  LinearGradient(
-    colors: [
-      Color(0xFFa4d8ec),
-      Color(0xFFb5d3f4),
-      Color(0xFFcdcdf2),
-      Color(0xFFf2c4d6),
     ],
   ),
   LinearGradient(
