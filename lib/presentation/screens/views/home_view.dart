@@ -20,6 +20,7 @@ class HomeViewState extends ConsumerState<HomeView>
         body: CustomScrollView(
       slivers: [
         const SliverAppBar(
+          floating: true,
           title: Text('Tus Grupos'),
         ),
         SliverToBoxAdapter(
@@ -37,9 +38,15 @@ class HomeViewState extends ConsumerState<HomeView>
                 return Column(
                   children: [
                     for (final group in data)
-                      CardTypeOne(
-                        title: group.name,
-                        subtitle: '1 Participante, 0 Canciones',
+                      Column(
+                        children: [
+                          CardTypeOne(
+                            title: group.name,
+                            subtitle: '1 Participante, 0 Canciones',
+                            imageUrl: group.image,
+                          ),
+                          const SizedBox(height: 10)
+                        ],
                       ),
                     FilledButton(
                       onPressed: () {

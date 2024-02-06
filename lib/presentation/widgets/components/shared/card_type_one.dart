@@ -4,6 +4,7 @@ import 'package:reper/config/theme/theme.dart';
 class CardTypeOne extends StatelessWidget {
   final String title;
   final String subtitle;
+  final String imageUrl;
   final void Function()? onTap;
 
   const CardTypeOne({
@@ -11,6 +12,7 @@ class CardTypeOne extends StatelessWidget {
     required this.title,
     required this.subtitle,
     this.onTap,
+    required this.imageUrl,
   });
 
   @override
@@ -29,8 +31,8 @@ class CardTypeOne extends StatelessWidget {
                 width: size.width * 0.223,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10),
-                  child: Image.asset(
-                    'assets/img/login.jpg',
+                  child: Image.network(
+                    imageUrl,
                     fit: BoxFit.cover,
                   ),
                 ),

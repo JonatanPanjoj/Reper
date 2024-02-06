@@ -56,6 +56,7 @@ class FirebaseAuthDataSource extends AuthDatasource {
         uid: cred.user!.uid,
         user: AppUser(
           uid: 'no-uid',
+          image: '',
           name: nickname,
           email: email,
           joinedAt: Timestamp.now(),
@@ -119,6 +120,7 @@ class FirebaseAuthDataSource extends AuthDatasource {
             user: AppUser(
               uid: cred.user!.uid,
               name: googleUser.displayName ?? 'No name',
+              image: googleUser.displayName ?? '',
               email: googleUser.email,
               joinedAt: Timestamp.now(),
               googleId: googleUser.id,

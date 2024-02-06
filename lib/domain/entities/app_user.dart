@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AppUser {
   final String uid;
+  final String image;
   final String? googleId;
   final String name;
   final String email;
@@ -10,6 +11,7 @@ class AppUser {
 
   AppUser({
     required this.uid,
+    required this.image,
     this.googleId,
     required this.name,
     required this.email,
@@ -17,13 +19,15 @@ class AppUser {
     this.groups,
   });
 
-  AppUser copyWith(
-      {String? uid,
-      String? googleId,
-      String? name,
-      String? email,
-      Timestamp? joinedAt,
-      List<String>? groups}) {
+  AppUser copyWith({
+    String? uid,
+    String? image,
+    String? googleId,
+    String? name,
+    String? email,
+    Timestamp? joinedAt,
+    List<String>? groups,
+  }) {
     return AppUser(
       uid: uid ?? this.uid,
       name: name ?? this.name,
@@ -31,6 +35,7 @@ class AppUser {
       joinedAt: joinedAt ?? this.joinedAt,
       googleId: googleId ?? this.googleId,
       groups: groups ?? this.groups,
+      image: image ?? this.image,
     );
   }
 
@@ -41,7 +46,8 @@ class AppUser {
       'email': email,
       'joined_at': joinedAt,
       'google_id': googleId,
-      'groups': groups
+      'groups': groups,
+      'image': image,
     };
   }
 
@@ -55,16 +61,41 @@ class AppUser {
       groups: List<String>.from(
         json['groups'],
       ),
+      image: json['image'] ?? '',
     );
   }
 
   factory AppUser.empty() {
     return AppUser(
       uid: '',
+      image: '',
       googleId: '',
       name: '',
       email: '',
       joinedAt: Timestamp.now(),
     );
   }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is AppUser &&
+          runtimeType == other.runtimeType &&
+          uid == other.uid &&
+          image == other.image &&
+          googleId == other.googleId &&
+          name == other.name &&
+          email == other.email &&
+          joinedAt == other.joinedAt &&
+          groups == other.groups);
+
+  @override
+  int get hashCode =>
+      uid.hashCode ^
+      image.hashCode ^
+      googleId.hashCode ^
+      name.hashCode ^
+      email.hashCode ^
+      joinedAt.hashCode ^
+      groups.hashCode;
 }

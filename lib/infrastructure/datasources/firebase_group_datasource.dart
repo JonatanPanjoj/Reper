@@ -34,6 +34,10 @@ class FirebaseGroupDatasource extends GroupDatasource {
       //Obtener Usuario
       final user =
           await groupDatasource.getUserById(uid: _auth.currentUser!.uid);
+
+      await groupDatasource.updateGroup(
+          uid: _auth.currentUser!.uid, groupId: groupRef.id);
+
       //Agregar User a SubCollection Group
       if (user != null) {
         await _database

@@ -31,4 +31,19 @@ class UserRepositoryImpl extends UserRepository {
   Future<AppUser?> getUserById({required String uid}) {
     return datasource.getUserById(uid: uid);
   }
+  
+  @override
+  Future<ResponseStatus> updateUser({required AppUser user}) {
+    return datasource.updateUser(user: user);
+  }
+  
+  @override
+  Future<ResponseStatus> updateGroup({required String uid, required String groupId}) {
+    return datasource.updateGroup(uid: uid, groupId: groupId);
+  }
+  
+  @override
+  Stream<AppUser?> streamUser({required String uid}) {
+    return datasource.streamUser(uid: uid);
+  }
 }
