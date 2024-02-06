@@ -56,6 +56,7 @@ class FirebaseAuthDataSource extends AuthDatasource {
         uid: cred.user!.uid,
         user: AppUser(
           uid: 'no-uid',
+          image: '',
           name: nickname,
           email: email,
           joinedAt: Timestamp.now(),
@@ -115,16 +116,19 @@ class FirebaseAuthDataSource extends AuthDatasource {
             await userDatasource.validateGoogleUser(id: googleUser.id);
         //NO ESTÁ CREADO EL USUARIO
         if (!userRes.hasError) {
-          userDatasource.createUser(
+          await userDatasource.createUser(
             user: AppUser(
               uid: cred.user!.uid,
               name: googleUser.displayName ?? 'No name',
+              image: googleUser.displayName ?? '',
               email: googleUser.email,
               joinedAt: Timestamp.now(),
-              googleId: googleUser.id
+              googleId: googleUser.id,
+              groups: []
             ),
             uid: cred.user!.uid,
           );
+          return ResponseStatus(message: 'success', hasError: false);
         }
       }
       return ResponseStatus(message: 'success', hasError: false);

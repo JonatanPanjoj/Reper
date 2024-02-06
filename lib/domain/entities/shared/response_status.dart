@@ -1,7 +1,7 @@
 class ResponseStatus {
   final String message;
   final bool hasError;
-  final Object? extra;
+  final Map <String,dynamic>? extra;
 
   ResponseStatus({
     required this.message,

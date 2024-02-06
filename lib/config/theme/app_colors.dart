@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 
 const Color primaryDark = Color(0xFF6C5DD3);
 const Color backgroundDark = Color(0xFF1F2128);
+const Color canvasDark = Color(0xFF1E1F24);
 const Color cardDark = Color(0xFF242731);
 
 //TODO: PENDIENTE DE REVISAR COLORES LIGHT
 const Color primaryLight = Color(0xFF6C5DD3);
 const Color backgroundLight = Color(0xFFF0F2F5);
+const Color canvasLight = Color(0xFFF0F2F5);
 const Color cardLight = Color(0xFFffffff);
 
 //USED BY BOTH THEMES

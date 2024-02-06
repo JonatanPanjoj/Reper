@@ -21,7 +21,7 @@ class CustomInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textStyle = Theme.of(context).textTheme;
-
+    final colors = Theme.of(context);
     return SizedBox(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -38,7 +38,7 @@ class CustomInput extends StatelessWidget {
               obscureText: isPassword,
               keyboardType: keyboardType,
               decoration: InputDecoration(
-                fillColor: const Color(0xFF1E1F24),
+                fillColor: colors.canvasColor,
                 suffixIcon: suffixIcon,
                 filled: true,
                 border: const OutlineInputBorder(borderSide: BorderSide.none),

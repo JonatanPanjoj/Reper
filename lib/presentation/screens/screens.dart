@@ -12,3 +12,5 @@ export 'package:reper/presentation/screens/views/home_view.dart';
 export 'package:reper/presentation/screens/views/notifications_view.dart';
 export 'package:reper/presentation/screens/views/profile_view.dart';
 
+//Groups
+export 'package:reper/presentation/screens/groups/create_group_screen.dart';
