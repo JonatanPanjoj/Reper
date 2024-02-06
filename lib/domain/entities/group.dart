@@ -17,7 +17,7 @@ class Group {
     return Group(
       id: id ?? this.id,
       name: name ?? this.name,
-      image: image ?? this.image,
+      image: image ?? this.image, 
     );
   }
 

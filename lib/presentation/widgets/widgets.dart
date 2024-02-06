@@ -1,3 +1,5 @@
+export 'package:reper/presentation/widgets/components/shared/full_screen_loader.dart';
+
 export 'package:reper/presentation/widgets/components/shared/card_type_one.dart';
 
 export 'package:reper/presentation/widgets/utils/show_snackbar_response.dart';

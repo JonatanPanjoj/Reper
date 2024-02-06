@@ -30,5 +30,10 @@ class GroupRepositoryImpl extends GroupRepository{
   Future<ResponseStatus> updateGroup({required Group group}) {
     return datasource.updateGroup(group: group);
   }
+  
+  @override
+  Stream<List<Group>> streamGroupsById({required List<String> groups}) {
+    return datasource.streamGroupsById(groups: groups);
+  }
 
 }

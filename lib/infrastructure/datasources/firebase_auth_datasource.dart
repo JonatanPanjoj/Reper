@@ -122,6 +122,7 @@ class FirebaseAuthDataSource extends AuthDatasource {
               email: googleUser.email,
               joinedAt: Timestamp.now(),
               googleId: googleUser.id,
+              groups: []
             ),
             uid: cred.user!.uid,
           );

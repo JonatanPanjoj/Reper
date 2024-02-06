@@ -1,6 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:reper/presentation/providers/loaders/initial_loading_provider.dart';
+import 'package:reper/presentation/providers/providers.dart';
 import 'package:reper/presentation/screens/screens.dart';
 
 import 'package:reper/presentation/widgets/widgets.dart';
@@ -18,6 +21,8 @@ class HomeScreen extends ConsumerStatefulWidget {
 class HomeScreenState extends ConsumerState<HomeScreen>
     with AutomaticKeepAliveClientMixin {
 
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  
   late PageController pageController;
   final viewRoutes = const <Widget>[
     HomeView(),
@@ -29,6 +34,8 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   @override
   void initState() {
     super.initState();
+    ref.read(userProvider.notifier).loadUserInfo(_auth.currentUser!.uid);
+    
     pageController = PageController(keepPage: true);
   }
 
@@ -41,6 +48,9 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   @override
   Widget build(BuildContext context) {
     super.build(context);
+
+    final isLoading = ref.watch(initialLoadingProvider);
+    if (isLoading) return const FullScreenLoader();
 
     if (pageController.hasClients) {
       pageController.animateToPage(widget.pageIndex,

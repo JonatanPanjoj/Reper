@@ -10,4 +10,6 @@ abstract class GroupDatasource {
   Future<ResponseStatus> updateGroup({required Group group});
 
   Future<ResponseStatus> deleteGroup({required String groupId});
+
+  Stream<List<Group>> streamGroupsById({required List<String> groups});
 }

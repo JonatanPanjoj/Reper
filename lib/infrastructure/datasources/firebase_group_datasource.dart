@@ -32,7 +32,8 @@ class FirebaseGroupDatasource extends GroupDatasource {
           .set(group.copyWith(image: imageUrl, id: groupRef.id).toJson());
 
       //Obtener Usuario
-      final user = await groupDatasource.getUserById(uid: _auth.currentUser!.uid);
+      final user =
+          await groupDatasource.getUserById(uid: _auth.currentUser!.uid);
       //Agregar User a SubCollection Group
       if (user != null) {
         await _database
@@ -78,5 +79,15 @@ class FirebaseGroupDatasource extends GroupDatasource {
   Future<ResponseStatus> updateGroup({required Group group}) {
     // TODO: implement updateGroup
     throw UnimplementedError();
+  }
+
+  @override
+  Stream<List<Group>> streamGroupsById({required List<String> groups}) {
+    return _database
+        .collection('groups')
+        .where('id', whereIn: groups)
+        .snapshots()
+        .map((snapshot) =>
+            snapshot.docs.map((doc) => Group.fromJson(doc.data())).toList());
   }
 }
