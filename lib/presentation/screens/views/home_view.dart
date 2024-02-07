@@ -15,21 +15,37 @@ class HomeViewState extends ConsumerState<HomeView>
     with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     super.build(context);
     return Scaffold(
         body: CustomScrollView(
       slivers: [
-        const SliverAppBar(
+        SliverAppBar(
           floating: true,
-          title: Text('Tus Grupos'),
+          title: Text(
+            'Tus Grupos',
+            style: TextStyle(color: colors.onSurface),
+          ),
+          actions: [
+            TextButton.icon(
+              onPressed: () {
+                context.push('/create-group');
+              },
+              icon: const Icon(Icons.add),
+              label: Text(
+                'Crear Grupo',
+                style: TextStyle(color: colors.primary),
+              ),
+            )
+          ],
         ),
         SliverToBoxAdapter(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: StreamBuilder(
               stream: ref.watch(groupProvider).streamGroupsById(
-                groups: ref.watch(userProvider).groups!,
-              ),
+                    groups: ref.watch(userProvider).groups!,
+                  ),
               builder: (context, snapshot) {
                 final data = snapshot.data;
                 if (data == null) {
@@ -37,23 +53,22 @@ class HomeViewState extends ConsumerState<HomeView>
                 }
                 return Column(
                   children: [
-                    for (final group in data)
+                    const SizedBox(height: 15),
+                    for (int i = 0; i < data.length; i++)
                       Column(
                         children: [
                           CardTypeOne(
-                            title: group.name,
+                            title: data[i].name,
                             subtitle: '1 Participante, 0 Canciones',
-                            imageUrl: group.image,
+                            imageUrl: data[i].image,
+                            animateFrom: 100 + (i * 100),
+                            onTap: () {
+                              context.push('/group-screen', extra: data[i]);
+                            },
                           ),
-                          const SizedBox(height: 10)
+                          const SizedBox(height: 15)
                         ],
                       ),
-                    FilledButton(
-                      onPressed: () {
-                        context.push('/create-group');
-                      },
-                      child: const Text('Agregar Grupo'),
-                    )
                   ],
                 );
               },
