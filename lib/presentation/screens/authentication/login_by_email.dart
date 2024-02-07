@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:reper/domain/entities/entities.dart';
 import 'package:reper/presentation/providers/auth/auth_repository_provider.dart';
+import 'package:reper/presentation/providers/providers.dart';
 import 'package:reper/presentation/widgets/widgets.dart';
 
 class LoginByEmailScreen extends ConsumerStatefulWidget {

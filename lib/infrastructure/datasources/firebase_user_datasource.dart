@@ -13,7 +13,7 @@ class FirebaseUserDatasource extends UserDatasource {
     required String uid,
   }) async {
     try {
-      await database.collection('users').doc(uid).set(user.toJson());
+      await database.collection('users').doc(uid).set(user.copyWith(uid: uid).toJson());
       return ResponseStatus(
           message: 'Usuario Creado con Éxito', hasError: false);
     } on FirebaseException catch (e) {

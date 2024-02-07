@@ -59,7 +59,7 @@ class AppUser {
       joinedAt: json['joined_at'],
       googleId: json['google_id'],
       groups: List<String>.from(
-        json['groups'],
+        json['groups'] ?? [],
       ),
       image: json['image'] ?? '',
     );
