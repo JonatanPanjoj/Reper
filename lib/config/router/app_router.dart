@@ -9,11 +9,11 @@ final appRouter = GoRouter(
     GoRoute(
       path: '/home/:page',
       builder: (context, state) {
-        final pageIndex = int.parse(state.pathParameters['page'] ?? '0');
-
         return StreamBuilder<User?>(
           stream: FirebaseAuth.instance.authStateChanges(),
           builder: (context, snapshot) {
+            final pageIndex = int.parse(state.pathParameters['page'] ?? '0');
+
             if (snapshot.hasData) {
               return HomeScreen(pageIndex: pageIndex);
             } else {

@@ -87,6 +87,9 @@ class FirebaseGroupDatasource extends GroupDatasource {
 
   @override
   Stream<List<Group>> streamGroupsById({required List<String> groups}) {
+    if (groups.isEmpty) {
+      return Stream.value([]);
+    }
     return _database
         .collection('groups')
         .where('id', whereIn: groups)

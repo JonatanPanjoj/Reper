@@ -55,7 +55,7 @@ class FirebaseAuthDataSource extends AuthDatasource {
       userDatasource.createUser(
         uid: cred.user!.uid,
         user: AppUser(
-          uid: 'no-uid',
+          uid: cred.user!.uid,
           image: '',
           name: nickname,
           email: email,

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reper/presentation/providers/auth/auth_repository_provider.dart';
+import 'package:reper/presentation/providers/providers.dart';
 
 import 'package:reper/presentation/widgets/widgets.dart';
 
@@ -49,8 +50,9 @@ class LoginScreen extends ConsumerWidget {
                     onTap: () async {
                       final res =
                           await ref.read(authProvider).loginWithGoogle();
+
                       if (!res.hasError) {
-                        context.replace('/home/0');
+                        // context.replace('/home/0');
                       }
                     },
                   ),
