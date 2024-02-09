@@ -11,6 +11,7 @@ class CustomFilledButton extends ConsumerWidget {
   final void Function()? onTap;
   final String text;
   final double size;
+  final double height;
   final bool isLoading;
   final Widget? icon;
   final Color? color;
@@ -20,6 +21,7 @@ class CustomFilledButton extends ConsumerWidget {
     super.key,
     this.onTap,
     this.size = double.infinity,
+    this.height = 50,
     required this.text,
     this.isLoading = false,
     this.icon,
@@ -34,7 +36,7 @@ class CustomFilledButton extends ConsumerWidget {
     final backgroundColor = isDarkMode ? primaryDark : primaryDark;
     return SizedBox(
       width: size,
-      height: 50,
+      height: height,
       child: FilledButton.icon(
         onPressed: isLoading ? null : onTap,
         style: ButtonStyle(

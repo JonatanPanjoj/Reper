@@ -18,7 +18,7 @@ class UserNotifier extends StateNotifier<AppUser> {
 
   UserNotifier({required this.userRepository}) : super(AppUser.empty());
 
-  loadUserInfo(String uid) async {
+  streamUserInfo(String uid) async {
     // ignore: unused_local_variable
     StreamSubscription<AppUser?>? subscription;
     subscription = userRepository.streamUser(uid: uid).listen((user) {
@@ -36,8 +36,10 @@ class UserNotifier extends StateNotifier<AppUser> {
         childName: 'profile_pictures',
         mediaFile: file,
       );
+      //TODO:Update state
       return await userRepository.updateUser(user: user.copyWith(image: imageUrl));
     }
+    //TODO:Update state
     return await userRepository.updateUser(user: user);
   }
 }
