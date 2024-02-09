@@ -31,7 +31,8 @@ class GroupListNotifier extends StateNotifier<List<Group>> {
         group: Group(
           id: 'no-id',
           name: groupName,
-          image: 'no-image', 
+          image: 'no-image',
+          reps: []
         ),
         mediaFile: mediaFile);
     if (!response.hasError){
@@ -39,4 +40,6 @@ class GroupListNotifier extends StateNotifier<List<Group>> {
     }
     return response;
   }
+
+  
 }

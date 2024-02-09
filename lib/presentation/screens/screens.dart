@@ -14,3 +14,4 @@ export 'package:reper/presentation/screens/views/profile_view.dart';
 
 //Groups
 export 'package:reper/presentation/screens/groups/create_group_screen.dart';
+export 'package:reper/presentation/screens/groups/group_screen.dart';

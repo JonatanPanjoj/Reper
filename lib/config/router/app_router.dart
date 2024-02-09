@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:reper/domain/entities/entities.dart';
 import 'package:reper/presentation/screens/screens.dart';
 
 final appRouter = GoRouter(
@@ -21,6 +22,12 @@ final appRouter = GoRouter(
             }
           },
         );
+      },
+    ),
+    GoRoute(
+      path: '/group-screen',
+      builder: (context, state) {
+        return GroupScreen(group: state.extra as Group);
       },
     ),
     GoRoute(
@@ -47,5 +54,6 @@ final appRouter = GoRouter(
         return const CreateGroupScreen();
       },
     ),
+    
   ],
 );

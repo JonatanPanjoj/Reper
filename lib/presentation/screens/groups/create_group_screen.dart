@@ -56,7 +56,7 @@ class CreateGroupScreenState extends ConsumerState<CreateGroupScreen> {
                 const SizedBox(height: 25),
                 CustomInput(
                   controller: _nameGroupController,
-                  label: 'Nombre del Servidor',
+                  label: 'Nombre del Grupo',
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Nombra a tu grupo';

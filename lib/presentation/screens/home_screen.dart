@@ -34,7 +34,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   @override
   void initState() {
     super.initState();
-    ref.read(userProvider.notifier).loadUserInfo(_auth.currentUser!.uid);
+    ref.read(userProvider.notifier).streamUserInfo(_auth.currentUser!.uid);
     
     pageController = PageController(keepPage: true);
   }

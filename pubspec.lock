@@ -9,6 +9,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.3.19"
+  animate_do:
+    dependency: "direct main"
+    description:
+      name: animate_do
+      sha256: "8a9d0f91d066d5f86bd9de9455e5741e6bbb284b114c76375f01584065dd3da1"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.3.3"
   args:
     dependency: transitive
     description:
@@ -811,7 +819,7 @@ packages:
     source: hosted
     version: "0.6.1"
   transparent_image:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: transparent_image
       sha256: e8991d955a2094e197ca24c645efec2faf4285772a4746126ca12875e54ca02f
