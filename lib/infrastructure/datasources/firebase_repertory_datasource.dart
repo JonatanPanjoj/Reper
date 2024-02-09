@@ -16,11 +16,17 @@ class FirebaseRepertoryDatasource extends RepertoryDatasource {
     required String groupId,
   }) async {
     try {
-      final repertoryRef = await _database
+      final WriteBatch batch = _database.batch();
+
+// Crear una referencia al nuevo documento
+      final DocumentReference repertoryRef = _database
           .collection('groups')
           .doc(groupId)
           .collection('repertories')
-          .add(repertory.toJson());
+          .doc();
+
+// Agregar la operación de escritura al lote
+      batch.set(repertoryRef, repertory.toJson());
 
       final String imageUrl = await uploadImageToStorage(
         fileName: repertoryRef.id,
@@ -28,13 +34,18 @@ class FirebaseRepertoryDatasource extends RepertoryDatasource {
         mediaFile: image,
       );
 
-      await repertoryRef.set(
+// Actualizar el documento con la URL de la imagen
+      batch.update(repertoryRef,
           repertory.copyWith(id: repertoryRef.id, image: imageUrl).toJson());
+
+// Confirmar todas las operaciones de escritura
+      await batch.commit();
 
       return ResponseStatus(
         message: 'Se creó el repertorio correctamente',
         hasError: false,
       );
+
     } on FirebaseException catch (e) {
       return ResponseStatus(
           message: e.message ?? 'An exeption occurred', hasError: true);
@@ -51,8 +62,13 @@ class FirebaseRepertoryDatasource extends RepertoryDatasource {
 
   @override
   Stream<List<Repertory>> streamRepertoriesById({required String repId}) {
-    // TODO: implement streamRepertoriesById
-    throw UnimplementedError();
+    return _database
+        .collection('groups')
+        .doc(repId)
+        .collection('repertories')
+        .snapshots()
+        .map((snapshot) =>
+            snapshot.docs.map((doc) => Repertory.fromJson(doc.data())).toList());
   }
 
   @override

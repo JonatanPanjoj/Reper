@@ -51,6 +51,8 @@ class HomeViewState extends ConsumerState<HomeView>
                 if (data == null) {
                   return const SizedBox();
                 }
+                //CREAR UN PROVIDER DE MAP STRING LIST<REPER>
+                //PARA MOSTRAR AQUÍ JEJE
                 return Column(
                   children: [
                     const SizedBox(height: 15),
