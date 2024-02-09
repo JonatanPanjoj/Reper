@@ -22,7 +22,7 @@ class GroupScreen extends StatelessWidget {
               onPressed: () {
                 showCustomDialog(
                   context: context,
-                  alertDialog: const AddReperDialog(),
+                  alertDialog: AddReperDialog(groupId: group.id),
                 );
               },
               icon: const Icon(Icons.add),

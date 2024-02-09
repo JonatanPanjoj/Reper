@@ -12,6 +12,7 @@ export 'package:reper/presentation/widgets/elements/custom_input.dart';
 export 'package:reper/presentation/widgets/elements/custom_filled_button.dart';
 export 'package:reper/presentation/widgets/elements/custom_loading.dart';
 export 'package:reper/presentation/widgets/elements/custom_bottom_navigation_bar.dart';
+export 'package:reper/presentation/widgets/elements/custom_image_picker.dart';
 
 //Utils
 export 'package:reper/presentation/widgets/utils/show_snackbar_response.dart';
