@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:reper/presentation/providers/auth/auth_repository_provider.dart';
-import 'package:reper/presentation/providers/theme/theme_provider.dart';
+import 'package:reper/config/utils/utils.dart';
+import 'package:reper/domain/entities/app_user.dart';
+import 'package:reper/presentation/providers/providers.dart';
 
 class ProfileView extends ConsumerStatefulWidget {
   const ProfileView({super.key});
@@ -14,6 +15,7 @@ class ProfileViewState extends ConsumerState<ProfileView> {
   @override
   Widget build(BuildContext context) {
     final isDarkMode = ref.watch(themeNotifierProvider).isDarkMode;
+    final userInfo = ref.watch(userProvider);
     bool switchChanged = true;
     final colors = Theme.of(context);
     return Scaffold(
@@ -21,10 +23,10 @@ class ProfileViewState extends ConsumerState<ProfileView> {
         children: <Widget>[
           SizedBox(
             height: 230,
-            child: _buildBanner(colors),
+            child: _buildBanner(colors, userInfo),
           ),
           const SizedBox(height: 20),
-          _buildUserInfo(),
+          _buildUserInfo(userInfo),
           const SizedBox(height: 10),
           _buildSettings(isDarkMode, switchChanged),
           const SizedBox(height: 10),
@@ -81,8 +83,7 @@ class ProfileViewState extends ConsumerState<ProfileView> {
               padding: const EdgeInsets.all(20),
               child: Column(children: [
                 GestureDetector(
-                  onTap: () {
-                  },
+                  onTap: () {},
                   child: const Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [Text('Ayuda y soporte')],
@@ -92,8 +93,7 @@ class ProfileViewState extends ConsumerState<ProfileView> {
                   height: 15,
                 ),
                 GestureDetector(
-                  onTap: () {
-                  },
+                  onTap: () {},
                   child: const Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [Text('Contáctanos')],
@@ -103,8 +103,7 @@ class ProfileViewState extends ConsumerState<ProfileView> {
                   height: 15,
                 ),
                 GestureDetector(
-                  onTap: () {
-                  },
+                  onTap: () {},
                   child: const Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [Text('Política de Privacidad')],
@@ -114,8 +113,7 @@ class ProfileViewState extends ConsumerState<ProfileView> {
                   height: 15,
                 ),
                 GestureDetector(
-                  onTap: () {
-                  },
+                  onTap: () {},
                   child: const Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [Text('Cambio de contraseña')],
@@ -166,12 +164,12 @@ class ProfileViewState extends ConsumerState<ProfileView> {
                     ),
                     Switch(
                       value: switchChanged,
-                      onChanged: (value) {
+                      onChanged: (newValue) {
                         setState(() {
-                          switchChanged = value;
+                          switchChanged = newValue;
                         });
                       },
-                    )
+                    ),
                   ],
                 ),
               ],
@@ -182,8 +180,8 @@ class ProfileViewState extends ConsumerState<ProfileView> {
     );
   }
 
-  Widget _buildUserInfo() {
-    return const Padding(
+  Widget _buildUserInfo(AppUser user) {
+    return Padding(
       padding: EdgeInsets.symmetric(horizontal: 30),
       child: Column(children: [
         Card(
@@ -193,15 +191,16 @@ class ProfileViewState extends ConsumerState<ProfileView> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Joix',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 32),
+                  user.name,
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 32),
                 ),
                 Column(
                   children: [
-                    SizedBox(
+                    const SizedBox(
                       height: 15,
                     ),
-                    Text(
+                    const Text(
                       'Miembro desde',
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
@@ -210,7 +209,7 @@ class ProfileViewState extends ConsumerState<ProfileView> {
                       height: 5,
                     ),
                     Text(
-                      '1 de febrero de 2024',
+                      formatDate(user.joinedAt),
                       style: TextStyle(fontSize: 10),
                     ),
                     SizedBox(
@@ -226,7 +225,7 @@ class ProfileViewState extends ConsumerState<ProfileView> {
     );
   }
 
-  Widget _buildBanner(ThemeData colors) {
+  Widget _buildBanner(ThemeData colors, AppUser user) {
     return Stack(
       alignment: Alignment.bottomCenter,
       children: <Widget>[
@@ -254,10 +253,18 @@ class ProfileViewState extends ConsumerState<ProfileView> {
               backgroundColor: colors.scaffoldBackgroundColor,
               radius: 70,
             ),
-            const CircleAvatar(
-              backgroundImage: AssetImage('assets/img/userProfile.jpg'),
-              radius: 65,
-            ),
+            user.image.isNotEmpty
+                ? CircleAvatar(
+                    backgroundImage: NetworkImage(user.image),
+                    radius: 65,
+                  )
+                : CircleAvatar(
+                    radius: 65,
+                    child: Text(
+                      user.name.substring(0, 1),
+                      style: const TextStyle(fontSize: 40),
+                    ),
+                  )
           ],
         ),
         Positioned(
@@ -288,10 +295,10 @@ class ProfileViewState extends ConsumerState<ProfileView> {
           top: 180,
           right: 20,
           child: GestureDetector(
-              onTap: () {
-              },
+              onTap: () {},
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 7),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 15, vertical: 7),
                 width: 69,
                 height: 30,
                 decoration: BoxDecoration(
@@ -313,8 +320,7 @@ class ProfileViewState extends ConsumerState<ProfileView> {
           child: Stack(
             children: [
               GestureDetector(
-                onTap: () {
-                },
+                onTap: () {},
                 child: Container(
                   width: 45,
                   height: 45,
@@ -323,7 +329,8 @@ class ProfileViewState extends ConsumerState<ProfileView> {
                     shape: BoxShape.circle,
                   ),
                   child: const Icon(
-                    Icons.notifications, size: 30,
+                    Icons.notifications,
+                    size: 30,
                   ),
                 ),
               ),
@@ -334,3 +341,62 @@ class ProfileViewState extends ConsumerState<ProfileView> {
     );
   }
 }
+
+/*
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: HomeScreen(),
+    );
+  }
+}
+
+class HomeScreen extends StatefulWidget {
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  bool switchValue = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Switch Example'),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Switch(
+              value: switchValue,
+              onChanged: (newValue) {
+                setState(() {
+                  switchValue = newValue;
+                });
+              },
+              activeColor: Colors.blue, // Color cuando está encendido
+              inactiveThumbColor: Colors.grey, // Color del pulgar cuando está apagado
+            ),
+            SizedBox(height: 12.0),
+            Text(
+              'Estado: ${switchValue ? "Encendido" : "Apagado"}',
+              style: TextStyle(fontSize: 20.0),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+*/
