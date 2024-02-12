@@ -27,7 +27,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   final viewRoutes = const <Widget>[
     HomeView(),
     AlbumsView(),
-    NotificationsView(),
+    LibraryView(),
     ProfileView()
   ];
 

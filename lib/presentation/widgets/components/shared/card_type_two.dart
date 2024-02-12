@@ -87,6 +87,7 @@ class _CardTypeTwoState extends State<CardTypeTwo> {
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
       child: InkWell(
+        onTap: widget.onTap,
         child: Stack(
           children: [
             Container(

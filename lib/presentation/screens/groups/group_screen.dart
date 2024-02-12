@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:reper/domain/entities/entities.dart';
 import 'package:reper/presentation/providers/database/repertory_repository_provider.dart';
 import 'package:reper/presentation/widgets/widgets.dart';
@@ -22,7 +23,7 @@ class GroupScreenState extends ConsumerState<GroupScreen> {
         slivers: [
           CustomSliverAppBar(
             title: widget.group.name,
-            subtitle: '${widget.group.reps.length} canciones',
+            subtitle: '${widget.group.reps.length} repertorios',
             height: size.height * 0.5,
             image: widget.group.image,
             bottomAction: IconButton(
@@ -67,6 +68,9 @@ class GroupScreenState extends ConsumerState<GroupScreen> {
                               subtitle: '${data[i].sections.length} Canciones',
                               imageUrl: data[i].image,
                               index: i,
+                              onTap: () {
+                                context.push('/repertory', extra: data[i]);
+                              },
                               onDelete: () async {
                                 await ref
                                     .read(repertoryRepositoryProvider)

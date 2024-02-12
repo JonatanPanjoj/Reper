@@ -24,6 +24,7 @@ final appRouter = GoRouter(
         );
       },
     ),
+    //TODO: Ordenar por secciones
     GoRoute(
       path: '/group-screen',
       builder: (context, state) {
@@ -52,6 +53,12 @@ final appRouter = GoRouter(
       path: '/create-group',
       builder: (context, state) {
         return const CreateGroupScreen();
+      },
+    ),
+    GoRoute(
+      path: '/repertory',
+      builder: (context, state) {
+        return RepertoryScreen(repertory: state.extra as Repertory);
       },
     ),
     
