@@ -34,3 +34,15 @@ Future<String> uploadImageToStorage({
 
   return downloadUrl;
 }
+
+Future<void> deleteImageFromStorage({
+  required String fileName,
+  required String childName,
+}) async {
+  final Reference ref = FirebaseStorage.instance
+      .ref()
+      .child(childName)
+      .child(fileName);
+
+  await ref.delete();
+}

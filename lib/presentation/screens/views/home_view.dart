@@ -51,12 +51,14 @@ class HomeViewState extends ConsumerState<HomeView>
                 if (data == null) {
                   return const SizedBox();
                 }
+                //CREAR UN PROVIDER DE MAP STRING LIST<REPER>
+                //PARA MOSTRAR AQUÍ JEJE
                 return Column(
                   children: [
-                    const SizedBox(height: 15),
                     for (int i = 0; i < data.length; i++)
                       Column(
                         children: [
+                          const SizedBox(height: 15),
                           CardTypeOne(
                             title: data[i].name,
                             subtitle: '1 Participante, 0 Canciones',
@@ -65,8 +67,13 @@ class HomeViewState extends ConsumerState<HomeView>
                             onTap: () {
                               context.push('/group-screen', extra: data[i]);
                             },
+                            index: i,
+                            onDelete: () async {
+                              ref.read(groupProvider).deleteGroup(
+                                    groupId: data[i].id,
+                                  );
+                            },
                           ),
-                          const SizedBox(height: 15)
                         ],
                       ),
                   ],

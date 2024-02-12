@@ -1,18 +1,29 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:reper/presentation/widgets/elements/custom_filled_button.dart';
-import 'package:reper/presentation/widgets/elements/custom_input.dart';
+import 'package:reper/domain/entities/entities.dart';
+import 'package:reper/presentation/providers/database/repertory_repository_provider.dart';
 import 'package:reper/presentation/widgets/widgets.dart';
 
-class AddReperDialog extends StatefulWidget {
-  const AddReperDialog({super.key});
+class AddReperDialog extends ConsumerStatefulWidget {
+
+  final String groupId;
+
+  const AddReperDialog({super.key, required this.groupId});
 
   @override
-  State<AddReperDialog> createState() => _AddReperDialogState();
+  AddReperDialogState createState() => AddReperDialogState();
 }
 
-class _AddReperDialogState extends State<AddReperDialog> {
-  final TextEditingController _reperName = TextEditingController();
+class AddReperDialogState extends ConsumerState<AddReperDialog> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController _reperNameController = TextEditingController();
+  Uint8List? selectedImage;
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -31,26 +42,77 @@ class _AddReperDialogState extends State<AddReperDialog> {
           },
         ),
         CustomFilledButton(
+          isLoading: isLoading,
           size: size.width * 0.3,
           height: 35,
           text: 'Create',
           onTap: () {
-            context.pop();
+            _createReper();
           },
         ),
       ],
       content: SizedBox(
-        height: 100,
-        child: Column(
-          children: [
-            CustomInput(
-              label: 'Nombre:',
-              controller: _reperName,
-              fillColor: colors.cardColor,
-            ),
-          ],
+        height: 300,
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              CustomInput(
+                label: 'Nombre:',
+                controller: _reperNameController,
+                fillColor: colors.cardColor,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Ingrese un nombre';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 20),
+              CustomImagePicker(
+                height: 150,
+                onPressed: (image) {
+                  selectedImage = image;
+                },
+              )
+            ],
+          ),
         ),
       ),
     );
+  }
+
+  void _createReper() async {
+    if (_formKey.currentState!.validate()) {
+      if (selectedImage == null) {
+        showSnackbarResponse(
+          context: context,
+          response: ResponseStatus(
+            message: 'Seleccione una imagen',
+            hasError: true,
+          ),
+        );
+        return;
+      }
+      isLoading = true;
+      setState(() {});
+      final res = await ref.read(repertoryRepositoryProvider).createRepertory(
+            repertory: Repertory(
+              id: 'no-id',
+              name: _reperNameController.text,
+              image: 'no-image',
+              sections: [],
+            ),
+            groupId: widget.groupId,
+            image: selectedImage!,
+          );
+      isLoading = false;
+      setState(() {});
+      showSnackbarResponse(
+        context: context,
+        response: res,
+      );
+      context.pop();
+    }
   }
 }
