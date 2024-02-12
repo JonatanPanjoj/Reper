@@ -24,8 +24,8 @@ class RepertoryRepositoryImpl extends RepertoryRepository {
   }
 
   @override
-  Future<ResponseStatus> deleteRepertory({required String repId}) {
-    return datasource.deleteRepertory(repId: repId);
+  Future<ResponseStatus> deleteRepertory({required String repId, required String groupId}) {
+    return datasource.deleteRepertory(repId: repId, groupId: groupId);
   }
 
   @override

@@ -45,7 +45,6 @@ class FirebaseRepertoryDatasource extends RepertoryDatasource {
         message: 'Se creó el repertorio correctamente',
         hasError: false,
       );
-
     } on FirebaseException catch (e) {
       return ResponseStatus(
           message: e.message ?? 'An exeption occurred', hasError: true);
@@ -55,9 +54,27 @@ class FirebaseRepertoryDatasource extends RepertoryDatasource {
   }
 
   @override
-  Future<ResponseStatus> deleteRepertory({required String repId}) {
-    // TODO: implement deleteRepertory
-    throw UnimplementedError();
+  Future<ResponseStatus> deleteRepertory({
+    required String repId,
+    required String groupId,
+  }) async {
+    try {
+      await _database
+          .collection('groups')
+          .doc(groupId)
+          .collection('repertories')
+          .doc(repId)
+          .delete();
+      await deleteImageFromStorage(fileName: repId, childName: 'repertories');
+
+      return ResponseStatus(
+          message: 'Repertorio eliminado con éxito', hasError: false);
+    } on FirebaseException catch (e) {
+      return ResponseStatus(
+          message: e.message ?? 'An exeption occurred', hasError: true);
+    } catch (e) {
+      return ResponseStatus(message: e.toString(), hasError: true);
+    }
   }
 
   @override
@@ -67,8 +84,9 @@ class FirebaseRepertoryDatasource extends RepertoryDatasource {
         .doc(repId)
         .collection('repertories')
         .snapshots()
-        .map((snapshot) =>
-            snapshot.docs.map((doc) => Repertory.fromJson(doc.data())).toList());
+        .map((snapshot) => snapshot.docs
+            .map((doc) => Repertory.fromJson(doc.data()))
+            .toList());
   }
 
   @override

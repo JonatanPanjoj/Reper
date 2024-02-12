@@ -68,9 +68,23 @@ class FirebaseGroupDatasource extends GroupDatasource {
   }
 
   @override
-  Future<ResponseStatus> deleteGroup({required String groupId}) {
-    // TODO: implement deleteGroup
-    throw UnimplementedError();
+  Future<ResponseStatus> deleteGroup({required String groupId}) async {
+    try {
+      await _database.collection('groups').doc(groupId).delete();
+      await deleteSubcollectionDocs(
+        collection: 'groups',
+        collectionId: groupId,
+        subcollectionName: 'users',
+      );
+      await deleteImageFromStorage(fileName: groupId, childName: 'groups');
+
+      return ResponseStatus(message: 'Grupo Creado Eliminado', hasError: false);
+    } on FirebaseException catch (e) {
+      return ResponseStatus(
+          message: e.message ?? 'An exeption occurred', hasError: true);
+    } catch (e) {
+      return ResponseStatus(message: e.toString(), hasError: true);
+    }
   }
 
   @override
@@ -96,5 +110,23 @@ class FirebaseGroupDatasource extends GroupDatasource {
         .snapshots()
         .map((snapshot) =>
             snapshot.docs.map((doc) => Group.fromJson(doc.data())).toList());
+  }
+
+//OTROS
+  Future<void> deleteSubcollectionDocs({
+    required String collection,
+    required String collectionId,
+    required String subcollectionName,
+  }) {
+    return _database
+        .collection(collection)
+        .doc(collectionId)
+        .collection(subcollectionName)
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      for (final doc in querySnapshot.docs) {
+        doc.reference.delete();
+      }
+    });
   }
 }

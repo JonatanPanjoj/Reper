@@ -29,7 +29,6 @@ class CustomSliverAppBar extends StatelessWidget {
           ? (size.height * 0.5).round().toDouble()
           : height!.round().toDouble(),
       titleSpacing: 0,
-      floating: floating,
       flexibleSpace: FlexibleSpaceBar(
         titlePadding: const EdgeInsets.all(0),
         title: Stack(
