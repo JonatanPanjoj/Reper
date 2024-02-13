@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:reper/config/theme/app_font_styles.dart';
+import 'package:reper/domain/entities/song.dart';
+import 'package:reper/presentation/providers/providers.dart';
 
 import 'package:reper/presentation/widgets/widgets.dart';
 
-class LibraryView extends StatelessWidget {
+class LibraryView extends ConsumerWidget {
   const LibraryView({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return DefaultTabController(
-      initialIndex: 1,
+      initialIndex: 0,
       length: 2,
       child: Scaffold(
         appBar: AppBar(
@@ -25,7 +29,7 @@ class LibraryView extends StatelessWidget {
         ),
         body: TabBarView(
           children: [
-            _buildMySongsTab(),
+            _buildMySongsTab(ref, context),
             const Center(
               child: Text("It's rainy here"),
             ),
@@ -35,7 +39,8 @@ class LibraryView extends StatelessWidget {
     );
   }
 
-  Widget _buildMySongsTab() {
+  Widget _buildMySongsTab(WidgetRef ref, BuildContext context) {
+    final List<Song> userSongs = ref.watch(userSongsListProvider);
     return CustomScrollView(
       slivers: [
         SliverToBoxAdapter(
@@ -43,23 +48,33 @@ class LibraryView extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             child: GestureDetector(
               onTap: () {
-                
+                context.push('/create-song');
               },
               child: const Row(
                 children: [
-                  Icon(Icons.add, size: 50,),
+                  Icon(
+                    Icons.add,
+                    size: 50,
+                  ),
                   SizedBox(width: 20),
-                  Text('Agregar una canción', style: normal20,)
+                  Text(
+                    'Agregar una canción',
+                    style: normal20,
+                  )
                 ],
               ),
             ),
           ),
         ),
         SliverList.builder(
+          itemCount: userSongs.length,
           itemBuilder: (context, index) {
-            return const CardTypeThree(
-              title: 'Hola',
-              subtitle: 'Como estas',
+            return CardTypeThree(
+              title: userSongs[index].title,
+              subtitle: userSongs[index].artist,
+              onTap: () {
+                context.push('/song-screen', extra: userSongs[index]);
+              },
             );
           },
         )

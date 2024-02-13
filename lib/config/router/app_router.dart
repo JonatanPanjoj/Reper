@@ -61,6 +61,18 @@ final appRouter = GoRouter(
         return RepertoryScreen(repertory: state.extra as Repertory);
       },
     ),
+    GoRoute(
+      path: '/song-screen',
+      builder: (context, state) {
+        return SongScreen(song: state.extra as Song);
+      },
+    ),
+    GoRoute(
+      path: '/create-song',
+      builder: (context, state) {
+        return const CreateSongScreen();
+      },
+    ),
     
   ],
 );
