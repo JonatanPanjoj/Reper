@@ -39,7 +39,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
       destinations: const [
         NavigationDestination(icon: Icon(Icons.home_rounded), label: 'Home'),
         NavigationDestination(icon: Icon(Icons.album), label: 'Albumes'),
-        NavigationDestination(icon: Icon(Icons.notifications), label: 'Notifications'),
+        NavigationDestination(icon: Icon(Icons.music_note), label: 'Mis canciones'),
         NavigationDestination(icon: Icon(Icons.person), label: 'Profile'),
       ],
     );

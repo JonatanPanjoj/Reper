@@ -37,8 +37,8 @@ class CardTypeOne extends StatelessWidget {
       manualTrigger: true,
       duration: animationDuration,
       controller: (controller) => animateController = controller,
-      child: FadeInRight(
-        from: animateFrom ?? 100,
+      child: FadeIn(
+        // from: animateFrom ?? 100,
         child: Dismissible(
           key: ValueKey(index),
           direction: DismissDirection.endToStart,

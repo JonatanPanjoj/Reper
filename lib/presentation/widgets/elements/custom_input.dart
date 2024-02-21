@@ -3,12 +3,16 @@ import 'package:flutter/material.dart';
 class CustomInput extends StatelessWidget {
   final String? label;
   final String? initialValue;
+  final String? hintText;
   final TextEditingController? controller;
   final Widget? suffixIcon;
   final bool isPassword;
   final TextInputType? keyboardType;
   final String? Function(String? value)? validator;
+  final void Function(String value)? onChanged;
   final Color? fillColor;
+  final int? maxLines;
+  final int? minLines;
 
   const CustomInput({
     super.key,
@@ -20,6 +24,10 @@ class CustomInput extends StatelessWidget {
     this.isPassword = false,
     this.fillColor,
     this.initialValue,
+    this.maxLines = 1,
+    this.minLines,
+    this.hintText,
+    this.onChanged,
   });
 
   @override
@@ -37,12 +45,16 @@ class CustomInput extends StatelessWidget {
           ClipRRect(
             borderRadius: BorderRadius.circular(15),
             child: TextFormField(
+              maxLines: maxLines,
+              minLines: minLines,
               initialValue: initialValue,
               validator: validator,
               controller: controller,
               obscureText: isPassword,
               keyboardType: keyboardType,
+              onChanged: onChanged,
               decoration: InputDecoration(
+                hintText: hintText,
                 fillColor: fillColor ?? colors.canvasColor,
                 suffixIcon: suffixIcon,
                 filled: true,

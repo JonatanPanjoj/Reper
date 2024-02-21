@@ -27,7 +27,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   final viewRoutes = const <Widget>[
     HomeView(),
     AlbumsView(),
-    NotificationsView(),
+    LibraryView(),
     ProfileView()
   ];
 
@@ -35,7 +35,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   void initState() {
     super.initState();
     ref.read(userProvider.notifier).streamUserInfo(_auth.currentUser!.uid);
-    
+    ref.read(userSongsListProvider.notifier).streamUserSongs(_auth.currentUser!.uid);
     pageController = PageController(keepPage: true);
   }
 
