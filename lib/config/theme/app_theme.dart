@@ -37,9 +37,11 @@ class AppTheme {
       //WIDGET STYLES
       //APP BAR
       appBarTheme: AppBarTheme(
+        shadowColor: primaryDark,
         color: isDarkMode ? backgroundDark : backgroundLight,
         titleSpacing: 25,
         titleTextStyle: GoogleFonts.urbanist(
+          color: isDarkMode ? backgroundLight : backgroundDark,
           fontSize: 30,
           fontWeight: FontWeight.bold,
         ),

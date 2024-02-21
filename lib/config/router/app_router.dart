@@ -73,6 +73,12 @@ final appRouter = GoRouter(
         return const CreateSongScreen();
       },
     ),
+    GoRoute(
+      path: '/edit-song-screen',
+      builder: (context, state) {
+        return EditSongScreen(song: state.extra as Song,);
+      },
+    ),
     
   ],
 );

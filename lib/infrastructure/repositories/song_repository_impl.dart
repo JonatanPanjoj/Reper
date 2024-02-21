@@ -1,6 +1,5 @@
 import 'package:reper/domain/datasources/song_datasource.dart';
-import 'package:reper/domain/entities/shared/response_status.dart';
-import 'package:reper/domain/entities/song.dart';
+import 'package:reper/domain/entities/entities.dart';
 import 'package:reper/domain/repositories/song_repository.dart';
 
 class SongRepositoryImpl extends SongRepository {
@@ -9,8 +8,8 @@ class SongRepositoryImpl extends SongRepository {
   SongRepositoryImpl(this.datasource);
 
   @override
-  Future<ResponseStatus> createSong({required Song song}) {
-    return datasource.createSong(song: song);
+  Future<ResponseStatus> createSong({required Song song, required AppUser user}) {
+    return datasource.createSong(song: song, user: user);
   }
 
   @override
@@ -31,5 +30,10 @@ class SongRepositoryImpl extends SongRepository {
   @override
   Future<ResponseStatus> updateSong({required Song song}) {
     return datasource.updateSong(song: song);
+  }
+  
+  @override
+  Stream<Song> streamSong({required String songId}) {
+    return datasource.streamSong(songId: songId);
   }
 }

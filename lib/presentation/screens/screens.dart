@@ -22,3 +22,4 @@ export 'package:reper/presentation/screens/repertories/repertory_screen.dart';
 //Songs
 export 'package:reper/presentation/screens/songs/create_song_screen.dart';
 export 'package:reper/presentation/screens/songs/song_screen.dart';
+export 'package:reper/presentation/screens/songs/edit_song_screen.dart';

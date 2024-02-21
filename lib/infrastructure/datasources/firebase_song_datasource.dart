@@ -1,22 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:reper/domain/datasources/song_datasource.dart';
-import 'package:reper/domain/entities/shared/response_status.dart';
-import 'package:reper/domain/entities/song.dart';
+import 'package:reper/domain/entities/entities.dart';
 
 class FirebaseSongDatasource extends SongDatasource {
   final FirebaseFirestore _database = FirebaseFirestore.instance;
-  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   @override
-  Future<ResponseStatus> createSong({required Song song}) async {
+  Future<ResponseStatus> createSong({required Song song, required AppUser user}) async {
     try {
       final WriteBatch batch = _database.batch();
       final ref = _database.collection('songs').doc();
       batch.set(
         ref,
-        song.copyWith(id: ref.id, createdBy: _auth.currentUser!.uid).toJson(),
+        song.copyWith(id: ref.id, createdBy: user).toJson(),
       );
       await batch.commit();
       return ResponseStatus(
@@ -56,17 +53,33 @@ class FirebaseSongDatasource extends SongDatasource {
 
   @override
   Stream<List<Song>> streamSongsByUser({required String uid}) {
-    return _database
+    return _database  
         .collection('songs')
-        .where('created_by', isEqualTo: uid)
+        .where('created_by.uid', isEqualTo: uid)
         .snapshots()
         .map((snapshot) =>
             snapshot.docs.map((doc) => Song.fromJson(doc.data())).toList());
   }
 
+
+
   @override
-  Future<ResponseStatus> updateSong({required Song song}) {
-    // TODO: implement updateSong
-    throw UnimplementedError();
+  Future<ResponseStatus> updateSong({required Song song}) async {
+    try {
+    await _database.collection('songs').doc(song.id).set(song.toJson());
+    
+    return ResponseStatus(message: 'Canción actualizada con éxito', hasError: false);
+    } on FirebaseException catch (e) {
+    return ResponseStatus(message: e.message ?? 'An exeption occurred', hasError: true);
+    } catch (e) {
+    return ResponseStatus(message: e.toString(), hasError: true);
+    }
+  }
+  
+  @override
+  Stream<Song> streamSong({required String songId}) {
+    return _database.collection('songs').doc(songId).snapshots().map((snapshot) {
+      return Song.fromJson(snapshot.data()!..addAll({'uid': snapshot.id}));
+    });
   }
 }

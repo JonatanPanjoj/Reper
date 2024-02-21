@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:reper/presentation/providers/providers.dart';
 import 'package:transparent_image/transparent_image.dart';
 
-class CustomSliverAppBar extends StatelessWidget {
+class CustomSliverAppBar extends ConsumerWidget {
   final String? title;
   final String? subtitle;
   final double? height;
@@ -21,7 +23,8 @@ class CustomSliverAppBar extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    bool isDark = ref.watch(themeNotifierProvider).isDarkMode;
     final colors = Theme.of(context);
     final size = MediaQuery.of(context).size;
     return SliverAppBar(
@@ -40,11 +43,21 @@ class CustomSliverAppBar extends StatelessWidget {
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
-                    stops: const [0.1, 1],
-                    colors: [
-                      Colors.transparent,
-                      colors.scaffoldBackgroundColor,
-                    ],
+                    stops: !isDark
+                        //LIGHT MODE
+                        ? [0.1, 0.4, 1]
+                        //DARK MODE
+                        : [0.1, 1],
+                    colors: (!isDark)
+                        ? [
+                            Colors.transparent,
+                            colors.colorScheme.primary.withOpacity(0.1),
+                            colors.scaffoldBackgroundColor,
+                          ]
+                        : [
+                            Colors.transparent,
+                            colors.scaffoldBackgroundColor,
+                          ],
                   ),
                 ),
               ),
@@ -83,10 +96,9 @@ class CustomSliverAppBar extends StatelessWidget {
           children: [
             SizedBox.expand(
               child: FadeInImage.memoryNetwork(
-                image: image,
-                placeholder: (kTransparentImage),
-                fit: BoxFit.cover
-              ),
+                  image: image,
+                  placeholder: (kTransparentImage),
+                  fit: BoxFit.cover),
             ),
           ],
         ),

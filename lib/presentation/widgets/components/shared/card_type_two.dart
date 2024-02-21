@@ -1,10 +1,12 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reper/config/theme/theme.dart';
+import 'package:reper/presentation/providers/providers.dart';
 import 'package:reper/presentation/widgets/widgets.dart';
 
-class CardTypeTwo extends StatefulWidget {
+class CardTypeTwo extends ConsumerStatefulWidget {
   final String title;
   final String subtitle;
   final String imageUrl;
@@ -25,10 +27,10 @@ class CardTypeTwo extends StatefulWidget {
   });
 
   @override
-  State<CardTypeTwo> createState() => _CardTypeTwoState();
+  CardTypeTwoState createState() => CardTypeTwoState();
 }
 
-class _CardTypeTwoState extends State<CardTypeTwo> {
+class CardTypeTwoState extends ConsumerState<CardTypeTwo> {
   late AnimationController animateController;
   final animationDuration = Durations.long1;
   final delayAnimation = Durations.long2;
@@ -41,8 +43,8 @@ class _CardTypeTwoState extends State<CardTypeTwo> {
       manualTrigger: true,
       duration: animationDuration,
       controller: (controller) => animateController = controller,
-      child: FadeInRight(
-        from: widget.animateFrom ?? 100,
+      child: FadeIn(
+        // from: widget.animateFrom ?? 100,
         child: Dismissible(
           key: ValueKey(widget.index),
           direction: DismissDirection.endToStart,
@@ -67,23 +69,24 @@ class _CardTypeTwoState extends State<CardTypeTwo> {
 
   ClipRRect _buildDismissibleBackground(ThemeData colors) {
     return ClipRRect(
-        borderRadius: BorderRadius.circular(10),
-        child: Stack(
-          alignment: Alignment.centerRight,
-          children: [
-            Container(
-              color: colors.colorScheme.error,
-            ),
-            const Positioned(
-              right: 10,
-              child: Icon(Icons.delete),
-            ),
-          ],
-        ),
-      );
+      borderRadius: BorderRadius.circular(10),
+      child: Stack(
+        alignment: Alignment.centerRight,
+        children: [
+          Container(
+            color: colors.colorScheme.error,
+          ),
+          const Positioned(
+            right: 10,
+            child: Icon(Icons.delete),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _buildCard(ThemeData colors, Size size) {
+    bool isDark = ref.watch(themeNotifierProvider).isDarkMode;
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
       child: InkWell(
@@ -95,11 +98,18 @@ class _CardTypeTwoState extends State<CardTypeTwo> {
                 gradient: LinearGradient(
                   begin: Alignment.bottomLeft,
                   end: Alignment.topRight,
-                  colors: [
-                    primaryDark.withOpacity(0.26),
-                    colors.colorScheme.primary.withOpacity(0.10),
-                    colors.disabledColor.withOpacity(0.08),
-                  ],
+                  stops: !isDark ? [0.1, 0.7, 1] : null,
+                  colors: !isDark
+                      ? [
+                          primaryDark.withOpacity(0.1),
+                          primaryDark.withOpacity(0.3),
+                          primaryDark.withOpacity(0.5),
+                        ]
+                      : [
+                          primaryDark.withOpacity(0.26),
+                          colors.colorScheme.primary.withOpacity(0.10),
+                          colors.disabledColor.withOpacity(0.08),
+                        ],
                 ),
                 borderRadius: BorderRadius.circular(10),
               ),

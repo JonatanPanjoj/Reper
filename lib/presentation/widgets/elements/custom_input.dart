@@ -9,6 +9,7 @@ class CustomInput extends StatelessWidget {
   final bool isPassword;
   final TextInputType? keyboardType;
   final String? Function(String? value)? validator;
+  final void Function(String value)? onChanged;
   final Color? fillColor;
   final int? maxLines;
   final int? minLines;
@@ -26,6 +27,7 @@ class CustomInput extends StatelessWidget {
     this.maxLines = 1,
     this.minLines,
     this.hintText,
+    this.onChanged,
   });
 
   @override
@@ -50,6 +52,7 @@ class CustomInput extends StatelessWidget {
               controller: controller,
               obscureText: isPassword,
               keyboardType: keyboardType,
+              onChanged: onChanged,
               decoration: InputDecoration(
                 hintText: hintText,
                 fillColor: fillColor ?? colors.canvasColor,

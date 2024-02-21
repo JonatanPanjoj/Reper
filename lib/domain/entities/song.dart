@@ -1,6 +1,8 @@
+import 'package:reper/domain/entities/entities.dart';
+
 class Song {
   final String id;
-  final String createdBy;
+  final AppUser createdBy;
   final String title;
   final String lyrics;
   final String artist;
@@ -20,7 +22,7 @@ class Song {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'created_by': createdBy,
+      'created_by': createdBy.toJson(),
       'title': title,
       'lyrics': lyrics,
       'artist': artist,
@@ -32,7 +34,7 @@ class Song {
   factory Song.fromJson(Map<String, dynamic> json) {
     return Song(
       id: json['id'] ?? '',
-      createdBy: json['created_by'] ?? '',
+      createdBy: AppUser.fromJson(json['created_by']),
       title: json['title'] ?? '',
       lyrics: json['lyrics'] ?? '',
       artist: json['artist'] ?? '',
@@ -43,7 +45,7 @@ class Song {
 
     Song copyWith({
     String? id,
-    String? createdBy,
+    AppUser? createdBy,
     String? title,
     String? lyrics,
     String? artist,

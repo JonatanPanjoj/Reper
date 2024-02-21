@@ -6,8 +6,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:reper/config/theme/theme.dart';
+import 'package:reper/domain/entities/entities.dart';
 import 'package:reper/domain/entities/song.dart';
 import 'package:reper/presentation/providers/database/songs_repository_provider.dart';
+import 'package:reper/presentation/providers/database/user_provider.dart';
 import 'package:reper/presentation/widgets/widgets.dart';
 
 class CreateSongScreen extends ConsumerStatefulWidget {
@@ -87,9 +89,10 @@ class CreateSongScreenState extends ConsumerState<CreateSongScreen> {
       isLoading = true;
       setState(() {});
       final res = await ref.read(songsRepositoryProvider).createSong(
+            user: ref.read(userProvider),
             song: Song(
               id: 'no-id',
-              createdBy: 'no-id',
+              createdBy: AppUser.empty(),
               title: _songNameController.text,
               lyrics: _songLyricController.text,
               artist: _songArtistController.text.isEmpty
@@ -97,7 +100,7 @@ class CreateSongScreenState extends ConsumerState<CreateSongScreen> {
                   : _songArtistController.text,
               images: [],
               pdfFile: '',
-            ),
+            ), 
           );
       isLoading = false;
       setState(() {});
