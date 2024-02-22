@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reper/domain/entities/entities.dart';
 import 'package:reper/infrastructure/repositories/song_repository_impl.dart';
-import 'package:reper/presentation/providers/database/songs_repository_provider.dart';
+import 'package:reper/presentation/providers/database/repositories/songs_repository_provider.dart';
 
 // Providers
 final userSongsListProvider =

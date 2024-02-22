@@ -14,4 +14,7 @@ abstract class RepertoryRepository {
   Future<ResponseStatus> deleteRepertory({required String repId, required String groupId});
 
   Stream<List<Repertory>> streamRepertoriesById({required String repId});
+
+  Stream<Repertory> streamRepertory({required String id, required String groupId});
+
 }

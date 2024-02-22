@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:reper/config/theme/theme.dart';
 import 'package:reper/domain/entities/entities.dart';
-import 'package:reper/presentation/providers/database/songs_repository_provider.dart';
+import 'package:reper/presentation/providers/database/repositories/songs_repository_provider.dart';
 import 'package:reper/presentation/widgets/elements/custom_loading.dart';
 
 class SongScreen extends ConsumerStatefulWidget {
