@@ -83,7 +83,7 @@ class EditSongScreenState extends ConsumerState<EditSongScreen> {
                     setState(() {});
                   },
                   maxLines: null,
-                  minLines: 10,
+                  minLines: 3,
                 ),
                 const SizedBox(height: 35),
                 _buildPreview(size, colors)

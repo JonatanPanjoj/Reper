@@ -35,11 +35,8 @@ class FirebaseRepertoryDatasource extends RepertoryDatasource {
       );
 
 // Actualizar el documento con la URL de la imagen
-      batch.update(
-          repertoryRef,
-          repertory
-              .copyWith(id: repertoryRef.id, image: imageUrl)
-              .toJson());
+      batch.update(repertoryRef,
+          repertory.copyWith(id: repertoryRef.id, image: imageUrl).toJson());
 
 // Confirmar todas las operaciones de escritura
       await batch.commit();
@@ -97,19 +94,39 @@ class FirebaseRepertoryDatasource extends RepertoryDatasource {
     // TODO: implement updateRepertory
     throw UnimplementedError();
   }
-  
+
   @override
-  Stream<Repertory> streamRepertory({required String id, required String groupId}) {
-        return _database
+  Stream<Repertory> streamRepertory(
+      {required String id, required String groupId}) {
+    return _database
         .collection('groups')
-        .doc(groupId).
-        collection('repertories').  
-        doc(id)
+        .doc(groupId)
+        .collection('repertories')
+        .doc(id)
         .snapshots()
         .map((snapshot) {
       return Repertory.fromJson(snapshot.data()!..addAll({'id': snapshot.id}));
     });
   }
 
+  @override
+  Future<ResponseStatus> createRepertorySection(
+      {required Repertory repertory, required String groupId}) async {
+    try {
+      await _database
+          .collection('groups')
+          .doc(groupId)
+          .collection('repertories')
+          .doc(repertory.id)
+          .set(repertory.toJson());
 
+      return ResponseStatus(
+          message: 'Repertorio actualizado con éxito', hasError: false);
+    } on FirebaseException catch (e) {
+      return ResponseStatus(
+          message: e.message ?? 'An exeption occurred', hasError: true);
+    } catch (e) {
+      return ResponseStatus(message: e.toString(), hasError: true);
+    }
+  }
 }

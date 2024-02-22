@@ -42,4 +42,9 @@ class RepertoryRepositoryImpl extends RepertoryRepository {
   Stream<Repertory> streamRepertory({required String id, required String groupId}) {
     return datasource.streamRepertory(id: id, groupId: groupId);
   }
+  
+  @override
+  Future<ResponseStatus> createRepertorySection({required Repertory repertory, required String groupId}) {
+    return datasource.createRepertorySection(repertory: repertory, groupId: groupId);
+  }
 }

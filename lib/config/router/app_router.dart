@@ -79,6 +79,12 @@ final appRouter = GoRouter(
         return EditSongScreen(song: state.extra as Song,);
       },
     ),
+    GoRoute(
+      path: '/library-screen',
+      builder: (context, state) {
+        return const LibraryView(isaddSongScreen: true,);
+      },
+    ),
     
   ],
 );
