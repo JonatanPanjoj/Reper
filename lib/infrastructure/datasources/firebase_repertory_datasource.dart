@@ -35,8 +35,11 @@ class FirebaseRepertoryDatasource extends RepertoryDatasource {
       );
 
 // Actualizar el documento con la URL de la imagen
-      batch.update(repertoryRef,
-          repertory.copyWith(id: repertoryRef.id, image: imageUrl).toJson());
+      batch.update(
+          repertoryRef,
+          repertory
+              .copyWith(id: repertoryRef.id, image: imageUrl)
+              .toJson());
 
 // Confirmar todas las operaciones de escritura
       await batch.commit();
@@ -94,4 +97,19 @@ class FirebaseRepertoryDatasource extends RepertoryDatasource {
     // TODO: implement updateRepertory
     throw UnimplementedError();
   }
+  
+  @override
+  Stream<Repertory> streamRepertory({required String id, required String groupId}) {
+        return _database
+        .collection('groups')
+        .doc(groupId).
+        collection('repertories').  
+        doc(id)
+        .snapshots()
+        .map((snapshot) {
+      return Repertory.fromJson(snapshot.data()!..addAll({'id': snapshot.id}));
+    });
+  }
+
+
 }

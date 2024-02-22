@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:reper/domain/entities/entities.dart';
-import 'package:reper/presentation/providers/database/repertory_repository_provider.dart';
+import 'package:reper/presentation/providers/database/repositories/repertory_repository_provider.dart';
 import 'package:reper/presentation/widgets/widgets.dart';
 
 class AddReperDialog extends ConsumerStatefulWidget {
@@ -99,6 +99,7 @@ class AddReperDialogState extends ConsumerState<AddReperDialog> {
       final res = await ref.read(repertoryRepositoryProvider).createRepertory(
             repertory: Repertory(
               id: 'no-id',
+              groupId: widget.groupId,
               name: _reperNameController.text,
               image: 'no-image',
               sections: [],
