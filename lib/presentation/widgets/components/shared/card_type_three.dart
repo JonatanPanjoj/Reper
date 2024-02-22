@@ -86,6 +86,7 @@ class _CardTypeThreeState extends State<CardTypeThree> {
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
       child: InkWell(
+        borderRadius: BorderRadius.circular(10),
         onTap: widget.onTap,
         child: Stack(
           children: [
