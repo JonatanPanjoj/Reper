@@ -122,7 +122,6 @@ class EditSongScreenState extends ConsumerState<EditSongScreen> {
   }
 
   void _updateSong() async {
-    print('Entre xdd');
     if (_formKey.currentState!.validate()) {
       setState(() {
         isLoading = true;
