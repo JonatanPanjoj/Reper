@@ -8,7 +8,10 @@ import 'package:reper/presentation/providers/providers.dart';
 import 'package:reper/presentation/widgets/widgets.dart';
 
 class LibraryView extends ConsumerWidget {
-  const LibraryView({super.key});
+
+  final bool isaddSongScreen;
+
+  const LibraryView({super.key, this.isaddSongScreen = false});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -73,7 +76,11 @@ class LibraryView extends ConsumerWidget {
               title: userSongs[index].title,
               subtitle: userSongs[index].artist,
               onTap: () {
-                context.push('/song-screen', extra: userSongs[index]);
+                if(!isaddSongScreen){
+                  context.push('/song-screen', extra: userSongs[index]);
+                }else{
+                  context.pop(userSongs[index]);
+                }
               },
             );
           },

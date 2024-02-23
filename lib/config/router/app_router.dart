@@ -76,9 +76,28 @@ final appRouter = GoRouter(
     GoRoute(
       path: '/edit-song-screen',
       builder: (context, state) {
-        return EditSongScreen(song: state.extra as Song,);
+        return EditSongScreen(
+          song: state.extra as Song,
+        );
       },
     ),
-    
+    GoRoute(
+      path: '/section-screen',
+      builder: (context, state) {
+        final extras = state.extra as Map<String, dynamic>;
+        return SectionScreen(
+          section: extras['section'] as Section,
+          image: extras['image'] as String,
+        );
+      },
+    ),
+    GoRoute(
+      path: '/library-screen',
+      builder: (context, state) {
+        return const LibraryView(
+          isaddSongScreen: true,
+        );
+      },
+    ),
   ],
 );

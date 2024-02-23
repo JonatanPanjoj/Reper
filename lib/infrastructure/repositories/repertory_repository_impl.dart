@@ -37,4 +37,14 @@ class RepertoryRepositoryImpl extends RepertoryRepository {
   Future<ResponseStatus> updateRepertory({required Repertory repertory}) {
     return datasource.updateRepertory(repertory: repertory);
   }
+  
+  @override
+  Stream<Repertory> streamRepertory({required String id, required String groupId}) {
+    return datasource.streamRepertory(id: id, groupId: groupId);
+  }
+  
+  @override
+  Future<ResponseStatus> createRepertorySection({required Repertory repertory, required String groupId}) {
+    return datasource.createRepertorySection(repertory: repertory, groupId: groupId);
+  }
 }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:reper/domain/entities/entities.dart';
-import 'package:reper/presentation/providers/database/repertory_repository_provider.dart';
+import 'package:reper/presentation/providers/database/repositories/repertory_repository_provider.dart';
 import 'package:reper/presentation/widgets/widgets.dart';
 
 class GroupScreen extends ConsumerStatefulWidget {
@@ -65,7 +65,7 @@ class GroupScreenState extends ConsumerState<GroupScreen> {
                             CardTypeTwo(
                               animateFrom: 100 + (i * 300),
                               title: data[i].name,
-                              subtitle: '${data[i].sections.length} Canciones',
+                              subtitle: '0 Canciones',
                               imageUrl: data[i].image,
                               index: i,
                               onTap: () {
