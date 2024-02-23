@@ -65,7 +65,7 @@ class GroupScreenState extends ConsumerState<GroupScreen> {
                             CardTypeTwo(
                               animateFrom: 100 + (i * 300),
                               title: data[i].name,
-                              subtitle: '${data[i].sections.length} Canciones',
+                              subtitle: '0 Canciones',
                               imageUrl: data[i].image,
                               index: i,
                               onTap: () {

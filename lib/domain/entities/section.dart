@@ -30,4 +30,18 @@ class Section {
       position: json['position']
     );
   }
+
+  Section copyWith({
+    String? id,
+    int? position,
+    String? name,
+    Song? song,
+  }) {
+    return Section(
+      id: id ?? this.id,
+      position: position ?? this.position,
+      name: name ?? this.name,
+      song: song ?? this.song,
+    );
+  }
 }

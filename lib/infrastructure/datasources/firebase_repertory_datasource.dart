@@ -113,12 +113,14 @@ class FirebaseRepertoryDatasource extends RepertoryDatasource {
   Future<ResponseStatus> createRepertorySection(
       {required Repertory repertory, required String groupId}) async {
     try {
-      await _database
+      final ref = _database
           .collection('groups')
           .doc(groupId)
           .collection('repertories')
           .doc(repertory.id)
-          .set(repertory.toJson());
+          .collection('sections')
+          .doc();
+      await ref.set(repertory.toJson());
 
       return ResponseStatus(
           message: 'Repertorio actualizado con éxito', hasError: false);
