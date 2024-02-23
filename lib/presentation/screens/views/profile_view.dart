@@ -4,6 +4,7 @@ import 'package:reper/config/utils/utils.dart';
 import 'package:reper/domain/entities/app_user.dart';
 import 'package:reper/presentation/providers/providers.dart';
 
+
 class ProfileView extends ConsumerStatefulWidget {
   const ProfileView({super.key});
 
@@ -19,23 +20,25 @@ class ProfileViewState extends ConsumerState<ProfileView> {
     bool switchChanged = true;
     final colors = Theme.of(context);
     return Scaffold(
-      body: Column(
-        children: <Widget>[
-          SizedBox(
-            height: 230,
-            child: _buildBanner(colors, userInfo),
-          ),
-          const SizedBox(height: 20),
-          _buildUserInfo(userInfo),
-          const SizedBox(height: 10),
-          _buildSettings(isDarkMode, switchChanged),
-          const SizedBox(height: 10),
-          _buildUserSupport(),
-          const SizedBox(
-            height: 10,
-          ),
-          _buildLogOut()
-        ],
+      body: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            SizedBox(
+              height: 230,
+              child: _buildBanner(colors, userInfo),
+            ),
+            const SizedBox(height: 20),
+            _buildUserInfo(userInfo),
+            const SizedBox(height: 10),
+            _buildSettings(isDarkMode, switchChanged),
+            const SizedBox(height: 10),
+            _buildUserSupport(),
+            const SizedBox(
+              height: 10,
+            ),
+            _buildLogOut()
+          ],
+        ),
       ),
     );
   }
@@ -181,19 +184,26 @@ class ProfileViewState extends ConsumerState<ProfileView> {
   }
 
   Widget _buildUserInfo(AppUser user) {
+    final size = MediaQuery.of(context).size; 
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 30),
+      padding: const EdgeInsets.symmetric(horizontal: 30),
       child: Column(children: [
         Card(
           child: Padding(
-            padding: EdgeInsets.only(left: 20, right: 20),
+            padding: const EdgeInsets.only(left: 20, right: 20),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  user.name,
-                  style: const TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: 32),
+                SizedBox(
+                  width: size.width * 0.4,
+                  child: Text( 
+                    user.name,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20
+                    ),
+                    overflow: TextOverflow.ellipsis,    
+                  ),
                 ),
                 Column(
                   children: [
@@ -205,14 +215,14 @@ class ProfileViewState extends ConsumerState<ProfileView> {
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 5,
                     ),
                     Text(
                       formatDate(user.joinedAt),
-                      style: TextStyle(fontSize: 10),
+                      style: const TextStyle(fontSize: 10),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 15,
                     ),
                   ],
@@ -282,10 +292,10 @@ class ProfileViewState extends ConsumerState<ProfileView> {
                 ),
                 color: const Color.fromRGBO(241, 144, 0, 1),
                 borderRadius: BorderRadius.circular(20)),
-            child: Text(
+            child: const Text(
               'Premium',
               style: TextStyle(
-                  color: colors.colorScheme.onSurface,
+                  color: Colors.white,
                   fontWeight: FontWeight.bold,
                   fontSize: 10),
             ),
@@ -331,6 +341,7 @@ class ProfileViewState extends ConsumerState<ProfileView> {
                   child: const Icon(
                     Icons.notifications,
                     size: 30,
+                    color: Colors.white,
                   ),
                 ),
               ),
