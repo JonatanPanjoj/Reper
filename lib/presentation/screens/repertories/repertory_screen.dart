@@ -59,15 +59,25 @@ class RepertoryScreenState extends ConsumerState<RepertoryScreen> {
                         itemCount: sections.length,
                         itemBuilder: (BuildContext context, int index) {
                           return Builder(builder: (context) {
-                            return CardTypeThree(
-                              title: sections[index].name,
-                              subtitle: sections[index].song.title,
-                              onTap: () {
-                                context.push('/section-screen', extra: {
-                                  'section': sections[index],
-                                  'image': widget.repertory.image
-                                });
-                              },
+                            return StreamBuilder(
+                              stream: ref.watch(songsRepositoryProvider).streamSong(songId: sections[index].song),
+                              builder: (context, snapshot) {
+                                final song = snapshot.data;
+                                if(song == null){
+                                  return const SizedBox();
+                                }
+                                return CardTypeThree(
+                                  title: sections[index].name,
+                                  subtitle: song.title,
+                                  onTap: () {
+                                    context.push('/section-screen', extra: {
+                                      'section': sections[index],
+                                      'image': widget.repertory.image,
+                                      'song': song
+                                    });
+                                  },
+                                );
+                              }
                             );
                           });
                         },
@@ -141,14 +151,7 @@ class RepertoryScreenState extends ConsumerState<RepertoryScreen> {
       name: repertorySections.isEmpty
           ? 'Sección 1'
           : 'Sección ${repertorySections.last!.position + 1}',
-      song: Song(
-        id: selectedSong.id,
-        title: selectedSong.title,
-        lyrics: selectedSong.lyrics,
-        artist: selectedSong.artist,
-        images: selectedSong.images,
-        pdfFile: selectedSong.pdfFile,
-      ),
+      song: selectedSong.id,
       position:
           repertorySections.isEmpty ? 1 : repertorySections.last!.position + 1,
     );

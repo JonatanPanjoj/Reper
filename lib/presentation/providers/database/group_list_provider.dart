@@ -32,7 +32,7 @@ class GroupListNotifier extends StateNotifier<List<Group>> {
           id: 'no-id',
           name: groupName,
           image: 'no-image',
-          reps: []
+          repertories: []
         ),
         mediaFile: mediaFile);
     if (!response.hasError){

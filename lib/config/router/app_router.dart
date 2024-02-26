@@ -88,6 +88,7 @@ final appRouter = GoRouter(
         return SectionScreen(
           section: extras['section'] as Section,
           image: extras['image'] as String,
+          song: extras['song'] as Song
         );
       },
     ),

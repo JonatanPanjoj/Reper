@@ -65,7 +65,9 @@ class HomeViewState extends ConsumerState<HomeView>
                             const SizedBox(height: 15),
                             CardTypeOne(
                               title: data[i].name,
-                              subtitle: '1 Participante, 0 Canciones',
+                              //TODO: AGREGAR LIST DE PARTICIPANTES
+                              subtitle:
+                                  '${data[i].repertories.length} repertorios',
                               imageUrl: data[i].image,
                               animateFrom: 100 + (i * 100),
                               onTap: () {
