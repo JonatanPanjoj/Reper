@@ -35,9 +35,9 @@ class AuthSliverAppBar extends StatelessWidget {
             Positioned(
               bottom: 60,
               child: Image.asset(
-                'assets/img/logo.png',
-                width: 55,
-                height: 55,
+                'assets/img/rippy-logo.png',
+                width: 100,
+                height: 100,
               ),
             ),
             Positioned(

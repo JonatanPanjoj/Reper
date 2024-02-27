@@ -11,6 +11,7 @@ import 'package:reper/config/utils/utils.dart';
 import 'package:reper/domain/entities/entities.dart';
 import 'package:reper/presentation/providers/database/group_list_provider.dart';
 import 'package:reper/presentation/widgets/widgets.dart';
+import 'package:dotted_border/dotted_border.dart';
 
 class CreateGroupScreen extends ConsumerStatefulWidget {
   const CreateGroupScreen({super.key});
@@ -65,37 +66,44 @@ class CreateGroupScreenState extends ConsumerState<CreateGroupScreen> {
                   },
                 ),
                 const SizedBox(height: 25),
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Container(
-                    height: 250,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: colors.canvasColor,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Stack(
-                      alignment: Alignment.center,
-                      fit: StackFit.expand,
-                      children: [
-                        if (selectedImage != null)
-                          Image.memory(
-                            selectedImage!,
-                          ),
-                        Center(
-                          child: IconButton(
-                            iconSize: 35,
-                            icon: const Icon(
-                              Icons.image,
+                DottedBorder(
+                  borderType: BorderType.RRect,
+                  radius: Radius.circular(10),
+                  color: colors.colorScheme.onPrimary,
+                  strokeWidth: 2,
+                  dashPattern: [5,5],
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Container(
+                      height: 250,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: colors.canvasColor,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Stack(
+                        alignment: Alignment.center,
+                        fit: StackFit.expand,
+                        children: [
+                          if (selectedImage != null)
+                            Image.memory(
+                              selectedImage!,
                             ),
-                            onPressed: () async {
-                              selectedImage = await pickImage(ImageSource.gallery);
-                              if (selectedImage == null) return;
-                              setState(() {});
-                            },
+                          Center(
+                            child: IconButton(
+                              iconSize: 35,
+                              icon: const Icon(
+                                Icons.image,
+                              ),
+                              onPressed: () async {
+                                selectedImage = await pickImage(ImageSource.gallery);
+                                if (selectedImage == null) return;
+                                setState(() {});
+                              },
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),
