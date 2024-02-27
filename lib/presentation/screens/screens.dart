@@ -1,4 +1,5 @@
 //Raíz
+
 export 'package:reper/presentation/screens/home_screen.dart';
 
 //Authentication
@@ -15,6 +16,8 @@ export 'package:reper/presentation/screens/views/profile_view.dart';
 //Groups
 export 'package:reper/presentation/screens/groups/create_group_screen.dart';
 export 'package:reper/presentation/screens/groups/group_screen.dart';
+export 'package:reper/presentation/screens/views/empty_groups.dart';
+
 
 //Repertories
 export 'package:reper/presentation/screens/repertories/repertory_screen.dart';
