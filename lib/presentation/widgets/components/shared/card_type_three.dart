@@ -10,6 +10,7 @@ class CardTypeThree extends StatefulWidget {
   final int? index;
   final void Function()? onTap;
   final Future<void> Function()? onDelete;
+  final Widget deleteDialogWidget;
 
   const CardTypeThree({
     super.key,
@@ -19,6 +20,7 @@ class CardTypeThree extends StatefulWidget {
     this.onTap,
     this.index,
     this.onDelete,
+    required this.deleteDialogWidget,
   });
 
   @override
@@ -35,7 +37,7 @@ class _CardTypeThreeState extends State<CardTypeThree> {
     final colors = Theme.of(context);
     final size = MediaQuery.of(context).size;
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
       child: FadeOutLeft(
         manualTrigger: true,
         duration: animationDuration,
@@ -48,7 +50,7 @@ class _CardTypeThreeState extends State<CardTypeThree> {
             confirmDismiss: (direction) async {
               final res = await showCustomDialog(
                 context: context,
-                alertDialog: const DeleteRepertoryDialog(),
+                alertDialog: widget.deleteDialogWidget,
               );
               if (res == true && widget.onDelete != null) {
                 animateController.forward();
@@ -75,7 +77,7 @@ class _CardTypeThreeState extends State<CardTypeThree> {
           ),
           const Positioned(
             right: 10,
-            child: Icon(Icons.delete),
+            child: Icon(Icons.delete, color: Colors.white),
           ),
         ],
       ),

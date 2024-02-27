@@ -3,12 +3,14 @@ class Repertory {
   final String groupId;
   final String name;
   final String image;
+  final List<String> sections;
 
   Repertory({
     required this.id,
     required this.groupId,
     required this.name,
     required this.image,
+    required this.sections
   });
 
   Repertory copyWith({
@@ -23,6 +25,7 @@ class Repertory {
       groupId: groupId ?? this.groupId,
       name: name ?? this.name,
       image: image ?? this.image,
+      sections: sections ?? this.sections
     );
   }
 
@@ -32,6 +35,7 @@ class Repertory {
       'group_id': groupId,
       'name': name,
       'image': image,
+      'sections': sections
     };
   }
 
@@ -41,6 +45,9 @@ class Repertory {
       groupId: json['group_id'],
       name: json['name'],
       image: json['image'],
+      sections: List<String>.from(
+        json['sections'] ?? [],
+      ),
     );
   }
 
@@ -50,6 +57,7 @@ class Repertory {
       groupId: '',
       name: '',
       image: '',
+      sections: []
     );
   }
 }

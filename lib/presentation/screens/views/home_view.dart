@@ -73,6 +73,7 @@ class HomeViewState extends ConsumerState<HomeView>
                               onTap: () {
                                 context.push('/group-screen', extra: data[i]);
                               },
+                              deleteDialogWidget: const DeleteGroupDialog(),
                               index: i,
                               onDelete: () async {
                                 ref.read(groupProvider).deleteGroup(

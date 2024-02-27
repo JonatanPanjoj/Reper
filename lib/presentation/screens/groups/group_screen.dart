@@ -60,12 +60,13 @@ class GroupScreenState extends ConsumerState<GroupScreen> {
                   CardTypeTwo(
                     animateFrom: 100 + (i * 300),
                     title: repertories[i].name,
-                    subtitle: '0 Canciones',
+                    subtitle: '${repertories[i].sections.length} Canciones',
                     imageUrl: repertories[i].image,
                     index: i,
                     onTap: () {
                       context.push('/repertory', extra: repertories[i]);
                     },
+                    deleteDialogWidget: const DeleteRepertoryDialog(),
                     onDelete: () async {
                       await ref
                           .read(repertoryRepositoryProvider)
@@ -78,7 +79,6 @@ class GroupScreenState extends ConsumerState<GroupScreen> {
                   ),
                 ],
               ),
-            const SizedBox(height: 1000),
           ],
         ),
       ),

@@ -1,4 +1,5 @@
 //Components
+export 'package:reper/presentation/widgets/components/alert_dialogs.dart/delete_section_dialog.dart';
 export 'package:reper/presentation/widgets/components/shared/card_type_three.dart';
 export 'package:reper/presentation/widgets/components/alert_dialogs.dart/delete_group_dialog.dart';
 export 'package:reper/presentation/widgets/components/alert_dialogs.dart/add_reper_dialog.dart';

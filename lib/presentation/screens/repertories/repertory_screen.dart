@@ -9,7 +9,6 @@ import 'package:reper/domain/entities/entities.dart';
 import 'package:reper/presentation/providers/database/repositories/repertory_repository_provider.dart';
 import 'package:reper/presentation/providers/providers.dart';
 import 'package:reper/presentation/widgets/widgets.dart';
-import 'package:uuid/uuid.dart';
 
 class RepertoryScreen extends ConsumerStatefulWidget {
   final Repertory repertory;
@@ -28,19 +27,14 @@ class RepertoryScreenState extends ConsumerState<RepertoryScreen> {
     final size = MediaQuery.of(context).size;
     return Scaffold(
       body: StreamBuilder(
-        stream: ref.watch(repertoryRepositoryProvider).streamRepertory(
-              id: widget.repertory.id,
-              groupId: widget.repertory.groupId,
-            ),
+        stream: _streamRepertory(),
         builder: (context, snapshot) {
           final songs = snapshot.data;
           if (songs == null) {
             return const Center(child: CustomLoading());
           }
           return StreamBuilder(
-              stream: ref.watch(sectionRepositoryProvider).streamSections(
-                  groupId: widget.repertory.groupId,
-                  repertoryId: widget.repertory.id),
+              stream: _streamSections(),
               builder: (context, snapshot) {
                 final sections = snapshot.data;
                 if (sections == null) {
@@ -49,45 +43,77 @@ class RepertoryScreenState extends ConsumerState<RepertoryScreen> {
                 if (sections.isNotEmpty) {
                   sections.sort((a, b) => a.position.compareTo(b.position));
                 }
-                return CustomScrollView(
-                  slivers: [
-                    _buildAppBar(size, sections),
-                    _buildAddSongTile(sections),
-                    if (sections.isEmpty) _buildNoSongsMessage(),
-                    if (sections.isNotEmpty)
-                      SliverList.builder(
-                        itemCount: sections.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return Builder(builder: (context) {
-                            return StreamBuilder(
-                              stream: ref.watch(songsRepositoryProvider).streamSong(songId: sections[index].song),
-                              builder: (context, snapshot) {
-                                final song = snapshot.data;
-                                if(song == null){
-                                  return const SizedBox();
-                                }
-                                return CardTypeThree(
-                                  title: sections[index].name,
-                                  subtitle: song.title,
-                                  onTap: () {
-                                    context.push('/section-screen', extra: {
-                                      'section': sections[index],
-                                      'image': widget.repertory.image,
-                                      'song': song
-                                    });
-                                  },
-                                );
-                              }
-                            );
-                          });
-                        },
-                      )
-                  ],
-                );
+                return _buildBody(size, sections);
               });
         },
       ),
     );
+  }
+
+  Widget _buildBody(Size size, List<Section> sections) {
+    return CustomScrollView(
+      slivers: [
+        _buildAppBar(size, sections),
+        _buildAddSongTile(sections),
+        if (sections.isEmpty) _buildNoSongsMessage(),
+        if (sections.isNotEmpty)
+          SliverList.builder(
+            itemCount: sections.length,
+            itemBuilder: (BuildContext context, int index) {
+              return Builder(
+                builder: (context) {
+                  return StreamBuilder(
+                    stream: ref
+                        .watch(songsRepositoryProvider)
+                        .streamSong(songId: sections[index].song),
+                    builder: (context, snapshot) {
+                      final song = snapshot.data;
+                      if (song == null) {
+                        return const SizedBox();
+                      }
+                      return CardTypeThree(
+                        title: sections[index].name,
+                        subtitle: song.title,
+                        onTap: () {
+                          context.push(
+                            '/section-screen',
+                            extra: {
+                              'section': sections[index],
+                              'image': widget.repertory.image,
+                              'song': song
+                            },
+                          );
+                        },
+                        deleteDialogWidget: const DeleteSectionDialog(),
+                        onDelete: () async {
+                          await ref
+                              .read(sectionRepositoryProvider)
+                              .deleteSection(
+                                  groupId: widget.repertory.groupId,
+                                  repertoryId: widget.repertory.id,
+                                  sectionId: sections[index].id);
+                        },
+                      );
+                    },
+                  );
+                },
+              );
+            },
+          )
+      ],
+    );
+  }
+
+  Stream<List<Section>> _streamSections() {
+    return ref.watch(sectionRepositoryProvider).streamSections(
+        groupId: widget.repertory.groupId, repertoryId: widget.repertory.id);
+  }
+
+  Stream<Repertory> _streamRepertory() {
+    return ref.watch(repertoryRepositoryProvider).streamRepertory(
+          id: widget.repertory.id,
+          groupId: widget.repertory.groupId,
+        );
   }
 
   CustomSliverAppBar _buildAppBar(Size size, List<Section?> sections) {
@@ -147,7 +173,7 @@ class RepertoryScreenState extends ConsumerState<RepertoryScreen> {
     repertorySections.sort((a, b) => a!.position.compareTo(b!.position));
 
     final addSection = Section(
-      id: const Uuid().v4(),
+      id: 'no-id',
       name: repertorySections.isEmpty
           ? 'Sección 1'
           : 'Sección ${repertorySections.last!.position + 1}',
