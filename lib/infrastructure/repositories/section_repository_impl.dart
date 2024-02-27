@@ -22,4 +22,9 @@ class SectionRepositoryImpl extends SectionRepository {
   Stream<List<Section>> streamSections({required String groupId, required String repertoryId}) {
     return datasource.streamSections(groupId: groupId, repertoryId: repertoryId);
   }
+  
+  @override
+  Future<ResponseStatus> deleteSection({required String groupId, required String repertoryId, required String sectionId}) {
+    return datasource.deleteSection(groupId: groupId, repertoryId: repertoryId, sectionId: sectionId);
+  }
 }

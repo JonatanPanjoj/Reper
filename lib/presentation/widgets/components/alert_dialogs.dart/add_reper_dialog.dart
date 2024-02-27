@@ -102,6 +102,7 @@ class AddReperDialogState extends ConsumerState<AddReperDialog> {
               groupId: widget.groupId,
               name: _reperNameController.text,
               image: 'no-image',
+              sections: []
             ),
             groupId: widget.groupId,
             image: selectedImage!,

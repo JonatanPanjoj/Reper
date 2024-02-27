@@ -12,6 +12,7 @@ class CardTypeOne extends StatelessWidget {
   final void Function()? onTap;
   final double? animateFrom;
   final Future<void> Function()? onDelete;
+  final Widget deleteDialogWidget;
 
   const CardTypeOne({
     super.key,
@@ -22,6 +23,7 @@ class CardTypeOne extends StatelessWidget {
     this.animateFrom,
     this.index,
     this.onDelete,
+    required this.deleteDialogWidget,
   });
 
   @override
@@ -46,7 +48,7 @@ class CardTypeOne extends StatelessWidget {
           confirmDismiss: (direction) async {
             final res = await showCustomDialog(
               context: context,
-              alertDialog: const DeleteGroupDialog(),
+              alertDialog: deleteDialogWidget,
             );
             if (res == true && onDelete != null) {
               animateController.forward();
@@ -63,75 +65,75 @@ class CardTypeOne extends StatelessWidget {
 
   Widget _buildDismissibleBackground(ThemeData colors) {
     return ClipRRect(
-          borderRadius: BorderRadius.circular(10),
-          child: Stack(
-            alignment: Alignment.centerRight,
-            children: [
-              Container(
-                color: colors.colorScheme.error,
-              ),
-              const Positioned(
-                right: 10,
-                child: Icon(Icons.delete),
-              ),
-            ],
+      borderRadius: BorderRadius.circular(10),
+      child: Stack(
+        alignment: Alignment.centerRight,
+        children: [
+          Container(
+            color: colors.colorScheme.error,
           ),
-        );
+          const Positioned(
+            right: 10,
+            child: Icon(Icons.delete, color: Colors.white),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _buildCard(Size size) {
     return GestureDetector(
-          onTap: onTap,
-          child: Card(
-            margin: const EdgeInsets.all(0),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                children: [
-                  SizedBox(
-                    height: size.width * 0.25,
-                    width: size.width * 0.223,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: FadeInImage(
-                        image: CachedNetworkImageProvider(imageUrl),
-                        fit: BoxFit.cover,
-                        placeholder: const AssetImage(
-                            'assets/loaders/bottle-loader.gif'),
-                      ),
-                    ),
+      onTap: onTap,
+      child: Card(
+        margin: const EdgeInsets.all(0),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            children: [
+              SizedBox(
+                height: size.width * 0.25,
+                width: size.width * 0.223,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: FadeInImage(
+                    image: CachedNetworkImageProvider(imageUrl),
+                    fit: BoxFit.cover,
+                    placeholder:
+                        const AssetImage('assets/loaders/bottle-loader.gif'),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 30),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          title,
-                          style: bold18,
-                        ),
-                        const SizedBox(height: 2),
-                        Text(subtitle),
-                        const SizedBox(height: 2),
-                        const Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.circle,
-                              size: 9,
-                              color: Colors.green,
-                            ),
-                            SizedBox(width: 10),
-                            Text('Active')
-                          ],
-                        )
-                      ],
-                    ),
-                  )
-                ],
+                ),
               ),
-            ),
+              Padding(
+                padding: const EdgeInsets.only(left: 30),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: bold18,
+                    ),
+                    const SizedBox(height: 2),
+                    Text(subtitle),
+                    const SizedBox(height: 2),
+                    const Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.circle,
+                          size: 9,
+                          color: Colors.green,
+                        ),
+                        SizedBox(width: 10),
+                        Text('Active')
+                      ],
+                    )
+                  ],
+                ),
+              )
+            ],
           ),
-        );
+        ),
+      ),
+    );
   }
 }

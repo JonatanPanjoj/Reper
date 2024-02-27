@@ -19,81 +19,97 @@ class GroupScreenState extends ConsumerState<GroupScreen> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          CustomSliverAppBar(
-            title: widget.group.name,
-            subtitle: '${widget.group.reps.length} repertorios',
-            height: size.height * 0.5,
-            image: widget.group.image,
-            bottomAction: IconButton(
-              onPressed: () {
-                showCustomDialog(
-                  context: context,
-                  alertDialog: AddReperDialog(groupId: widget.group.id),
-                );
-              },
-              icon: const Icon(Icons.add),
-            ),
-          ),
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: StreamBuilder(
-                stream: ref
-                    .watch(repertoryRepositoryProvider)
-                    .streamRepertoriesById(repId: widget.group.id),
-                builder: (context, snapshot) {
-                  final data = snapshot.data;
-                  if (data == null) {
-                    return const Center(child: CustomLoading());
-                  }
-                  if (data.isEmpty) {
-                    return const Column(
-                      children: [
-                        SizedBox(height: 50),
-                        Text('Aún no tienes repertorios creados'),
-                      ],
-                    );
-                  }
-                  return Column(
-                    children: [
-                      for (int i = 0; i < data.length; i++)
-                        Column(
-                          children: [
-                            const SizedBox(height: 10),
-                            CardTypeTwo(
-                              animateFrom: 100 + (i * 300),
-                              title: data[i].name,
-                              subtitle: '0 Canciones',
-                              imageUrl: data[i].image,
-                              index: i,
-                              onTap: () {
-                                context.push('/repertory', extra: data[i]);
-                              },
-                              onDelete: () async {
-                                await ref
-                                    .read(repertoryRepositoryProvider)
-                                    .deleteRepertory(
-                                      repId: data[i].id,
-                                      groupId: widget.group.id,
-                                    );
-                                setState(() {
-                                  
-                                });
-                              },
-                            ),
-                          ],
-                        ),
-                      const SizedBox(height: 1000),
-                    ],
-                  );
-                },
+      body: StreamBuilder(
+        stream: _repertoriesStream(),
+        builder: (context, snapshot) {
+          final repertories = snapshot.data;
+          if (repertories == null) {
+            return const Center(child: CustomLoading());
+          }
+          return CustomScrollView(
+            slivers: [
+              _buildAppBar(
+                size: size,
+                context: context,
+                repertories: repertories,
               ),
-            ),
-          )
-        ],
+              _buildBody(
+                repertories: repertories,
+                context: context,
+              )
+            ],
+          );
+        },
       ),
     );
+  }
+
+  SliverToBoxAdapter _buildBody({
+    required BuildContext context,
+    required List<Repertory> repertories,
+  }) {
+    return SliverToBoxAdapter(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Column(
+          children: [
+            for (int i = 0; i < repertories.length; i++)
+              Column(
+                children: [
+                  const SizedBox(height: 10),
+                  CardTypeTwo(
+                    animateFrom: 100 + (i * 300),
+                    title: repertories[i].name,
+                    subtitle: '${repertories[i].sections.length} Canciones',
+                    imageUrl: repertories[i].image,
+                    index: i,
+                    onTap: () {
+                      context.push('/repertory', extra: repertories[i]);
+                    },
+                    deleteDialogWidget: const DeleteRepertoryDialog(),
+                    onDelete: () async {
+                      await ref
+                          .read(repertoryRepositoryProvider)
+                          .deleteRepertory(
+                            repId: repertories[i].id,
+                            groupId: widget.group.id,
+                          );
+                      setState(() {});
+                    },
+                  ),
+                ],
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  CustomSliverAppBar _buildAppBar({
+    required Size size,
+    required BuildContext context,
+    required List<Repertory> repertories,
+  }) {
+    return CustomSliverAppBar(
+      title: widget.group.name,
+      subtitle: '${repertories.length} repertorios',
+      height: size.height * 0.5,
+      image: widget.group.image,
+      bottomAction: IconButton(
+        onPressed: () {
+          showCustomDialog(
+            context: context,
+            alertDialog: AddReperDialog(groupId: widget.group.id),
+          );
+        },
+        icon: const Icon(Icons.add),
+      ),
+    );
+  }
+
+  Stream<List<Repertory>> _repertoriesStream() {
+    return ref
+        .watch(repertoryRepositoryProvider)
+        .streamRepertoriesById(repId: widget.group.id);
   }
 }

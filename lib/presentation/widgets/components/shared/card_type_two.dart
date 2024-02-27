@@ -14,6 +14,7 @@ class CardTypeTwo extends ConsumerStatefulWidget {
   final int? index;
   final void Function()? onTap;
   final Future<void> Function()? onDelete;
+  final Widget deleteDialogWidget;
 
   const CardTypeTwo({
     super.key,
@@ -24,6 +25,7 @@ class CardTypeTwo extends ConsumerStatefulWidget {
     this.onTap,
     this.index,
     this.onDelete,
+    required this.deleteDialogWidget
   });
 
   @override
@@ -52,7 +54,7 @@ class CardTypeTwoState extends ConsumerState<CardTypeTwo> {
           confirmDismiss: (direction) async {
             final res = await showCustomDialog(
               context: context,
-              alertDialog: const DeleteRepertoryDialog(),
+              alertDialog: widget.deleteDialogWidget,
             );
             if (res == true && widget.onDelete != null) {
               animateController.forward();
@@ -78,7 +80,7 @@ class CardTypeTwoState extends ConsumerState<CardTypeTwo> {
           ),
           const Positioned(
             right: 10,
-            child: Icon(Icons.delete),
+            child: Icon(Icons.delete, color: Colors.white),
           ),
         ],
       ),

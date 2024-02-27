@@ -18,27 +18,32 @@ class FirebaseRepertoryDatasource extends RepertoryDatasource {
     try {
       final WriteBatch batch = _database.batch();
 
-// Crear una referencia al nuevo documento
+// Crear una referencia al group y repertory
       final DocumentReference repertoryRef = _database
           .collection('groups')
           .doc(groupId)
           .collection('repertories')
           .doc();
 
-// Agregar la operación de escritura al lote
-      batch.set(repertoryRef, repertory.toJson());
+      final DocumentReference groupRef =
+          _database.collection('groups').doc(groupId);
 
+// Subir la Imagen
       final String imageUrl = await uploadImageToStorage(
         fileName: repertoryRef.id,
         childName: 'repertories',
         mediaFile: image,
       );
 
-// Actualizar el documento con la URL de la imagen
-      batch.update(repertoryRef,
+// Agregar el documento con la URL de la imagen
+      batch.set(repertoryRef,
           repertory.copyWith(id: repertoryRef.id, image: imageUrl).toJson());
 
-// Confirmar todas las operaciones de escritura
+// Agregar ID a Group para saber la cantidad de reps
+      batch.update(groupRef, {
+        'repertories': FieldValue.arrayUnion([repertoryRef.id])
+      });
+
       await batch.commit();
 
       return ResponseStatus(
@@ -59,13 +64,22 @@ class FirebaseRepertoryDatasource extends RepertoryDatasource {
     required String groupId,
   }) async {
     try {
-      await _database
+      final WriteBatch batch = _database.batch();
+
+      final repertoryRef = _database
           .collection('groups')
           .doc(groupId)
           .collection('repertories')
-          .doc(repId)
-          .delete();
+          .doc(repId);
+      final groupRef = _database.collection('groups').doc(groupId);
+
+      batch.delete(repertoryRef);
+      batch.update(groupRef, {
+        'repertories': FieldValue.arrayRemove([repertoryRef.id])
+      });
       await deleteImageFromStorage(fileName: repId, childName: 'repertories');
+
+      await batch.commit();
 
       return ResponseStatus(
           message: 'Repertorio eliminado con éxito', hasError: false);

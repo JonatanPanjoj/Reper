@@ -50,7 +50,7 @@ class CustomFilledButton extends ConsumerWidget {
               ? const CustomLoading()
               : Text(
                   text,
-                  style: bold14.copyWith(color: fontColor),
+                  style: bold14.copyWith(color: fontColor ?? Colors.white),
                 ),
         ),
         icon: icon ?? const SizedBox(),

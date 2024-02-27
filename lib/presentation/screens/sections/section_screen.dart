@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chord/flutter_chord.dart';
 import 'package:reper/config/theme/theme.dart';
-import 'package:reper/domain/entities/section.dart';
 import 'package:reper/presentation/widgets/components/shared/custom_sliver_app_bar.dart';
+
+import '../../../domain/entities/entities.dart';
 
 class SectionScreen extends StatefulWidget {
   final String image;
   final Section section;
+  final Song song;
 
-  const SectionScreen({super.key, required this.section, required this.image});
+  const SectionScreen({
+    super.key,
+    required this.section,
+    required this.image,
+    required this.song,
+  });
 
   @override
   State<SectionScreen> createState() => _SectionScreenState();
@@ -27,7 +34,7 @@ class _SectionScreenState extends State<SectionScreen> {
         slivers: [
           CustomSliverAppBar(
             title: widget.section.name,
-            subtitle: widget.section.song.title,
+            subtitle: widget.song.title,
             height: size.height * 0.2,
             image: widget.image,
           ),
@@ -85,7 +92,7 @@ class _SectionScreenState extends State<SectionScreen> {
           LyricsRenderer(
             horizontalAlignment: CrossAxisAlignment.start,
             widgetPadding: (size.width * 0.3).round(),
-            lyrics: widget.section.song.lyrics,
+            lyrics: widget.song.lyrics,
             textStyle: normal16.copyWith(color: colors.colorScheme.onSurface),
             chordStyle: bold16.copyWith(color: colors.colorScheme.primary),
             transposeIncrement: transposeIncrement,

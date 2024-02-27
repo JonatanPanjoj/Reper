@@ -1,10 +1,8 @@
-import 'package:reper/domain/entities/entities.dart';
-
 class Section {
   final String id;
   final int position;
   final String name;
-  final Song song;
+  final String song;
 
   Section({
     required this.id,
@@ -17,7 +15,7 @@ class Section {
     return {
       'id': id,
       'name': name,
-      'song': song.toJson(),
+      'song': song,
       'position': position
     };
   }
@@ -26,7 +24,7 @@ class Section {
     return Section(
       id: json['id'],
       name: json['name'],
-      song: Song.fromJson(json['song']),
+      song: json['song'],
       position: json['position']
     );
   }
@@ -35,7 +33,7 @@ class Section {
     String? id,
     int? position,
     String? name,
-    Song? song,
+    String? song,
   }) {
     return Section(
       id: id ?? this.id,
