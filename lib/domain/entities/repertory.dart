@@ -1,16 +1,20 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Repertory {
   final String id;
   final String groupId;
   final String name;
   final String image;
   final List<String> sections;
+  final Timestamp? event;
 
   Repertory({
     required this.id,
     required this.groupId,
     required this.name,
     required this.image,
-    required this.sections
+    required this.sections,
+    this.event,
   });
 
   Repertory copyWith({
@@ -19,13 +23,15 @@ class Repertory {
     String? name,
     String? image,
     List<String>? sections,
+    final Timestamp? event,
   }) {
     return Repertory(
       id: id ?? this.id,
       groupId: groupId ?? this.groupId,
       name: name ?? this.name,
       image: image ?? this.image,
-      sections: sections ?? this.sections
+      sections: sections ?? this.sections,
+      event: event ?? this.event,
     );
   }
 
@@ -35,7 +41,8 @@ class Repertory {
       'group_id': groupId,
       'name': name,
       'image': image,
-      'sections': sections
+      'sections': sections,
+      'event': event
     };
   }
 
@@ -48,6 +55,7 @@ class Repertory {
       sections: List<String>.from(
         json['sections'] ?? [],
       ),
+      event: json['event'],
     );
   }
 
@@ -57,7 +65,8 @@ class Repertory {
       groupId: '',
       name: '',
       image: '',
-      sections: []
+      sections: [],
+      event: null,
     );
   }
 }

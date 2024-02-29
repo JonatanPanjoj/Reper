@@ -11,6 +11,7 @@ class CardTypeThree extends StatefulWidget {
   final void Function()? onTap;
   final Future<void> Function()? onDelete;
   final Widget deleteDialogWidget;
+  final Widget? actionWidget;
 
   const CardTypeThree({
     super.key,
@@ -21,6 +22,7 @@ class CardTypeThree extends StatefulWidget {
     this.index,
     this.onDelete,
     required this.deleteDialogWidget,
+    this.actionWidget
   });
 
   @override
@@ -132,11 +134,7 @@ class _CardTypeThreeState extends State<CardTypeThree> {
             Positioned(
               right: 10,
               top: 5,
-              child: Text(
-                '10 oct 2024',
-                style: TextStyle(
-                    fontSize: 10, color: colors.colorScheme.onSurface),
-              ),
+              child: widget.actionWidget ?? const SizedBox(),
             ),
           ],
         ),
