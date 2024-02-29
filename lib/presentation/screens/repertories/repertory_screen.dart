@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:go_router/go_router.dart';
 import 'package:reper/config/theme/theme.dart';
 
@@ -43,17 +44,17 @@ class RepertoryScreenState extends ConsumerState<RepertoryScreen> {
                 if (sections.isNotEmpty) {
                   sections.sort((a, b) => a.position.compareTo(b.position));
                 }
-                return _buildBody(size, sections);
+                return _buildBody(size, sections, songs);
               });
         },
       ),
     );
   }
 
-  Widget _buildBody(Size size, List<Section> sections) {
+  Widget _buildBody(Size size, List<Section> sections, Repertory repertory) {
     return CustomScrollView(
       slivers: [
-        _buildAppBar(size, sections),
+        _buildAppBar(size, sections, repertory),
         _buildAddSongTile(sections),
         if (sections.isEmpty) _buildNoSongsMessage(),
         if (sections.isNotEmpty)
@@ -116,13 +117,41 @@ class RepertoryScreenState extends ConsumerState<RepertoryScreen> {
         );
   }
 
-  CustomSliverAppBar _buildAppBar(Size size, List<Section?> sections) {
+  CustomSliverAppBar _buildAppBar(
+      Size size, List<Section?> sections, Repertory repertory) {
+    final colors = Theme.of(context);
     return CustomSliverAppBar(
-      height: size.height * 0.2,
-      image: widget.repertory.image,
-      title: widget.repertory.name,
-      subtitle: '${sections.length} canciones',
-    );
+        height: size.height * 0.3,
+        image: widget.repertory.image,
+        title: widget.repertory.name,
+        subtitle: '${sections.length} canciones',
+        bottomAction: Stack(
+          alignment: Alignment.center,
+          children: [
+            if (repertory.event != null && repertory.event!.toDate().isAfter(DateTime.now()))
+              SpinKitRipple(
+                duration: const Duration(seconds: 4),
+                itemBuilder: (context, index) {
+                  return Container(
+                    decoration: BoxDecoration(
+                      color: primaryDark.withOpacity(0.8),
+                      shape: BoxShape.circle,
+                    ),
+                  );
+                },
+              ),
+            IconButton(
+              color: colors.colorScheme.onSurface,
+              onPressed: () {
+                context.push(
+                  '/add-repertory-event-screen',
+                  extra: repertory,
+                );
+              },
+              icon: const Icon(Icons.calendar_month),
+            ),
+          ],
+        ));
   }
 
   SliverToBoxAdapter _buildNoSongsMessage() {

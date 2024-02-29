@@ -21,6 +21,7 @@ export 'package:reper/presentation/screens/views/empty_groups.dart';
 
 //Repertories
 export 'package:reper/presentation/screens/repertories/repertory_screen.dart';
+export 'package:reper/presentation/screens/repertories/add_repertory_event_screen.dart';
 
 //Songs
 export 'package:reper/presentation/screens/songs/create_song_screen.dart';

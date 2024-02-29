@@ -27,7 +27,7 @@ class ProfileViewState extends ConsumerState<ProfileView> {
               height: 230,
               child: _buildBanner(colors, userInfo),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
             _buildUserInfo(userInfo),
             const SizedBox(height: 10),
             _buildSettings(isDarkMode, switchChanged),
@@ -46,7 +46,7 @@ class ProfileViewState extends ConsumerState<ProfileView> {
   Widget _buildLogOut() {
     final colors = Theme.of(context);
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 30),
+      padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(children: [
         Card(
           child: Padding(
@@ -78,7 +78,7 @@ class ProfileViewState extends ConsumerState<ProfileView> {
 
   Widget _buildUserSupport() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 30),
+      padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
         children: [
           Card(
@@ -132,7 +132,7 @@ class ProfileViewState extends ConsumerState<ProfileView> {
 
   Widget _buildSettings(bool isDarkMode, bool switchChanged) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 30),
+      padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(children: [
         Card(
           child: Padding(
@@ -186,7 +186,7 @@ class ProfileViewState extends ConsumerState<ProfileView> {
   Widget _buildUserInfo(AppUser user) {
     final size = MediaQuery.of(context).size; 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 30),
+      padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(children: [
         Card(
           child: Padding(

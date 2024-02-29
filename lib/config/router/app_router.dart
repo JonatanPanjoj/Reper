@@ -86,10 +86,9 @@ final appRouter = GoRouter(
       builder: (context, state) {
         final extras = state.extra as Map<String, dynamic>;
         return SectionScreen(
-          section: extras['section'] as Section,
-          image: extras['image'] as String,
-          song: extras['song'] as Song
-        );
+            section: extras['section'] as Section,
+            image: extras['image'] as String,
+            song: extras['song'] as Song);
       },
     ),
     GoRoute(
@@ -98,6 +97,12 @@ final appRouter = GoRouter(
         return const LibraryView(
           isaddSongScreen: true,
         );
+      },
+    ),
+    GoRoute(
+      path: '/add-repertory-event-screen',
+      builder: (context, state) {
+        return AddRepertoryEventScreen(repertory: state.extra as Repertory);
       },
     ),
   ],

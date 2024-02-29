@@ -104,9 +104,28 @@ class FirebaseRepertoryDatasource extends RepertoryDatasource {
   }
 
   @override
-  Future<ResponseStatus> updateRepertory({required Repertory repertory}) {
-    // TODO: implement updateRepertory
-    throw UnimplementedError();
+  Future<ResponseStatus> updateRepertory({required Repertory repertory}) async {
+    try {
+      final WriteBatch batch = _database.batch();
+
+      final repertoryRef = _database
+          .collection('groups')
+          .doc(repertory.groupId)
+          .collection('repertories')
+          .doc(repertory.id);
+
+      batch.update(repertoryRef, repertory.toJson());
+
+      await batch.commit();
+
+      return ResponseStatus(
+          message: 'Repertorio actualizado con éxito', hasError: false);
+    } on FirebaseException catch (e) {
+      return ResponseStatus(
+          message: e.message ?? 'An exeption occurred', hasError: true);
+    } catch (e) {
+      return ResponseStatus(message: e.toString(), hasError: true);
+    }
   }
 
   @override

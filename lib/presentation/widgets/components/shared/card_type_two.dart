@@ -15,6 +15,7 @@ class CardTypeTwo extends ConsumerStatefulWidget {
   final void Function()? onTap;
   final Future<void> Function()? onDelete;
   final Widget deleteDialogWidget;
+  final Widget? actionWidget;
 
   const CardTypeTwo({
     super.key,
@@ -25,7 +26,8 @@ class CardTypeTwo extends ConsumerStatefulWidget {
     this.onTap,
     this.index,
     this.onDelete,
-    required this.deleteDialogWidget
+    required this.deleteDialogWidget,
+    this.actionWidget
   });
 
   @override
@@ -149,11 +151,7 @@ class CardTypeTwoState extends ConsumerState<CardTypeTwo> {
             Positioned(
               right: 10,
               top: 5,
-              child: Text(
-                '10 oct 2024',
-                style: TextStyle(
-                    fontSize: 10, color: colors.colorScheme.onSurface),
-              ),
+              child: widget.actionWidget ?? const SizedBox(),
             ),
           ],
         ),

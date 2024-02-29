@@ -114,19 +114,19 @@ class CardTypeOne extends StatelessWidget {
                     ),
                     const SizedBox(height: 2),
                     Text(subtitle),
-                    const SizedBox(height: 2),
-                    const Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.circle,
-                          size: 9,
-                          color: Colors.green,
-                        ),
-                        SizedBox(width: 10),
-                        Text('Active')
-                      ],
-                    )
+                    const SizedBox(height: 15),
+                    // const Row(
+                    //   crossAxisAlignment: CrossAxisAlignment.center,
+                    //   children: [
+                    //     Icon(
+                    //       Icons.circle,
+                    //       size: 9,
+                    //       color: Colors.green,
+                    //     ),
+                    //     SizedBox(width: 10),
+                    //     Text('Active')
+                    //   ],
+                    // )
                   ],
                 ),
               )
