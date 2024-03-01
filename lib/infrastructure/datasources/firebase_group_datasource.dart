@@ -106,9 +106,16 @@ class FirebaseGroupDatasource extends GroupDatasource {
   }
 
   @override
-  Future<ResponseStatus> updateGroup({required Group group}) {
-    // TODO: implement updateGroup
-    throw UnimplementedError();
+  Future<ResponseStatus> updateGroup({required Group group}) async {
+    try{
+      await _database.collection('groups').doc(group.id).set(group.toJson());
+      return ResponseStatus(message: 'Grupo Actualizado!', hasError: false);
+
+    }on FirebaseException catch(e){
+      return ResponseStatus(message: e.toString(), hasError: true);
+    }catch(e){
+      return ResponseStatus(message: e.toString(), hasError: true);
+    }
   }
 
   @override
