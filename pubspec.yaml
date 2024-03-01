@@ -30,11 +30,18 @@ dependencies:
   lottie: ^3.0.0
   transparent_image: ^2.0.1
   uuid: ^4.3.3
+  flutter_launcher_icons: ^0.13.1
 
 dev_dependencies:
   flutter_lints: ^2.0.0
   flutter_test:
     sdk: flutter
+
+flutter_launcher_icons:
+  image_path: "assets/img/rippy-logo.png"
+  ios: true
+  android: true
+  min_sdk_android: 21 
 
 flutter:
   uses-material-design: true

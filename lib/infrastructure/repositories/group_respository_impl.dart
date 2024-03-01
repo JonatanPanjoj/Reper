@@ -35,5 +35,10 @@ class GroupRepositoryImpl extends GroupRepository{
   Stream<List<Group>> streamGroupsById({required List<String> groups}) {
     return datasource.streamGroupsById(groups: groups);
   }
+  
+  @override
+  Future<ResponseStatus> deleteParticipant({required String uid, required groupId}) {
+    return datasource.deleteParticipant(uid: uid, groupId: groupId);
+  }
 
 }

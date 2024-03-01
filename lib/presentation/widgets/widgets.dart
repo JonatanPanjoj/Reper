@@ -3,11 +3,13 @@ export 'package:reper/presentation/widgets/components/alert_dialogs.dart/delete_
 export 'package:reper/presentation/widgets/components/shared/card_type_three.dart';
 export 'package:reper/presentation/widgets/components/alert_dialogs.dart/delete_group_dialog.dart';
 export 'package:reper/presentation/widgets/components/alert_dialogs.dart/add_reper_dialog.dart';
+export 'package:reper/presentation/widgets/components/alert_dialogs.dart/add_friend_dialog.dart';
 export 'package:reper/presentation/widgets/components/alert_dialogs.dart/delete_repertory_dialog.dart';
 export 'package:reper/presentation/widgets/components/shared/custom_sliver_app_bar.dart';
 export 'package:reper/presentation/widgets/components/shared/card_type_two.dart';
 export 'package:reper/presentation/widgets/components/shared/full_screen_loader.dart';
 export 'package:reper/presentation/widgets/components/shared/card_type_one.dart';
+export 'package:reper/presentation/widgets/components/shared/user_tile.dart';
 export 'package:reper/presentation/widgets/components/authentication/auth_sliver_app_bar.dart';
 
 //Elements

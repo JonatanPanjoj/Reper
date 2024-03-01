@@ -70,7 +70,7 @@ class CreateGroupScreenState extends ConsumerState<CreateGroupScreen> {
                 DottedBorder(
                   borderType: BorderType.RRect,
                   radius: Radius.circular(10),
-                  color: colors.colorScheme.onPrimary,
+                  color: Colors.white,
                   strokeWidth: 2,
                   dashPattern: [5,5],
                   child: ClipRRect(
@@ -79,7 +79,7 @@ class CreateGroupScreenState extends ConsumerState<CreateGroupScreen> {
                       height: 250,
                       width: double.infinity,
                       decoration: BoxDecoration(
-                        color: colors.canvasColor,
+                        color: colors.cardColor,
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Stack(

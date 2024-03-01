@@ -12,4 +12,6 @@ abstract class GroupRepository {
   Future<ResponseStatus> deleteGroup({required String groupId});
 
   Stream<List<Group>> streamGroupsById({required List<String> groups});
+
+  Future<ResponseStatus> deleteParticipant({required String uid, required groupId});
 }

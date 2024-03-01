@@ -80,6 +80,7 @@ class FirebaseRepertoryDatasource extends RepertoryDatasource {
       await deleteImageFromStorage(fileName: repId, childName: 'repertories');
 
       await batch.commit();
+      await deleteAllRepertorySections(groupId: groupId, repertoryId: repId);
 
       return ResponseStatus(
           message: 'Repertorio eliminado con éxito', hasError: false);
@@ -157,6 +158,31 @@ class FirebaseRepertoryDatasource extends RepertoryDatasource {
 
       return ResponseStatus(
           message: 'Repertorio actualizado con éxito', hasError: false);
+    } on FirebaseException catch (e) {
+      return ResponseStatus(
+          message: e.message ?? 'An exeption occurred', hasError: true);
+    } catch (e) {
+      return ResponseStatus(message: e.toString(), hasError: true);
+    }
+  }
+
+  Future<ResponseStatus> deleteAllRepertorySections({
+    required String groupId,
+    required String repertoryId,
+  }) async {
+    try {
+      WriteBatch batch = _database.batch();
+      QuerySnapshot sections = await FirebaseFirestore.instance
+          .collection('groups/$groupId/repertories/$repertoryId/sections')
+          .get();
+      for (var doc in sections.docs) {
+        batch.delete(doc.reference);
+      }
+
+      batch.commit();
+
+      return ResponseStatus(
+          message: 'Repertorios eliminados con exito', hasError: false);
     } on FirebaseException catch (e) {
       return ResponseStatus(
           message: e.message ?? 'An exeption occurred', hasError: true);
