@@ -112,9 +112,13 @@ class CardTypeOne extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          title,
-                          style: bold18,
+                        SizedBox(
+                      width: size.width * 0.5,
+                      child: Text(
+                            title,
+                            style: bold18,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                         ),
                         const SizedBox(height: 2),
                         Text(subtitle),

@@ -65,22 +65,35 @@ class CustomSliverAppBar extends ConsumerWidget {
             Positioned(
               bottom: 35,
               left: 20,
-              child: Text(
-                title ?? '',
-                style: GoogleFonts.urbanist(fontSize: 25).copyWith(
-                    color: colors.colorScheme.onSurface,
-                    fontWeight: FontWeight.bold),
+              child: Row(
+                children: [
+                  SizedBox(
+                    width: size.width * 0.5,
+                    child: Text(
+                      title ?? '',
+                      style: GoogleFonts.urbanist(fontSize: 25).copyWith(
+                          color: colors.colorScheme.onSurface,
+                          fontWeight: FontWeight.bold),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
               ),
+              
             ),
             Positioned(
               bottom: 20,
               left: 20,
-              child: Text(
-                subtitle ?? '',
-                style: GoogleFonts.urbanist(fontSize: 12).copyWith(
-                  color: colors.colorScheme.onSurface,
-                  fontWeight: FontWeight.w300,
-                ),
+              child: Row(
+                children: [
+                  Text(
+                    subtitle ?? '',
+                    style: GoogleFonts.urbanist(fontSize: 12).copyWith(
+                      color: colors.colorScheme.onSurface,
+                      fontWeight: FontWeight.w300,
+                    ),
+                  ),
+                ],
               ),
             ),
             bottomAction != null
@@ -89,7 +102,7 @@ class CustomSliverAppBar extends ConsumerWidget {
                     bottom: 20,
                     child: bottomAction!,
                   )
-                : const SizedBox()
+                : const SizedBox(),
           ],
         ),
         background: Stack(

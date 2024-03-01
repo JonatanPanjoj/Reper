@@ -139,9 +139,9 @@ class CreateGroupScreenState extends ConsumerState<CreateGroupScreen> {
       isLoading = true;
       setState(() {});
       final res = await ref.read(groupListProvider.notifier).addGroup(
-            groupName: _nameGroupController.text,
-            mediaFile: selectedImage!,
-          );
+        groupName: _nameGroupController.text,
+        mediaFile: selectedImage!,
+      );
       isLoading = false;
       setState(() {});
       showSnackbarResponse(

@@ -105,5 +105,14 @@ final appRouter = GoRouter(
         return AddRepertoryEventScreen(repertory: state.extra as Repertory);
       },
     ),
+    GoRoute(
+      path: '/edit-group-screen',
+      builder: (context, state) {
+        final extras = state.extra as Map<String, dynamic>;
+        return EditGroupScreen(
+          group: extras['group'] as Group,
+        );
+      },
+    ),
   ],
 );
