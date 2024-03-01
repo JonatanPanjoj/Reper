@@ -30,7 +30,7 @@ class MyApp extends ConsumerWidget {
 
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
-      title: "reper",
+      title: "Reper",
       routerConfig: appRouter,
       theme: appTheme.getTheme(),
       localizationsDelegates: context.localizationDelegates,

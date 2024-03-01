@@ -3,24 +3,28 @@ class Group {
   final String name;
   final String image;
   final List<String> repertories;
+  final List<String>? users;
 
   Group(
       {required this.id,
       required this.name,
       required this.image,
-      required this.repertories});
+      required this.repertories,
+      this.users});
 
   Group copyWith({
     String? id,
     String? name,
     String? image,
-    final List<String>? repertories,
+    List<String>? repertories,
+    List<String>? users,
   }) {
     return Group(
       id: id ?? this.id,
       name: name ?? this.name,
       image: image ?? this.image,
       repertories: repertories ?? this.repertories,
+      users: users ?? this.users,
     );
   }
 
@@ -30,6 +34,7 @@ class Group {
       'name': name,
       'image': image,
       'repertories': repertories,
+      'users': users,
     };
   }
 
@@ -41,10 +46,19 @@ class Group {
       repertories: List<String>.from(
         json['repertories'] ?? [],
       ),
+      users: List<String>.from(
+        json['users'] ?? [],
+      ),
     );
   }
 
   factory Group.empty() {
-    return Group(id: '', name: '', image: '', repertories:[]);
+    return Group(
+      id: '',
+      name: '',
+      image: '',
+      repertories: [],
+      users: [],
+    );
   }
 }

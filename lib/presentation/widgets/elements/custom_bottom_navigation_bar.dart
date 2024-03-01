@@ -20,6 +20,9 @@ class CustomBottomNavigationBar extends StatelessWidget {
       case 3:
         context.go('/home/3');
         break;
+      case 4:
+        context.go('/home/4');
+        break;
       default:
         context.go('/home/0');
         break;
@@ -32,15 +35,17 @@ class CustomBottomNavigationBar extends StatelessWidget {
       onDestinationSelected: (value) {
         onItemTapped(context, value);
       },
-      height: 65,
+      indicatorShape: const CircleBorder(),
+      height: 60,
       elevation: 0,
       selectedIndex: currentIndex,
-      labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
+      labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
       destinations: const [
-        NavigationDestination(icon: Icon(Icons.home_rounded), label: 'Home'),
-        NavigationDestination(icon: Icon(Icons.album), label: 'Albumes'),
-        NavigationDestination(icon: Icon(Icons.music_note), label: 'Mis canciones'),
-        NavigationDestination(icon: Icon(Icons.person), label: 'Profile'),
+        NavigationDestination(icon: Icon(Icons.home_rounded), label: ''),
+        NavigationDestination(icon: Icon(Icons.album), label: ''),
+        NavigationDestination(icon: Icon(Icons.group), label: ''),
+        NavigationDestination(icon: Icon(Icons.music_note), label: ''),
+        NavigationDestination(icon: Icon(Icons.person), label: ''),
       ],
     );
   }

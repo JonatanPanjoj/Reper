@@ -120,7 +120,7 @@ class FirebaseAuthDataSource extends AuthDatasource {
             user: AppUser(
               uid: cred.user!.uid,
               name: googleUser.displayName ?? 'No name',
-              image: googleUser.displayName ?? '',
+              image: googleUser.photoUrl ?? '',
               email: googleUser.email,
               joinedAt: Timestamp.now(),
               googleId: googleUser.id,

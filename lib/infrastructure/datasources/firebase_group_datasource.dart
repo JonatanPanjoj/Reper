@@ -5,12 +5,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:reper/config/utils/utils.dart';
 import 'package:reper/domain/datasources/group_datasource.dart';
 import 'package:reper/domain/entities/entities.dart';
-import 'package:reper/infrastructure/datasources/firebase_user_datasource.dart';
+import 'package:reper/infrastructure/datasources/firebase_repertory_datasource.dart';
 
 class FirebaseGroupDatasource extends GroupDatasource {
   final FirebaseFirestore _database = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirebaseUserDatasource groupDatasource = FirebaseUserDatasource();
+  final FirebaseRepertoryDatasource repertoryDatasource =
+      FirebaseRepertoryDatasource();
 
   @override
   Future<ResponseStatus> createGroup({
@@ -18,8 +19,12 @@ class FirebaseGroupDatasource extends GroupDatasource {
     required Uint8List mediaFile,
   }) async {
     try {
-      //Crear Group
-      final groupRef = await _database.collection('groups').add(group.toJson());
+      final uid = _auth.currentUser!.uid;
+      final WriteBatch batch = _database.batch();
+
+      //Crear Referencia a Group
+      final groupRef = _database.collection('groups').doc();
+      final userRef = _database.collection('users').doc(uid);
 
       //Subir imagen a Storage
       final imageUrl = await uploadImageToStorage(
@@ -28,29 +33,21 @@ class FirebaseGroupDatasource extends GroupDatasource {
         mediaFile: mediaFile,
       );
 
-      await groupRef
-          .set(group.copyWith(image: imageUrl, id: groupRef.id).toJson());
+      //Agregamos el Grupo
+      batch.set(
+        groupRef,
+        group.copyWith(image: imageUrl, id: groupRef.id).toJson(),
+      );
 
-      //Obtener Usuario
-      final user =
-          await groupDatasource.getUserById(uid: _auth.currentUser!.uid);
+      //Agregar User en Group y viceversa
+      batch.update(groupRef, {
+        'users': FieldValue.arrayUnion([_auth.currentUser!.uid])
+      });
+      batch.update(userRef, {
+        'groups': FieldValue.arrayUnion([groupRef.id])
+      });
 
-      await groupDatasource.updateGroup(
-          uid: _auth.currentUser!.uid, groupId: groupRef.id);
-
-      //Agregar User a SubCollection Group
-      if (user != null) {
-        await _database
-            .collection('groups')
-            .doc(groupRef.id)
-            .collection('users')
-            .add(user.toJson());
-      } else {
-        return ResponseStatus(
-          message: 'El usuario no se agregó',
-          hasError: true,
-        );
-      }
+      await batch.commit();
 
       return ResponseStatus(
         message: 'Grupo Creado con Éxito',
@@ -70,13 +67,28 @@ class FirebaseGroupDatasource extends GroupDatasource {
   @override
   Future<ResponseStatus> deleteGroup({required String groupId}) async {
     try {
-      await _database.collection('groups').doc(groupId).delete();
-      await deleteSubcollectionDocs(
-        collection: 'groups',
-        collectionId: groupId,
-        subcollectionName: 'users',
-      );
+      final users = await _database
+          .collection('users')
+          .where('groups', arrayContains: groupId)
+          .get();
+
+      final WriteBatch batch = _database.batch();
+      final groupRef = _database.collection('groups').doc(groupId);
+
+      // Operaciones de lote
+      batch.delete(groupRef);
+      for (var doc in users.docs) {
+        batch.update(doc.reference, {
+          'tu_lista': FieldValue.arrayRemove([groupId])
+        });
+      }
+
+      //TODO: CAMBIAR POR ELIMINAR GRUPOS Y REPERTORIOS
+
+      await deleteAllGroupRepertories(groupId: groupId);
       await deleteImageFromStorage(fileName: groupId, childName: 'groups');
+
+      batch.commit();
 
       return ResponseStatus(message: 'Grupo Creado Eliminado', hasError: false);
     } on FirebaseException catch (e) {
@@ -112,6 +124,34 @@ class FirebaseGroupDatasource extends GroupDatasource {
             snapshot.docs.map((doc) => Group.fromJson(doc.data())).toList());
   }
 
+  @override
+  Future<ResponseStatus> deleteParticipant(
+      {required String uid, required groupId}) async {
+    try {
+      final WriteBatch batch = _database.batch();
+
+      final groupRef = _database.collection('groups').doc(groupId);
+      final userRef = _database.collection('users').doc(uid);
+
+      batch.update(groupRef, {
+        'participants': FieldValue.arrayRemove([uid])
+      });
+      batch.update(userRef, {
+        'groups': FieldValue.arrayRemove([groupId])
+      });
+
+      await batch.commit();
+
+      return ResponseStatus(
+          message: 'Participante eliminado con éxito', hasError: false);
+    } on FirebaseException catch (e) {
+      return ResponseStatus(
+          message: e.message ?? 'An exeption occurred', hasError: true);
+    } catch (e) {
+      return ResponseStatus(message: e.toString(), hasError: true);
+    }
+  }
+
 //OTROS
   Future<void> deleteSubcollectionDocs({
     required String collection,
@@ -128,5 +168,36 @@ class FirebaseGroupDatasource extends GroupDatasource {
         doc.reference.delete();
       }
     });
+  }
+
+  Future<ResponseStatus> deleteAllGroupRepertories({
+    required String groupId,
+  }) async {
+    try {
+      WriteBatch batch = _database.batch();
+      QuerySnapshot repertory = await FirebaseFirestore.instance
+          .collection('groups/$groupId/repertories')
+          .get();
+      for (var doc in repertory.docs) {
+        batch.delete(doc.reference);
+        await repertoryDatasource.deleteAllRepertorySections(
+          groupId: groupId,
+          repertoryId: doc.id,
+        );
+      }
+      batch.commit();
+      for (var doc in repertory.docs) {
+        await deleteImageFromStorage(
+            fileName: doc.id, childName: 'repertories');
+      }
+
+      return ResponseStatus(
+          message: 'Repertorios eliminados con exito', hasError: false);
+    } on FirebaseException catch (e) {
+      return ResponseStatus(
+          message: e.message ?? 'An exeption occurred', hasError: true);
+    } catch (e) {
+      return ResponseStatus(message: e.toString(), hasError: true);
+    }
   }
 }

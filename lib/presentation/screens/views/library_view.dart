@@ -33,7 +33,7 @@ class LibraryView extends ConsumerWidget {
           children: [
             _buildMySongsTab(ref, context),
             const Center(
-              child: Text("It's rainy here"),
+              child: Text("Proximamente..."),
             ),
           ],
         ),
