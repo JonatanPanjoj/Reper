@@ -10,7 +10,7 @@ class GroupScreen extends ConsumerStatefulWidget {
   final Group group;
 
   const GroupScreen({super.key, required this.group});
-
+  
   @override
   GroupScreenState createState() => GroupScreenState();
 }
