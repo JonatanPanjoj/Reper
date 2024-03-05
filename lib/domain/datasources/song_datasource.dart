@@ -12,4 +12,7 @@ abstract class SongDatasource {
   Stream<Song> streamSong({required String songId});
 
   Future<ResponseStatus> getUserSongs({required String uid});
+
+  // //PUBLIC
+  // Future<List<Song>> getRecentSongs();
 }

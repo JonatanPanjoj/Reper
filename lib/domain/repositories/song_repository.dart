@@ -12,4 +12,5 @@ abstract class SongRepository {
   Stream<Song> streamSong({required String songId});
 
   Future<ResponseStatus> getUserSongs({required String uid});
+
 }

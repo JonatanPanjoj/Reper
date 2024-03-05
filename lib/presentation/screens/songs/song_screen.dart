@@ -60,12 +60,42 @@ class SongScreenState extends ConsumerState<SongScreen> {
         },
       ),
       floatingActionButton: FloatingSpeedButtons(
-        scrollController: scrollController,
-        speed: pixelsPerSecond,
+        onDecrement: _onDecrement,
+        onPause: _onPause,
+        onIncrement: _onIncrement,
       ),
     );
   }
 
+  void _onIncrement() {
+    scrollController.animateTo(
+      scrollController.position.maxScrollExtent,
+      duration: Duration(
+        seconds: ((scrollController.position.maxScrollExtent -
+                    scrollController.position.pixels) /
+                pixelsPerSecond)
+            .round(),
+      ),
+      curve: Curves.linear,
+    );
+  }
+
+  void _onPause() {
+    scrollController.jumpTo(scrollController.position.pixels);
+  }
+
+  void _onDecrement() {
+    scrollController.animateTo(
+      scrollController.position.minScrollExtent,
+      duration: Duration(
+        seconds: ((scrollController.position.pixels -
+                    scrollController.position.minScrollExtent) /
+                pixelsPerSecond)
+            .round(),
+      ),
+      curve: Curves.linear,
+    );
+  }
 
   SliverList _buildBody(Size size, ColorScheme colors, Song song) {
     return SliverList(

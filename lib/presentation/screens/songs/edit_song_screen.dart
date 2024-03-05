@@ -8,6 +8,7 @@ import 'package:reper/config/theme/theme.dart';
 import 'package:reper/domain/entities/entities.dart';
 import 'package:reper/presentation/providers/providers.dart';
 import 'package:reper/presentation/widgets/widgets.dart';
+import 'package:toggle_switch/toggle_switch.dart';
 
 class EditSongScreen extends ConsumerStatefulWidget {
   final Song song;
@@ -25,6 +26,7 @@ class EditSongScreenState extends ConsumerState<EditSongScreen> {
   final TextEditingController _lyricController = TextEditingController();
   String lyricPreview = '';
   bool isLoading = false;
+  late bool isPublic;
 
   @override
   void initState() {
@@ -32,15 +34,17 @@ class EditSongScreenState extends ConsumerState<EditSongScreen> {
     _artistController.text = widget.song.artist;
     _lyricController.text = widget.song.lyrics;
     lyricPreview = widget.song.lyrics;
+    isPublic = widget.song.isPublic;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final colors = Theme.of(context).colorScheme;
+    final colors = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
+        shadowColor: Colors.transparent,
         title: const Text('Edit Song'),
         actions: [
           TextButton(
@@ -59,7 +63,24 @@ class EditSongScreenState extends ConsumerState<EditSongScreen> {
             child: Column(
               children: [
                 const SizedBox(height: 15),
+                ToggleSwitch(
+                  activeFgColor: Colors.white,
+                  activeBgColor: const [primaryDark],
+                  inactiveBgColor: colors.scaffoldBackgroundColor,
+                  initialLabelIndex: isPublic ? 0 : 1,
+                  totalSwitches: 2,
+                  labels: const ['Public', 'Private'],
+                  onToggle: (index) {
+                    if (index == 0) {
+                      isPublic = true;
+                    } else {
+                      isPublic = false;
+                    }
+                  },
+                ),
+                const SizedBox(height: 15),
                 CustomInput(
+                  fillColor: colors.cardColor,
                   label: 'Titulo:',
                   controller: _titleController,
                   validator: (value) {
@@ -71,11 +92,13 @@ class EditSongScreenState extends ConsumerState<EditSongScreen> {
                 ),
                 const SizedBox(height: 15),
                 CustomInput(
+                  fillColor: colors.cardColor,
                   label: 'Artista:',
                   controller: _artistController,
                 ),
                 const SizedBox(height: 15),
                 CustomInput(
+                  fillColor: colors.cardColor,
                   label: 'Letra:',
                   controller: _lyricController,
                   onChanged: (value) {
@@ -86,7 +109,7 @@ class EditSongScreenState extends ConsumerState<EditSongScreen> {
                   minLines: 3,
                 ),
                 const SizedBox(height: 35),
-                _buildPreview(size, colors)
+                _buildPreview(size)
               ],
             ),
           ),
@@ -95,13 +118,14 @@ class EditSongScreenState extends ConsumerState<EditSongScreen> {
     );
   }
 
-  Widget _buildPreview(Size size, ColorScheme colors) {
+  Widget _buildPreview(Size size) {
+    final colors = Theme.of(context).colorScheme;
     return Column(
       children: [
         const Text('Vista previa', style: bold20),
         Card(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal:15, vertical: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
             child: SizedBox(
               child: LyricsRenderer(
                 horizontalAlignment: CrossAxisAlignment.start,
@@ -128,6 +152,8 @@ class EditSongScreenState extends ConsumerState<EditSongScreen> {
       });
       final res = await ref.read(songsRepositoryProvider).updateSong(
             song: Song(
+              createdAt: widget.song.createdAt,
+              isPublic: isPublic,
               id: widget.song.id,
               createdBy: widget.song.createdBy,
               title: _titleController.text,

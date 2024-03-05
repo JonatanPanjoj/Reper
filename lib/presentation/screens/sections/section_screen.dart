@@ -27,7 +27,6 @@ class _SectionScreenState extends State<SectionScreen> {
   int transposeIncrement = 0;
   int speed = 10;
 
-
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -74,9 +73,40 @@ class _SectionScreenState extends State<SectionScreen> {
         ],
       ),
       floatingActionButton: FloatingSpeedButtons(
-        scrollController: scrollController,
-        speed: speed,
+        onDecrement: _onDecrement,
+        onPause: _onPause,
+        onIncrement: _onIncrement,
       ),
+    );
+  }
+
+  void _onPause() {
+    scrollController.jumpTo(scrollController.position.pixels);
+  }
+
+  void _onIncrement() {
+    scrollController.animateTo(
+      scrollController.position.maxScrollExtent,
+      duration: Duration(
+        seconds: ((scrollController.position.maxScrollExtent -
+                    scrollController.position.pixels) /
+                speed)
+            .round(),
+      ),
+      curve: Curves.linear,
+    );
+  }
+
+  void _onDecrement() {
+    scrollController.animateTo(
+      scrollController.position.minScrollExtent,
+      duration: Duration(
+        seconds: ((scrollController.position.pixels -
+                    scrollController.position.minScrollExtent) /
+                speed)
+            .round(),
+      ),
+      curve: Curves.linear,
     );
   }
 
