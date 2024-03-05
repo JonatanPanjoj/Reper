@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chord/flutter_chord.dart';
 import 'package:reper/config/theme/theme.dart';
-import 'package:reper/presentation/widgets/components/shared/custom_sliver_app_bar.dart';
+import 'package:reper/presentation/widgets/widgets.dart';
 
 import '../../../domain/entities/entities.dart';
 
@@ -22,7 +22,11 @@ class SectionScreen extends StatefulWidget {
 }
 
 class _SectionScreenState extends State<SectionScreen> {
+  ScrollController scrollController = ScrollController();
+
   int transposeIncrement = 0;
+  int speed = 10;
+
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +35,7 @@ class _SectionScreenState extends State<SectionScreen> {
 
     return Scaffold(
       body: CustomScrollView(
+        controller: scrollController,
         slivers: [
           CustomSliverAppBar(
             title: widget.section.name,
@@ -41,45 +46,36 @@ class _SectionScreenState extends State<SectionScreen> {
           SliverList(
             delegate: SliverChildListDelegate(
               [
-                _buildToneController(),
+                ToneButtons(
+                  speed: speed,
+                  onDecrement: () {
+                    transposeIncrement--;
+                    setState(() {});
+                  },
+                  onIncrement: () {
+                    transposeIncrement++;
+                    setState(() {});
+                  },
+                  onDecrementSpeed: () {
+                    if (speed > 10) {
+                      speed -= 10;
+                      setState(() {});
+                    }
+                  },
+                  onIncrementSpeed: () {
+                    speed += 10;
+                    setState(() {});
+                  },
+                ),
                 _buildLyrics(size, colors),
               ],
             ),
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildToneController() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          Card(
-            child: Row(
-              children: [
-                IconButton(
-                    onPressed: () {
-                      transposeIncrement--;
-                      setState(() {});
-                    },
-                    icon: const Icon(Icons.remove)),
-                const Text(
-                  'Tono',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                IconButton(
-                    onPressed: () {
-                      transposeIncrement++;
-                      setState(() {});
-                    },
-                    icon: const Icon(Icons.add)),
-              ],
-            ),
-          ),
-        ],
+      floatingActionButton: FloatingSpeedButtons(
+        scrollController: scrollController,
+        speed: speed,
       ),
     );
   }

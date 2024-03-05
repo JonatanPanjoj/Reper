@@ -11,6 +11,8 @@ export 'package:reper/presentation/widgets/components/shared/full_screen_loader.
 export 'package:reper/presentation/widgets/components/shared/card_type_one.dart';
 export 'package:reper/presentation/widgets/components/shared/user_tile.dart';
 export 'package:reper/presentation/widgets/components/authentication/auth_sliver_app_bar.dart';
+export 'package:reper/presentation/widgets/components/shared/tone_buttons.dart';
+export 'package:reper/presentation/widgets/components/shared/floating_speed_buttons.dart';
 
 //Elements
 export 'package:reper/presentation/widgets/elements/custom_date_picker.dart';

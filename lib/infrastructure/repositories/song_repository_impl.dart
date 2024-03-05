@@ -8,8 +8,8 @@ class SongRepositoryImpl extends SongRepository {
   SongRepositoryImpl(this.datasource);
 
   @override
-  Future<ResponseStatus> createSong({required Song song, required AppUser user}) {
-    return datasource.createSong(song: song, user: user);
+  Future<ResponseStatus> createSong({required Song song}) {
+    return datasource.createSong(song: song);
   }
 
   @override

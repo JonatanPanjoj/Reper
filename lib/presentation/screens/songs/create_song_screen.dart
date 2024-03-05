@@ -89,10 +89,9 @@ class CreateSongScreenState extends ConsumerState<CreateSongScreen> {
       isLoading = true;
       setState(() {});
       final res = await ref.read(songsRepositoryProvider).createSong(
-            user: ref.read(userProvider),
             song: Song(
               id: 'no-id',
-              createdBy: AppUser.empty(),
+              createdBy: ref.read(userProvider).uid,
               title: _songNameController.text,
               lyrics: _songLyricController.text,
               artist: _songArtistController.text.isEmpty
