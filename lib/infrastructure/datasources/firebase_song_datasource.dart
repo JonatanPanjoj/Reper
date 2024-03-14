@@ -7,13 +7,13 @@ class FirebaseSongDatasource extends SongDatasource {
   final FirebaseFirestore _database = FirebaseFirestore.instance;
 
   @override
-  Future<ResponseStatus> createSong({required Song song, required AppUser user}) async {
+  Future<ResponseStatus> createSong({required Song song}) async {
     try {
       final WriteBatch batch = _database.batch();
       final ref = _database.collection('songs').doc();
       batch.set(
         ref,
-        song.copyWith(id: ref.id, createdBy: user).toJson(),
+        song.copyWith(id: ref.id, createdBy: song.createdBy).toJson(),
       );
       await batch.commit();
       return ResponseStatus(
@@ -55,7 +55,7 @@ class FirebaseSongDatasource extends SongDatasource {
   Stream<List<Song>> streamSongsByUser({required String uid}) {
     return _database  
         .collection('songs')
-        .where('created_by.uid', isEqualTo: uid)
+        .where('created_by', isEqualTo: uid)
         .snapshots()
         .map((snapshot) =>
             snapshot.docs.map((doc) => Song.fromJson(doc.data())).toList());

@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -11,6 +12,7 @@ import 'package:reper/domain/entities/song.dart';
 import 'package:reper/presentation/providers/database/repositories/songs_repository_provider.dart';
 import 'package:reper/presentation/providers/database/user_provider.dart';
 import 'package:reper/presentation/widgets/widgets.dart';
+import 'package:toggle_switch/toggle_switch.dart';
 
 class CreateSongScreen extends ConsumerStatefulWidget {
   const CreateSongScreen({super.key});
@@ -25,9 +27,11 @@ class CreateSongScreenState extends ConsumerState<CreateSongScreen> {
   final TextEditingController _songLyricController = TextEditingController();
   final TextEditingController _songArtistController = TextEditingController();
   bool isLoading = false;
+  bool isPublic = true;
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context);
     return Scaffold(
       appBar: AppBar(),
       body: SingleChildScrollView(
@@ -38,6 +42,23 @@ class CreateSongScreenState extends ConsumerState<CreateSongScreen> {
             child: Column(
               children: [
                 const Text('Ingresa una Canción!', style: bold24),
+                const SizedBox(height: 25),
+                ToggleSwitch(
+                  activeFgColor: Colors.white,
+                  activeBgColor: const [primaryDark],
+                  inactiveBgColor: colors.scaffoldBackgroundColor,
+                  initialLabelIndex: 0,
+                  totalSwitches: 2,
+                  labels: const ['Public', 'Private'],
+                  onToggle: (index) {
+                    if(index == 0){
+                      isPublic = true;
+                    } else{
+                      isPublic = false;
+
+                    }
+                  },
+                ),
                 const SizedBox(height: 25),
                 CustomInput(
                   controller: _songNameController,
@@ -89,10 +110,11 @@ class CreateSongScreenState extends ConsumerState<CreateSongScreen> {
       isLoading = true;
       setState(() {});
       final res = await ref.read(songsRepositoryProvider).createSong(
-            user: ref.read(userProvider),
             song: Song(
+              createdAt: Timestamp.fromDate(DateTime.now()),
+              isPublic: isPublic,
               id: 'no-id',
-              createdBy: AppUser.empty(),
+              createdBy: ref.read(userProvider).uid,
               title: _songNameController.text,
               lyrics: _songLyricController.text,
               artist: _songArtistController.text.isEmpty

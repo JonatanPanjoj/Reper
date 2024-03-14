@@ -1,7 +1,7 @@
 import 'package:reper/domain/entities/entities.dart';
 
 abstract class SongDatasource {
-  Future<ResponseStatus> createSong({required Song song, required AppUser user});
+  Future<ResponseStatus> createSong({required Song song});
 
   Stream<List<Song>> streamSongsByUser({required String uid});
 
@@ -12,4 +12,7 @@ abstract class SongDatasource {
   Stream<Song> streamSong({required String songId});
 
   Future<ResponseStatus> getUserSongs({required String uid});
+
+  // //PUBLIC
+  // Future<List<Song>> getRecentSongs();
 }
