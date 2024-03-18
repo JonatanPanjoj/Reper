@@ -154,6 +154,5 @@ class EditGroupState extends ConsumerState<EditGroupScreen> {
       showSnackbarResponse(context: context, response: res);
       context.pop();
     }
-
   }
 }

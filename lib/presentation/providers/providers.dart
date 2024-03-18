@@ -6,3 +6,4 @@ export 'package:reper/presentation/providers/database/repositories/section_repos
 export 'package:reper/presentation/providers/database/user_provider.dart';
 export 'package:reper/presentation/providers/database/repositories/songs_repository_provider.dart';
 export 'package:reper/presentation/providers/database/user_songs_list_provider.dart';
+export 'package:reper/presentation/providers/database/repositories/notification_repository_provider.dart';

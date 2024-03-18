@@ -28,14 +28,16 @@ class FirebaseUserDatasource extends UserDatasource {
   Future<ResponseStatus> validateNickname({required String nickname}) async {
     final snapshot = await database
         .collection('users')
-        .where('nickname', isEqualTo: nickname)
+        .where('name', isEqualTo: nickname)
         .get();
     if (snapshot.docs.isEmpty) {
       return ResponseStatus(message: 'success', hasError: false);
     } else {
+      final userId = AppUser.fromJson(snapshot.docs.first.data());
       return ResponseStatus(
         message: 'El nickname $nickname ya esta siendo utilizado',
         hasError: true,
+        extra: {'user':userId},
       );
     }
   }

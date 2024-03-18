@@ -27,7 +27,7 @@ class SocialView extends StatelessWidget {
           ),
           const SliverSizedBox(height: 5),
           SliverList.builder(
-            itemCount: 20,
+            itemCount: 5,
             itemBuilder: (context, index) {
               return const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
