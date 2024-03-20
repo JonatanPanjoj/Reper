@@ -109,5 +109,18 @@ class FirebaseUserDatasource extends UserDatasource {
           : AppUser.fromJson(snapshot.data()!..addAll({'uid': snapshot.id}));
     });
   }
+  
+  @override
+  Stream<List<AppUser>> streamUserFriends({required List<String> friends}) {
+    if (friends.isEmpty) {
+      return Stream.value([]);
+    }
+    return database
+        .collection('users')
+        .where('uid', whereIn: friends)
+        .snapshots()
+        .map((snapshot) =>
+            snapshot.docs.map((doc) => AppUser.fromJson(doc.data())).toList());
+  }
 
 }

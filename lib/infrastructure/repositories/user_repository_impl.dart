@@ -46,4 +46,9 @@ class UserRepositoryImpl extends UserRepository {
   Stream<AppUser?> streamUser({required String uid}) {
     return datasource.streamUser(uid: uid);
   }
+  
+  @override
+  Stream<List<AppUser>> streamUserFriends({required List<String> friends}) {
+    return datasource.streamUserFriends(friends: friends);
+  }
 }

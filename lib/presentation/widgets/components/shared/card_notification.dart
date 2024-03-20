@@ -38,7 +38,7 @@ class CardNotification extends ConsumerWidget {
             ),
             const SizedBox(width: 15),
             SizedBox(
-              width: size.width * 0.55,
+              width: size.width * 0.4,
               child: FutureBuilder(
                 future: ref
                     .read(userRepositoryProvider)

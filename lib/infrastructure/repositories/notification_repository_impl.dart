@@ -21,8 +21,8 @@ class NotificationRespositoryImpl extends NotificationRepository{
   }
 
   @override
-  Future<ResponseStatus> validateNotification({required String receiverId}){
-    return datasource.validateNotification(receiverId: receiverId);
+  Future<ResponseStatus> validateNotification({required String receiverId, required String senderId}){
+    return datasource.validateNotification(receiverId: receiverId, senderId: senderId);
   }
   
   @override

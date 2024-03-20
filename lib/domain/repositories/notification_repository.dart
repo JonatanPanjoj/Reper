@@ -6,7 +6,7 @@ abstract class NotificationRepository{
 
   Future<ResponseStatus> createNotification({required AppNotification notification, required String nickName});
 
-  Future<ResponseStatus> validateNotification({required String receiverId});
+  Future<ResponseStatus> validateNotification({required String receiverId, required String senderId});
 
   Stream<List<AppNotification>> streamUserNotifications();
 

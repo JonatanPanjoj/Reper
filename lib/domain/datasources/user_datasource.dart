@@ -30,4 +30,8 @@ abstract class UserDatasource {
   Stream<AppUser?> streamUser({
     required String uid,
   });
+
+  Stream<List<AppUser>> streamUserFriends({
+    required List<String> friends,
+  });
 }

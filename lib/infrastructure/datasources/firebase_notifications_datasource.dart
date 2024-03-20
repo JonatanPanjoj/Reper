@@ -55,7 +55,7 @@ class FirebaseNotificationsDatasource extends NotificationDatasource {
       }
 
       final resValidateNotification =
-          await validateNotification(receiverId: receiverId);
+          await validateNotification(receiverId: receiverId, senderId: userId);
       if (resValidateNotification.hasError) {
         return resValidateNotification;
       }
@@ -83,22 +83,38 @@ class FirebaseNotificationsDatasource extends NotificationDatasource {
   }
 
   @override
-  Future<ResponseStatus> validateNotification(
-      {required String receiverId}) async {
+  Future<ResponseStatus> validateNotification({
+    required String receiverId,
+    required String senderId,
+  }) async {
     try {
       final snapshot = await _database
           .collection('notifications')
-          .where('receiver_id', isEqualTo: receiverId)
           .where(
             Filter.or(
-              Filter("status", isEqualTo: 'waiting'),
-              Filter("status", isEqualTo: 'accepted'),
+              Filter.and(
+                Filter('receiver_id', isEqualTo: receiverId),
+                Filter('sender_id', isEqualTo: senderId),
+                Filter("status", isEqualTo: 'waiting'),
+                Filter.or(
+                  Filter("status", isEqualTo: 'waiting'),
+                  Filter("status", isEqualTo: 'accepted'),
+                ),
+              ),
+              Filter.and(
+                Filter('receiver_id', isEqualTo: senderId),
+                Filter('sender_id', isEqualTo: receiverId),
+                Filter.or(
+                  Filter("status", isEqualTo: 'waiting'),
+                  Filter("status", isEqualTo: 'accepted'),
+                ),
+              ),
             ),
           )
           .get();
       if (snapshot.docs.isNotEmpty) {
         return ResponseStatus(
-          message: 'Ya has enviado solicitud a este usuario',
+          message: 'No puedes enviar solicitud a este usuario',
           hasError: true,
         );
       }
