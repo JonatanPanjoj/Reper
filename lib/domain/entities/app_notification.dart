@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 enum NotificationType{
   group,
   friend,
@@ -59,7 +61,7 @@ class AppNotification {
   final NotificationType type;
   final String senderId;
   final String receiverId;
-  final DateTime sentAt;
+  final Timestamp sentAt;
   final NotificationStatus status;
 
   AppNotification({
@@ -88,7 +90,7 @@ class AppNotification {
       type: NotificationType.fromString(json['type'] ?? ''),
       senderId: json['sender_id'] ?? '',
       receiverId: json['receiver_id'] ?? '',
-      sentAt: json['sent_at'] ?? '',
+      sentAt: json['sent_at'],
       status: NotificationStatus.fromString(json['status'] ?? ''),
     );
   }
@@ -98,7 +100,7 @@ class AppNotification {
     NotificationType? type,
     String? senderId,
     String? receiverId,
-    DateTime? sentAt,
+    Timestamp? sentAt,
     NotificationStatus? status
   }){
     return AppNotification(

@@ -1,4 +1,3 @@
-import 'package:reper/domain/entities/app_notification.dart';
 import 'package:reper/domain/entities/entities.dart';
 
 abstract class NotificationRepository{
@@ -9,4 +8,7 @@ abstract class NotificationRepository{
 
   Future<ResponseStatus> validateNotification({required String receiverId});
 
+  Stream<List<AppNotification>> streamUserNotifications();
+
+  Future<ResponseStatus> changeRequestStatus({required AppNotification notification});
 }

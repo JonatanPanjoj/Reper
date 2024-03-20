@@ -24,4 +24,14 @@ class NotificationRespositoryImpl extends NotificationRepository{
   Future<ResponseStatus> validateNotification({required String receiverId}){
     return datasource.validateNotification(receiverId: receiverId);
   }
+  
+  @override
+  Stream<List<AppNotification>> streamUserNotifications() {
+    return datasource.streamUserNotifications();
+  }
+  
+  @override
+  Future<ResponseStatus> changeRequestStatus({required AppNotification notification}) {
+    return datasource.changeRequestStatus(notification: notification); 
+  }
 }

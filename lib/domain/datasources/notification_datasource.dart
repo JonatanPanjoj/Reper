@@ -1,5 +1,3 @@
-
-import 'package:reper/domain/entities/app_notification.dart';
 import 'package:reper/domain/entities/entities.dart';
 
 abstract class NotificationDatasource{
@@ -9,5 +7,9 @@ abstract class NotificationDatasource{
   Future<ResponseStatus> createNotification({required AppNotification notification, required String nickName});
 
   Future<ResponseStatus> validateNotification({required String receiverId});
+
+  Stream<List<AppNotification>> streamUserNotifications();
+
+  Future<ResponseStatus> changeRequestStatus({required AppNotification notification});
 
 }

@@ -9,6 +9,7 @@ export 'package:reper/presentation/widgets/components/shared/custom_sliver_app_b
 export 'package:reper/presentation/widgets/components/shared/card_type_two.dart';
 export 'package:reper/presentation/widgets/components/shared/full_screen_loader.dart';
 export 'package:reper/presentation/widgets/components/shared/card_type_one.dart';
+export 'package:reper/presentation/widgets/components/shared/card_notification.dart';
 export 'package:reper/presentation/widgets/components/shared/user_tile.dart';
 export 'package:reper/presentation/widgets/components/authentication/auth_sliver_app_bar.dart';
 export 'package:reper/presentation/widgets/components/shared/tone_buttons.dart';

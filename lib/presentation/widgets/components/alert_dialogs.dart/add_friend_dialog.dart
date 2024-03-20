@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -102,7 +103,7 @@ class AddFriendDialogState extends ConsumerState<AddFriendDialog> {
             type: NotificationType.friend,
             senderId: 'no-senderid',
             receiverId: 'no-id',
-            sentAt: DateTime.now(),
+            sentAt: Timestamp.fromDate(DateTime.now()),
             status: NotificationStatus.waiting),
         nickName: _friendsNickname.text,
       );
