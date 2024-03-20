@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:reper/config/utils/utils.dart';
 import 'package:reper/domain/entities/app_user.dart';
 import 'package:reper/presentation/providers/providers.dart';
-
 
 class ProfileView extends ConsumerStatefulWidget {
   const ProfileView({super.key});
@@ -17,6 +17,7 @@ class ProfileViewState extends ConsumerState<ProfileView> {
   Widget build(BuildContext context) {
     final isDarkMode = ref.watch(themeNotifierProvider).isDarkMode;
     final userInfo = ref.watch(userProvider);
+    final notifications = ref.watch(userNotificationListProvider);
     bool switchChanged = true;
     final colors = Theme.of(context);
     return Scaffold(
@@ -37,6 +38,31 @@ class ProfileViewState extends ConsumerState<ProfileView> {
               height: 10,
             ),
             _buildLogOut()
+          ],
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          context.push('/notifications-screen');
+        },
+        shape: CircleBorder(),
+        child: Stack(
+          children: [
+            Icon(Icons.notifications),
+            if (notifications.isNotEmpty)
+              Positioned(
+                right: 1  ,
+                top: 2,
+                child: SizedBox(
+                  height: 9,
+                  width: 9,
+                  child: Container(
+                    decoration: BoxDecoration(color: colors.colorScheme.error, shape: BoxShape.circle),
+                    // child: Text(notifications.length.toString(), style: TextStyle(fontSize: 8, fontWeight: FontWeight.bold),),
+                  ),
+                ),
+              )
           ],
         ),
       ),
@@ -184,7 +210,7 @@ class ProfileViewState extends ConsumerState<ProfileView> {
   }
 
   Widget _buildUserInfo(AppUser user) {
-    final size = MediaQuery.of(context).size; 
+    final size = MediaQuery.of(context).size;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(children: [
@@ -196,13 +222,11 @@ class ProfileViewState extends ConsumerState<ProfileView> {
               children: [
                 SizedBox(
                   width: size.width * 0.4,
-                  child: Text( 
+                  child: Text(
                     user.name,
                     style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20
-                    ),
-                    overflow: TextOverflow.ellipsis,    
+                        fontWeight: FontWeight.bold, fontSize: 20),
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
                 Column(
@@ -324,32 +348,7 @@ class ProfileViewState extends ConsumerState<ProfileView> {
                 ),
               )),
         ),
-        Positioned(
-          top: 30,
-          right: 20,
-          child: Stack(
-            children: [
-              GestureDetector(
-                onTap: () {},
-                child: Container(
-                  width: 45,
-                  height: 45,
-                  decoration: const BoxDecoration(
-                    color: Color(0xFF6C5DD3),
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(
-                    Icons.notifications,
-                    size: 30,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        )
       ],
     );
   }
 }
-

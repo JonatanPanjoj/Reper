@@ -31,3 +31,6 @@ export 'package:reper/presentation/screens/songs/edit_song_screen.dart';
 
 //Sections
 export 'package:reper/presentation/screens/sections/section_screen.dart';
+
+//Notifications
+export 'package:reper/presentation/screens/notifications/notifications_screen.dart';

@@ -37,6 +37,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
     super.initState();
     ref.read(userProvider.notifier).streamUserInfo(_auth.currentUser!.uid);
     ref.read(userSongsListProvider.notifier).streamUserSongs(_auth.currentUser!.uid);
+    ref.read(userNotificationListProvider.notifier).streamUserNotifications();
     pageController = PageController(keepPage: true);
   }
 

@@ -1,18 +1,24 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:reper/domain/entities/app_notification.dart';
+import 'package:reper/presentation/providers/providers.dart';
 import 'package:reper/presentation/widgets/widgets.dart';
 
-class AddFriendDialog extends StatefulWidget {
+class AddFriendDialog extends ConsumerStatefulWidget {
   const AddFriendDialog({super.key});
 
   @override
-  State<AddFriendDialog> createState() => _AddFriendDialogState();
+  AddFriendDialogState createState() => AddFriendDialogState();
 }
 
-class _AddFriendDialogState extends State<AddFriendDialog> {
-
+class AddFriendDialogState extends ConsumerState<AddFriendDialog> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _friendsNickname = TextEditingController();
+  bool isLoading = false;
 
   @override
   void dispose() {
@@ -44,7 +50,7 @@ class _AddFriendDialogState extends State<AddFriendDialog> {
           },
         ),
         CustomFilledButton(
-          // isLoading: isLoading,
+          isLoading: isLoading,
           size: size.width * 0.3,
           height: 35,
           text: '+ Añadir',
@@ -85,10 +91,29 @@ class _AddFriendDialogState extends State<AddFriendDialog> {
       ),
     );
   }
-  
-  void _addFriend() {
-    if(_formKey.currentState!.validate()){
 
+  void _addFriend() async{
+    if (_formKey.currentState!.validate()) {
+      isLoading = true;
+      setState(() {});
+      final notificationRepo = ref.read(notificationRepositoryProvider);
+      final responseNotification = await notificationRepo.createNotification(
+        notification: AppNotification(
+            id: 'no-id',
+            type: NotificationType.friend,
+            senderId: 'no-senderid',
+            receiverId: 'no-id',
+            sentAt: Timestamp.fromDate(DateTime.now()),
+            status: NotificationStatus.waiting),
+        nickName: _friendsNickname.text,
+      );
+      isLoading = false;
+      setState(() {});
+      showSnackbarResponse(
+        context: context,
+        response: responseNotification,
+      );
+      context.pop();
     }
   }
 }

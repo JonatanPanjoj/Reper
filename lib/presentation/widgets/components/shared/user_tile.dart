@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:reper/domain/entities/entities.dart';
 
-//TODO: Pedir el appuser y hacerlo dinámico
 class UserTile extends StatelessWidget {
-  // final AppUser user;
+  final AppUser user;
   const UserTile({
     super.key,
-    // required this.user,
+    required this.user,
   });
 
   @override
@@ -16,17 +16,21 @@ class UserTile extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
+            user.image.isEmpty
+            ? CircleAvatar(child: Text('${user.name.substring(0,1)}'),)
+            :
             CircleAvatar(
-              backgroundImage: NetworkImage(
-                  'https://pbs.twimg.com/media/GBFbUWhXgAI_5nT.jpg:large'),
-              
+              backgroundImage: NetworkImage(user.image),
             ),
             const SizedBox(width: 10),
-            const Text('SteRodrix')
+            Text(user.name)
           ],
         ),
-        Expanded(child: SizedBox()),
-        Icon(Icons.wifi_rounded, color: colors.dividerColor ,)
+        const Expanded(child: SizedBox()),
+        Icon(
+          Icons.wifi_rounded,
+          color: colors.dividerColor,
+        )
       ],
     );
   }

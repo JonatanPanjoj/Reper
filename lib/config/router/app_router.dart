@@ -114,5 +114,11 @@ final appRouter = GoRouter(
         );
       },
     ),
+    GoRoute(
+      path: '/notifications-screen',
+      builder: (context, state) {
+        return const NotificationsScreen();
+      },
+    ),
   ],
 );
