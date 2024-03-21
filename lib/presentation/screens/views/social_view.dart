@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:reper/domain/entities/entities.dart';
 import 'package:reper/presentation/providers/providers.dart';
 import 'package:reper/presentation/widgets/widgets.dart';
 
 class SocialView extends ConsumerStatefulWidget {
-  const SocialView({super.key});
+  final bool isAddFriendScreen;
+
+  const SocialView({
+    super.key,
+    this.isAddFriendScreen = false,
+  });
 
   @override
   SocialViewState createState() => SocialViewState();
@@ -31,14 +37,11 @@ class SocialViewState extends ConsumerState<SocialView>
             return Scaffold(
               appBar: AppBar(
                 title: const Text('Mis Amigos'),
-                actions: [
-                  _buildAddFriend()
-                ],
+                actions: [_buildAddFriend()],
               ),
               body: const Center(
                 child: Text('Aún no tienes amigos'),
               ),
-
             );
           }
           return _buildBody(context, friends);
@@ -47,8 +50,7 @@ class SocialViewState extends ConsumerState<SocialView>
     );
   }
 
-  CustomScrollView _buildBody(
-      BuildContext context, List<AppUser> friends) {
+  CustomScrollView _buildBody(BuildContext context, List<AppUser> friends) {
     return CustomScrollView(
       slivers: [
         SliverAppBar(
@@ -56,9 +58,7 @@ class SocialViewState extends ConsumerState<SocialView>
           floating: true,
           elevation: 0,
           shadowColor: Colors.transparent,
-          actions: [
-            _buildAddFriend()
-          ],
+          actions: [_buildAddFriend()],
         ),
         const SliverSizedBox(height: 5),
         SliverList.builder(
@@ -66,7 +66,15 @@ class SocialViewState extends ConsumerState<SocialView>
           itemBuilder: (context, index) {
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-              child: UserTile(user: friends[index],),
+              child: UserTile(
+                user: friends[index],
+                onTap: () {
+                  if (!widget.isAddFriendScreen) {
+                  } else {
+                    context.pop(friends[index]);
+                  }
+                },
+              ),
             );
           },
         )
@@ -77,13 +85,13 @@ class SocialViewState extends ConsumerState<SocialView>
   IconButton _buildAddFriend() {
     final colors = Theme.of(context);
     return IconButton(
-            onPressed: () {
-              showCustomDialog(
-                  context: context, alertDialog: const AddFriendDialog());
-            },
-            icon: const Icon(Icons.person_add_alt_1_rounded),
-            color: colors.colorScheme.primary,
-          );
+      onPressed: () {
+        showCustomDialog(
+            context: context, alertDialog: const AddFriendDialog());
+      },
+      icon: const Icon(Icons.person_add_alt_1_rounded),
+      color: colors.colorScheme.primary,
+    );
   }
 
   @override

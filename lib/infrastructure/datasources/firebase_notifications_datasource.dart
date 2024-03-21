@@ -1,9 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:reper/domain/datasources/notification_datasource.dart';
-import 'package:reper/domain/entities/app_notification.dart';
-import 'package:reper/domain/entities/app_user.dart';
-import 'package:reper/domain/entities/shared/response_status.dart';
+import 'package:reper/domain/entities/entities.dart';
 import 'package:reper/infrastructure/datasources/firebase_user_datasource.dart';
 
 class FirebaseNotificationsDatasource extends NotificationDatasource {
@@ -54,8 +52,11 @@ class FirebaseNotificationsDatasource extends NotificationDatasource {
         );
       }
 
-      final resValidateNotification =
-          await validateNotification(receiverId: receiverId, senderId: userId);
+      final resValidateNotification = await validateExistenceNotification(
+        receiverId: receiverId,
+        senderId: userId,
+        type: notification.type,
+      );
       if (resValidateNotification.hasError) {
         return resValidateNotification;
       }
@@ -82,11 +83,10 @@ class FirebaseNotificationsDatasource extends NotificationDatasource {
     }
   }
 
-  @override
-  Future<ResponseStatus> validateNotification({
-    required String receiverId,
-    required String senderId,
-  }) async {
+  Future<ResponseStatus> validateExistenceNotification(
+      {required String receiverId,
+      required String senderId,
+      required NotificationType type}) async {
     try {
       final snapshot = await _database
           .collection('notifications')
@@ -95,7 +95,7 @@ class FirebaseNotificationsDatasource extends NotificationDatasource {
               Filter.and(
                 Filter('receiver_id', isEqualTo: receiverId),
                 Filter('sender_id', isEqualTo: senderId),
-                Filter("status", isEqualTo: 'waiting'),
+                Filter("type", isEqualTo: type.value),
                 Filter.or(
                   Filter("status", isEqualTo: 'waiting'),
                   Filter("status", isEqualTo: 'accepted'),
@@ -104,6 +104,7 @@ class FirebaseNotificationsDatasource extends NotificationDatasource {
               Filter.and(
                 Filter('receiver_id', isEqualTo: senderId),
                 Filter('sender_id', isEqualTo: receiverId),
+                Filter("type", isEqualTo: type.value),
                 Filter.or(
                   Filter("status", isEqualTo: 'waiting'),
                   Filter("status", isEqualTo: 'accepted'),
@@ -114,7 +115,7 @@ class FirebaseNotificationsDatasource extends NotificationDatasource {
           .get();
       if (snapshot.docs.isNotEmpty) {
         return ResponseStatus(
-          message: 'No puedes enviar solicitud a este usuario',
+          message: 'Ya se ha enviado solicitud a este usuario',
           hasError: true,
         );
       }
@@ -140,27 +141,49 @@ class FirebaseNotificationsDatasource extends NotificationDatasource {
   }
 
   @override
-  Future<ResponseStatus> changeRequestStatus(
-      {required AppNotification notification}) async {
+  Future<ResponseStatus> changeRequestStatus({
+    required AppNotification notification
+  }) async {
     try {
       final WriteBatch batch = _database.batch();
 
       final notificationRef =
           _database.collection('notifications').doc(notification.id);
-      final receiverRef =
-          _database.collection('users').doc(notification.receiverId);
-      final senderRef =
-          _database.collection('users').doc(notification.senderId);
 
       batch.set(notificationRef, notification.toJson());
 
       if (notification.status == NotificationStatus.accepted) {
-        batch.update(receiverRef, {
-          'friends': FieldValue.arrayUnion([notification.senderId])
-        });
-        batch.update(senderRef, {
-          'friends': FieldValue.arrayUnion([notification.receiverId])
-        });
+
+
+        
+        if (notification.type == NotificationType.friend) {
+          final receiverRef =
+              _database.collection('users').doc(notification.receiverId);
+          final senderRef =
+              _database.collection('users').doc(notification.senderId);
+
+          batch.update(receiverRef, {
+            'friends': FieldValue.arrayUnion([notification.senderId])
+          });
+          batch.update(senderRef, {
+            'friends': FieldValue.arrayUnion([notification.receiverId])
+          });
+
+
+
+        } else if (notification.type == NotificationType.group) {
+          final groupRef =
+              _database.collection('groups').doc(notification.groupId);
+          final receiverRef =
+              _database.collection('users').doc(notification.receiverId);
+
+          batch.update(groupRef, {
+            'users': FieldValue.arrayUnion([notification.receiverId])
+          });
+          batch.update(receiverRef, {
+            'groups': FieldValue.arrayUnion([notification.groupId])
+          });
+        }
       }
       await batch.commit();
 
@@ -169,6 +192,47 @@ class FirebaseNotificationsDatasource extends NotificationDatasource {
       } else {
         return ResponseStatus(message: 'Solicitud rechazada', hasError: false);
       }
+    } on FirebaseException catch (e) {
+      return ResponseStatus(
+          message: e.message ?? 'An exeption occurred', hasError: true);
+    } catch (e) {
+      return ResponseStatus(message: e.toString(), hasError: true);
+    }
+  }
+
+  @override
+  Future<ResponseStatus> createInvitationGroupNotification(
+      {required AppNotification notification}) async {
+    try {
+      final userId = _auth.currentUser!.uid;
+      final WriteBatch batch = _database.batch();
+
+      final existenceNotificationRes = await validateExistenceNotification(
+        receiverId: notification.receiverId,
+        senderId: userId,
+        type: notification.type,
+      );
+
+      if (existenceNotificationRes.hasError) {
+        return existenceNotificationRes;
+      }
+
+      final notificationRef = _database.collection('notifications').doc();
+
+      batch.set(
+        notificationRef,
+        notification
+            .copyWith(
+              id: notificationRef.id,
+              senderId: userId,
+            )
+            .toJson(),
+      );
+
+      batch.commit();
+
+      return ResponseStatus(
+          message: 'Se ha enviado la solicitud', hasError: false);
     } on FirebaseException catch (e) {
       return ResponseStatus(
           message: e.message ?? 'An exeption occurred', hasError: true);

@@ -11,6 +11,7 @@ class CustomSliverAppBar extends ConsumerWidget {
   final bool floating;
   final String image;
   final Widget? bottomAction;
+  final List<Widget>? actions;
 
   const CustomSliverAppBar({
     super.key,
@@ -20,6 +21,7 @@ class CustomSliverAppBar extends ConsumerWidget {
     required this.image,
     this.floating = true,
     this.bottomAction,
+    this.actions
   });
 
   @override
@@ -28,6 +30,8 @@ class CustomSliverAppBar extends ConsumerWidget {
     final colors = Theme.of(context);
     final size = MediaQuery.of(context).size;
     return SliverAppBar(
+      actions: actions,
+      collapsedHeight: size.height * 0.12,
       expandedHeight: height == null
           ? (size.height * 0.5).round().toDouble()
           : height!.round().toDouble(),

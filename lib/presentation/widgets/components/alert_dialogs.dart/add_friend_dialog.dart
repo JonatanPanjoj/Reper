@@ -92,19 +92,21 @@ class AddFriendDialogState extends ConsumerState<AddFriendDialog> {
     );
   }
 
-  void _addFriend() async{
+  void _addFriend() async {
     if (_formKey.currentState!.validate()) {
       isLoading = true;
       setState(() {});
       final notificationRepo = ref.read(notificationRepositoryProvider);
       final responseNotification = await notificationRepo.createNotification(
         notification: AppNotification(
-            id: 'no-id',
-            type: NotificationType.friend,
-            senderId: 'no-senderid',
-            receiverId: 'no-id',
-            sentAt: Timestamp.fromDate(DateTime.now()),
-            status: NotificationStatus.waiting),
+          id: 'no-id',
+          type: NotificationType.friend,
+          senderId: 'no-senderid',
+          receiverId: 'no-id',
+          sentAt: Timestamp.fromDate(DateTime.now()),
+          status: NotificationStatus.waiting,
+          message: '${ref.read(userProvider).name} te ha enviado una solicitud de amistad'
+        ),
         nickName: _friendsNickname.text,
       );
       isLoading = false;

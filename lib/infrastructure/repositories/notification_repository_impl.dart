@@ -19,11 +19,6 @@ class NotificationRespositoryImpl extends NotificationRepository{
   Future<ResponseStatus> getNotification({required String receiverId}) {
     return datasource.getNotification(receiverId: receiverId);
   }
-
-  @override
-  Future<ResponseStatus> validateNotification({required String receiverId, required String senderId}){
-    return datasource.validateNotification(receiverId: receiverId, senderId: senderId);
-  }
   
   @override
   Stream<List<AppNotification>> streamUserNotifications() {
@@ -33,5 +28,10 @@ class NotificationRespositoryImpl extends NotificationRepository{
   @override
   Future<ResponseStatus> changeRequestStatus({required AppNotification notification}) {
     return datasource.changeRequestStatus(notification: notification); 
+  }
+  
+  @override
+  Future<ResponseStatus> createInvitationGroupNotification({required AppNotification notification}) {
+    return datasource.createInvitationGroupNotification(notification: notification);
   }
 }

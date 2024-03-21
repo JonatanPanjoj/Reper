@@ -4,11 +4,16 @@ import 'package:reper/domain/entities/entities.dart';
 import 'package:reper/presentation/providers/providers.dart';
 import 'package:reper/presentation/widgets/widgets.dart';
 
-class NotificationsScreen extends ConsumerWidget {
+class NotificationsScreen extends ConsumerStatefulWidget {
   const NotificationsScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  NotificationsScreenState createState() => NotificationsScreenState();
+}
+
+class NotificationsScreenState extends ConsumerState<NotificationsScreen> {
+  @override
+  Widget build(BuildContext context) {
     final notifications = ref.watch(userNotificationListProvider);
     return Scaffold(
       appBar: AppBar(
@@ -27,16 +32,18 @@ class NotificationsScreen extends ConsumerWidget {
                     notification: notifications[index],
                     onAccepted: () {
                       changeStatus(
-                        notifications[index]
-                            .copyWith(status: NotificationStatus.accepted),
+                        notifications[index].copyWith(
+                          status: NotificationStatus.accepted,
+                        ),
                         ref,
                         context,
                       );
                     },
                     onDeclined: () {
                       changeStatus(
-                        notifications[index]
-                            .copyWith(status: NotificationStatus.rejected),
+                        notifications[index].copyWith(
+                          status: NotificationStatus.rejected,
+                        ),
                         ref,
                         context,
                       );

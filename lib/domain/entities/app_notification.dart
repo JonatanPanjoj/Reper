@@ -63,6 +63,8 @@ class AppNotification {
   final String receiverId;
   final Timestamp sentAt;
   final NotificationStatus status;
+  final String? message;
+  final String? groupId;
 
   AppNotification({
     required this.id,
@@ -71,6 +73,8 @@ class AppNotification {
     required this.receiverId,
     required this.sentAt,
     this.status = NotificationStatus.waiting,
+    this.message,
+    this.groupId,
   });
 
   Map<String, dynamic> toJson() {
@@ -80,6 +84,8 @@ class AppNotification {
       'sender_id': senderId,
       'receiver_id': receiverId,
       'sent_at': sentAt,
+      'message': message,
+      'group_id': groupId,
       'status': status.value,
     };
   }
@@ -91,6 +97,8 @@ class AppNotification {
       senderId: json['sender_id'] ?? '',
       receiverId: json['receiver_id'] ?? '',
       sentAt: json['sent_at'],
+      message: json['message'] ?? '',
+      groupId: json['group_id'] ?? '',
       status: NotificationStatus.fromString(json['status'] ?? ''),
     );
   }
@@ -101,6 +109,8 @@ class AppNotification {
     String? senderId,
     String? receiverId,
     Timestamp? sentAt,
+    String? message,
+    String? groupId,
     NotificationStatus? status
   }){
     return AppNotification(
@@ -109,6 +119,8 @@ class AppNotification {
       senderId: senderId ?? this.senderId,
       receiverId: receiverId ?? this.receiverId,
       sentAt: sentAt ?? this.sentAt,
+      message: message ?? this.message,
+      groupId: groupId ?? this.groupId,
       status: status ?? this.status
     );
   }
