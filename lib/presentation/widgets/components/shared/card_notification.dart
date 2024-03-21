@@ -1,9 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reper/domain/entities/entities.dart';
-import 'package:reper/presentation/providers/database/repositories/user_repository_provider.dart';
 
 class CardNotification extends ConsumerWidget {
   final void Function()? onAccepted;
@@ -39,18 +36,7 @@ class CardNotification extends ConsumerWidget {
             const SizedBox(width: 15),
             SizedBox(
               width: size.width * 0.4,
-              child: FutureBuilder(
-                future: ref
-                    .read(userRepositoryProvider)
-                    .getUserById(uid: notification.senderId),
-                builder: (context, snapshot) {
-                  final data = snapshot.data;
-                  if (data == null) {
-                    return const SizedBox();
-                  }
-                  return Text('${data.name} te ha enviado una invitación');
-                },
-              ),
+              child: Text(notification.message!),
             ),
             const Expanded(child: SizedBox()),
             GestureDetector(

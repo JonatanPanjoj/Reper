@@ -120,5 +120,13 @@ final appRouter = GoRouter(
         return const NotificationsScreen();
       },
     ),
+    GoRoute(
+      path: '/add-friend-screen',
+      builder: (context, state) {
+        return const SocialView(
+          isAddFriendScreen: true,
+        );
+      },
+    ),
   ],
 );
