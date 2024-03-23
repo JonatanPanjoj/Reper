@@ -44,7 +44,7 @@ class AuthSliverAppBar extends StatelessWidget {
               bottom: 10,
               child: Text(
                 'Ingresa a Reper',
-                style: GoogleFonts.urbanist(fontSize: 23),
+                style: GoogleFonts.urbanist(fontSize: 23, color: colors.colorScheme.onSurface),
               ),
             ),
           ],

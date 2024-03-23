@@ -5,7 +5,7 @@ import 'package:reper/domain/entities/entities.dart';
 abstract class RepertoryRepository {
   Future<ResponseStatus> createRepertory({
     required Repertory repertory,
-    required Uint8List image,
+    required Uint8List? image,
     required String groupId,
   });
 

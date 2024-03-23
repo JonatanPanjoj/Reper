@@ -26,13 +26,13 @@ class LoginScreen extends ConsumerWidget {
                 children: [
                   const SizedBox(height: 15),
                   Text(
-                    'Registrate si no tienes una',
+                    'La app de canciones con acordes!',
                     style: TextStyle(color: colors.dividerColor),
                   ),
                   const SizedBox(height: 95),
                   CustomFilledButton(
                     text: 'Ingresa por Correo',
-                    icon: const Icon(Icons.email),
+                    icon: const Icon(Icons.email, color: Color(0xFFF0F2F5),),
                     onTap: () {
                       context.push('/login-by-email');
                     },
@@ -40,8 +40,8 @@ class LoginScreen extends ConsumerWidget {
                   const SizedBox(height: 20),
                   CustomFilledButton(
                     text: 'Ingresa con Google',
-                    color: const Color(0xFFF0F2F5),
-                    fontColor: colors.scaffoldBackgroundColor,
+                    color: colors.colorScheme.onSurface,
+                    fontColor: colors.colorScheme.surface,
                     icon: Image.asset(
                       'assets/img/google.png',
                       height: 30,

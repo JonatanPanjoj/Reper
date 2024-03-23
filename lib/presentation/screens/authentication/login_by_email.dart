@@ -67,10 +67,12 @@ class LoginByEmailScreenState extends ConsumerState<LoginByEmailScreen> {
 
   /// COMPONENTS
   Widget _buildEmailInput() {
+    final colors = Theme.of(context);
     return CustomInput(
       label: 'Email:',
       controller: _emailController,
       keyboardType: TextInputType.emailAddress,
+      fillColor: colors.cardColor,
       validator: (value) {
         if (value == null || value.isEmpty) {
           return 'Por favor ingresa tu email';
@@ -84,10 +86,12 @@ class LoginByEmailScreenState extends ConsumerState<LoginByEmailScreen> {
   }
 
   Widget _buildPasswordInput() {
+    final colors = Theme.of(context);
     return CustomInput(
       label: 'Password:',
       isPassword: obscureText,
       controller: _passwordController,
+      fillColor: colors.cardColor,
       suffixIcon: IconButton(
         icon: Icon(
           obscureText ? Icons.visibility_off : Icons.visibility,

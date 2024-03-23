@@ -74,8 +74,10 @@ class RegisterByEmailScreenState extends ConsumerState<RegisterByEmailScreen> {
 
   /// COMPONENTS
   Widget _buildNicknameInput() {
+    final colors = Theme.of(context);
     return CustomInput(
       label: 'Nickname:',
+      fillColor: colors.cardColor,
       controller: _nicknameController,
       keyboardType: TextInputType.emailAddress,
       validator: (value) {
@@ -88,9 +90,11 @@ class RegisterByEmailScreenState extends ConsumerState<RegisterByEmailScreen> {
   }
 
   Widget _buildEmailInput() {
+    final colors = Theme.of(context);
     return CustomInput(
       label: 'Email:',
       controller: _emailController,
+      fillColor: colors.cardColor,
       keyboardType: TextInputType.emailAddress,
       validator: (value) {
         if (value == null || value.isEmpty) {
@@ -105,10 +109,12 @@ class RegisterByEmailScreenState extends ConsumerState<RegisterByEmailScreen> {
   }
 
   Widget _buildPasswordInput() {
+    final colors = Theme.of(context);
     return CustomInput(
       label: 'Password:',
       isPassword: obscureText,
       controller: _passwordController,
+      fillColor: colors.cardColor,
       suffixIcon: IconButton(
         icon: Icon(
           obscureText ? Icons.visibility_off : Icons.visibility,
@@ -128,9 +134,11 @@ class RegisterByEmailScreenState extends ConsumerState<RegisterByEmailScreen> {
   }
 
   Widget _buildConfirmPasswordInput() {
+    final colors = Theme.of(context);
     return CustomInput(
       label: 'Confirm Password:',
       isPassword: obscureText,
+      fillColor: colors.cardColor,
       controller: _confirmPasswordController,
       suffixIcon: IconButton(
         icon: Icon(

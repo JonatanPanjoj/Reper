@@ -12,7 +12,7 @@ class FirebaseRepertoryDatasource extends RepertoryDatasource {
   @override
   Future<ResponseStatus> createRepertory({
     required Repertory repertory,
-    required Uint8List image,
+    required Uint8List? image,
     required String groupId,
   }) async {
     try {
@@ -28,16 +28,21 @@ class FirebaseRepertoryDatasource extends RepertoryDatasource {
       final DocumentReference groupRef =
           _database.collection('groups').doc(groupId);
 
-// Subir la Imagen
-      final String imageUrl = await uploadImageToStorage(
-        fileName: repertoryRef.id,
-        childName: 'repertories',
-        mediaFile: image,
-      );
+      if (image != null) {
+        // Subir la Imagen
+        final String imageUrl = await uploadImageToStorage(
+          fileName: repertoryRef.id,
+          childName: 'repertories',
+          mediaFile: image,
+        );
 
-// Agregar el documento con la URL de la imagen
-      batch.set(repertoryRef,
-          repertory.copyWith(id: repertoryRef.id, image: imageUrl).toJson());
+        // Agregar el documento con la URL de la imagen
+        batch.set(repertoryRef,
+            repertory.copyWith(id: repertoryRef.id, image: imageUrl).toJson());
+      }else{
+        batch.set(repertoryRef,
+            repertory.copyWith(id: repertoryRef.id).toJson());
+      }
 
 // Agregar ID a Group para saber la cantidad de reps
       batch.update(groupRef, {
@@ -98,6 +103,7 @@ class FirebaseRepertoryDatasource extends RepertoryDatasource {
         .collection('groups')
         .doc(repId)
         .collection('repertories')
+        .orderBy('event', descending: true)
         .snapshots()
         .map((snapshot) => snapshot.docs
             .map((doc) => Repertory.fromJson(doc.data()))
