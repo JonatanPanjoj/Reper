@@ -31,7 +31,7 @@ class CustomSliverAppBar extends ConsumerWidget {
     final size = MediaQuery.of(context).size;
     return SliverAppBar(
       actions: actions,
-      collapsedHeight: size.height * 0.12,
+      collapsedHeight: size.height * 0.18,
       expandedHeight: height == null
           ? (size.height * 0.5).round().toDouble()
           : height!.round().toDouble(),
@@ -112,7 +112,9 @@ class CustomSliverAppBar extends ConsumerWidget {
         background: Stack(
           children: [
             SizedBox.expand(
-              child: FadeInImage.memoryNetwork(
+              child: image.isEmpty 
+              ? Container( color: colors.colorScheme.inversePrimary,)
+              : FadeInImage.memoryNetwork(
                   image: image,
                   placeholder: (kTransparentImage),
                   fit: BoxFit.cover),

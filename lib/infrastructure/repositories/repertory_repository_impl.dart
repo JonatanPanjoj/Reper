@@ -13,7 +13,7 @@ class RepertoryRepositoryImpl extends RepertoryRepository {
   @override
   Future<ResponseStatus> createRepertory({
     required Repertory repertory,
-    required Uint8List image,
+    required Uint8List? image,
     required String groupId,
   }) {
     return datasource.createRepertory(

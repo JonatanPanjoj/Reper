@@ -103,7 +103,7 @@ class CardTypeOne extends StatelessWidget {
                         image: CachedNetworkImageProvider(imageUrl),
                         fit: BoxFit.cover,
                         placeholder: const AssetImage(
-                            'assets/loaders/bottle-loader.gif'),
+                            'assets/img/rippy-logo.png'),
                       ),
                     ),
                   ),

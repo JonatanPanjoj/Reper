@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:reper/presentation/widgets/widgets.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:reper/config/theme/app_font_styles.dart';
 
 class FullScreenLoader extends StatelessWidget {
   const FullScreenLoader({super.key});
 
   Stream<String> getLoadingMessages() {
     final messages = <String>[
-      'Cargando campeones',
-      'Randomizando Items',
-      'Carreando Yasuos',
-      'Preparándome para carrear, o al menos para no feedear.',
-      'Seleccionando runas y rezando por crits.',
-      'Cargando habilidades y buscando excusas. ',
+      'Cargando canciones',
+      'Afinando instrumentos',
+      '¿Ensayaste la canción?',
+      'Preparándome para brillar',
+      'Seleccionando acordes',
+      'Cargando a Rippy',
       'Ya mero...',
       'Esto está tardando más de lo esperado :(',
     ];
@@ -23,23 +24,32 @@ class FullScreenLoader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text('Espere por favor'),
-            const SizedBox(height: 20),
-            const CustomLoading(),
-            const SizedBox(height: 20),
-            StreamBuilder(
-              stream: getLoadingMessages(),
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) return const Text('Cargando...');
-                return Text(snapshot.data!);
-              },
-            ),
-          ],
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SpinKitSpinningCircle(
+                size:  size.width * 0.5,
+                itemBuilder: (context, index) {
+                  return Image.asset(
+                    'assets/img/rippy-logo.png',
+                  );
+                },
+              ),
+              const SizedBox(height: 20),
+              StreamBuilder(
+                stream: getLoadingMessages(),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) return const Text('Cargando...', style: bold18,);
+                  return Text(snapshot.data!, style: bold18, textAlign: TextAlign.center,);
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

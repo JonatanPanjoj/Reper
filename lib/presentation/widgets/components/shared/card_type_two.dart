@@ -1,6 +1,7 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reper/config/theme/theme.dart';
 import 'package:reper/presentation/providers/providers.dart';
@@ -17,18 +18,17 @@ class CardTypeTwo extends ConsumerStatefulWidget {
   final Widget deleteDialogWidget;
   final Widget? actionWidget;
 
-  const CardTypeTwo({
-    super.key,
-    this.animateFrom,
-    required this.title,
-    required this.subtitle,
-    required this.imageUrl,
-    this.onTap,
-    this.index,
-    this.onDelete,
-    required this.deleteDialogWidget,
-    this.actionWidget
-  });
+  const CardTypeTwo(
+      {super.key,
+      this.animateFrom,
+      required this.title,
+      required this.subtitle,
+      required this.imageUrl,
+      this.onTap,
+      this.index,
+      this.onDelete,
+      required this.deleteDialogWidget,
+      this.actionWidget});
 
   @override
   CardTypeTwoState createState() => CardTypeTwoState();
@@ -120,31 +120,9 @@ class CardTypeTwoState extends ConsumerState<CardTypeTwo> {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SizedBox(
-                    height: size.width * 0.18,
-                    width: size.width * 0.18,
-                    child: FadeInImage(
-                      image: CachedNetworkImageProvider(widget.imageUrl),
-                      fit: BoxFit.cover,
-                      placeholder: const AssetImage(
-                        'assets/loaders/bottle-loader.gif',
-                      ),
-                    ),
-                  ),
+                  _buildImage(size, colors),
                   const SizedBox(width: 20),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        widget.title,
-                        style: bold14,
-                      ),
-                      Text(
-                        widget.subtitle,
-                        style: normal12,
-                      ),
-                    ],
-                  ),
+                  _buildTitle(),
                 ],
               ),
             ),
@@ -156,6 +134,50 @@ class CardTypeTwoState extends ConsumerState<CardTypeTwo> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildTitle() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          widget.title,
+          style: bold14,
+        ),
+        Text(
+          widget.subtitle,
+          style: normal12,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildImage(Size size, ThemeData colors) {
+    return SizedBox(
+      height: size.width * 0.18,
+      width: size.width * 0.18,
+      child: widget.imageUrl.isEmpty
+          ? Container(
+              color: colors.cardColor,
+              child: const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: FadeInImage(
+                  image: AssetImage('assets/img/rippy-logo.png'),
+                  fit: BoxFit.cover,
+                  placeholder: AssetImage(
+                    'assets/img/rippy-logo.png',
+                  ),
+                ),
+               ),
+            )
+          : FadeInImage(
+              image: CachedNetworkImageProvider(widget.imageUrl),
+              fit: BoxFit.cover,
+              placeholder: const AssetImage(
+                'assets/img/rippy-logo.png',
+              ),
+            ),
     );
   }
 }

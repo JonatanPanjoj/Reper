@@ -59,68 +59,64 @@ class GroupScreenState extends ConsumerState<GroupScreen> {
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Column(
           children: [
-            if (repertories.isEmpty)
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                child: InkWell(
-                  borderRadius: BorderRadius.circular(10),
-                  onTap: () {
-                    showCustomDialog(
-                      context: context,
-                      alertDialog: AddReperDialog(groupId: widget.group.id),
-                    );
-                  },
-                  child: const Row(
-                    children: [
-                      Icon(
-                        Icons.add,
-                        size: 50,
-                      ),
-                      SizedBox(width: 20),
-                      Text(
-                        'Agregar una Repertorio',
-                        style: normal20,
-                      )
-                    ],
-                  ),
-                ),
-              )
-            else
-              Column(
-                children: [
-                  for (int i = 0; i < repertories.length; i++)
-                    Column(
+            Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(10),
+                    onTap: () {
+                      showCustomDialog(
+                        context: context,
+                        alertDialog: AddReperDialog(groupId: widget.group.id),
+                      );
+                    },
+                    child: const Row(
                       children: [
-                        const SizedBox(height: 10),
-                        CardTypeTwo(
-                          animateFrom: 100 + (i * 300),
-                          title: repertories[i].name,
-                          subtitle:
-                              '${repertories[i].sections.length} Canciones',
-                          imageUrl: repertories[i].image,
-                          index: i,
-                          onTap: () {
-                            context.push('/repertory', extra: repertories[i]);
-                          },
-                          deleteDialogWidget: const DeleteRepertoryDialog(),
-                          onDelete: () async {
-                            await ref
-                                .read(repertoryRepositoryProvider)
-                                .deleteRepertory(
-                                  repId: repertories[i].id,
-                                  groupId: widget.group.id,
-                                );
-                            setState(() {});
-                          },
+                        Icon(
+                          Icons.add,
+                          size: 50,
                         ),
-                        SizedBox(
-                          height: 1000,
+                        SizedBox(width: 20),
+                        Text(
+                          'Agregar una Repertorio',
+                          style: normal20,
                         )
                       ],
                     ),
-                ],
-              )
+                  ),
+                ),
+                for (int i = 0; i < repertories.length; i++)
+                  Column(
+                    children: [
+                      const SizedBox(height: 10),
+                      CardTypeTwo(
+                        animateFrom: 100 + (i * 300),
+                        title: repertories[i].name,
+                        subtitle: '${repertories[i].sections.length} Canciones',
+                        imageUrl: repertories[i].image,
+                        index: i,
+                        onTap: () {
+                          context.push('/repertory', extra: repertories[i]);
+                        },
+                        deleteDialogWidget: const DeleteRepertoryDialog(),
+                        onDelete: () async {
+                          await ref
+                              .read(repertoryRepositoryProvider)
+                              .deleteRepertory(
+                                repId: repertories[i].id,
+                                groupId: widget.group.id,
+                              );
+                          setState(() {});
+                        },
+                      ),
+                    ],
+                  ),
+                const SizedBox(
+                  height: 50,
+                )
+              ],
+            )
           ],
         ),
       ),
