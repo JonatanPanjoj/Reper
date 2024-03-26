@@ -17,4 +17,16 @@ abstract class SectionRepository {
     required String groupId,
     required String repertoryId,
   });
+
+  Future<ResponseStatus> updateSection({
+    required Section section,
+    required String groupId,
+    required String repertoryId,
+  });
+
+  Future<ResponseStatus> changeSectionPosition({
+    required List<Section> sections,
+    required String groupId,
+    required String repertoryId,
+  });
 }

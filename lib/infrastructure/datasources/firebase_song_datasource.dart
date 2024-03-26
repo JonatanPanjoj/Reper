@@ -32,7 +32,7 @@ class FirebaseSongDatasource extends SongDatasource {
   Future<ResponseStatus> deleteSong({required String songId}) async {
     try {
       await _database.collection('songs').doc(songId).delete();
-      
+
       return ResponseStatus(
         message: 'Canción eliminada con éxito',
         hasError: false,
@@ -53,7 +53,7 @@ class FirebaseSongDatasource extends SongDatasource {
 
   @override
   Stream<List<Song>> streamSongsByUser({required String uid}) {
-    return _database  
+    return _database
         .collection('songs')
         .where('created_by', isEqualTo: uid)
         .snapshots()
@@ -61,25 +61,35 @@ class FirebaseSongDatasource extends SongDatasource {
             snapshot.docs.map((doc) => Song.fromJson(doc.data())).toList());
   }
 
-
-
   @override
   Future<ResponseStatus> updateSong({required Song song}) async {
     try {
-    await _database.collection('songs').doc(song.id).set(song.toJson());
-    
-    return ResponseStatus(message: 'Canción actualizada con éxito', hasError: false);
+      await _database.collection('songs').doc(song.id).set(song.toJson());
+
+      return ResponseStatus(
+          message: 'Canción actualizada con éxito', hasError: false);
     } on FirebaseException catch (e) {
-    return ResponseStatus(message: e.message ?? 'An exeption occurred', hasError: true);
+      return ResponseStatus(
+          message: e.message ?? 'An exeption occurred', hasError: true);
     } catch (e) {
-    return ResponseStatus(message: e.toString(), hasError: true);
+      return ResponseStatus(message: e.toString(), hasError: true);
     }
   }
-  
+
   @override
   Stream<Song> streamSong({required String songId}) {
-    return _database.collection('songs').doc(songId).snapshots().map((snapshot) {
+    return _database
+        .collection('songs')
+        .doc(songId)
+        .snapshots()
+        .map((snapshot) {
       return Song.fromJson(snapshot.data()!..addAll({'uid': snapshot.id}));
     });
+  }
+
+  @override
+  Future<Song> getSong({required String songId}) async {
+    final snapshot = await _database.collection('songs').doc(songId).get();
+    return Song.fromJson(snapshot.data()!);
   }
 }

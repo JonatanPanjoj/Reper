@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -21,6 +22,9 @@ class RepertoryScreen extends ConsumerStatefulWidget {
 }
 
 class RepertoryScreenState extends ConsumerState<RepertoryScreen> {
+  List<Section> orderedSections = [];
+  List<Section> orderedSectionsCopy = [];
+  bool isOrderedSectionsEmpty = true;
   Song? selectedSong;
 
   @override
@@ -35,19 +39,28 @@ class RepertoryScreenState extends ConsumerState<RepertoryScreen> {
             return const Center(child: CustomLoading());
           }
           return StreamBuilder(
-              stream: _streamSections(),
-              builder: (context, snapshot) {
-                final sections = snapshot.data;
-                if (sections == null) {
-                  return const Center(child: CustomLoading());
-                }
-                if (sections.isNotEmpty) {
-                  sections.sort((a, b) => a.position.compareTo(b.position));
-                }
-                return _buildBody(size, sections, songs);
-              });
+            stream: _streamSections(),
+            builder: (context, snapshot) {
+              final sections = snapshot.data;
+              if (sections == null) {
+                return const Center(child: CustomLoading());
+              }
+              if (sections.isNotEmpty) {
+                sections.sort((a, b) => a.position.compareTo(b.position));
+              }
+              return _buildBody(size, sections, songs);
+            },
+          );
         },
       ),
+      floatingActionButton: (!listEquals(orderedSectionsCopy, orderedSections))
+          ? FloatingActionButton.small (
+              child: const Icon(Icons.save),
+              onPressed: () {
+                _updatePosition(sections: orderedSections);
+              },
+            )
+          : const SizedBox(),
     );
   }
 
@@ -57,51 +70,72 @@ class RepertoryScreenState extends ConsumerState<RepertoryScreen> {
         _buildAppBar(size, sections, repertory),
         _buildAddSongTile(sections),
         if (sections.isEmpty) _buildNoSongsMessage(),
-        if (sections.isNotEmpty)
-          SliverList.builder(
-            itemCount: sections.length,
-            itemBuilder: (BuildContext context, int index) {
-              return Builder(
-                builder: (context) {
-                  return StreamBuilder(
-                    stream: ref
-                        .watch(songsRepositoryProvider)
-                        .streamSong(songId: sections[index].song),
-                    builder: (context, snapshot) {
-                      final song = snapshot.data;
-                      if (song == null) {
-                        return const SizedBox();
-                      }
-                      return CardTypeThree(
-                        title: sections[index].name,
-                        subtitle: song.title,
-                        onTap: () {
-                          context.push(
-                            '/section-screen',
-                            extra: {
-                              'section': sections[index],
-                              'image': widget.repertory.image,
-                              'song': song
-                            },
-                          );
-                        },
-                        deleteDialogWidget: const DeleteSectionDialog(),
-                        onDelete: () async {
-                          await ref
-                              .read(sectionRepositoryProvider)
-                              .deleteSection(
-                                  groupId: widget.repertory.groupId,
-                                  repertoryId: widget.repertory.id,
-                                  sectionId: sections[index].id);
-                        },
-                      );
-                    },
-                  );
-                },
-              );
-            },
-          )
+        if (sections.isNotEmpty) _buildSectionsList(sections)
       ],
+    );
+  }
+
+  Widget _buildSectionsList(List<Section> sections) {
+    if (orderedSections.length != sections.length) {
+      orderedSections = sections;
+      orderedSectionsCopy = List.from(orderedSections);
+    }
+    return SliverReorderableList(
+      itemCount: orderedSections.length,
+      itemBuilder: (context, index) {
+        return ReorderableDragStartListener(
+          key: Key('$index'),
+          index: index,
+          child: StreamBuilder(
+            key: Key('$index'),
+            stream: ref
+                .watch(songsRepositoryProvider)
+                .streamSong(songId: orderedSections[index].song),
+            builder: (context, snapshot) {
+              final song = snapshot.data;
+              if (song == null) {
+                return const SizedBox();
+              }
+              return _buildCard(index, song, context, orderedSections);
+            },
+          ),
+        );
+      },
+      onReorder: (int oldIndex, int newIndex) {
+        if (oldIndex < newIndex) {
+          newIndex -= 1;
+        }
+        final item = orderedSections.removeAt(oldIndex);
+        orderedSections.insert(newIndex, item);
+        setState(() {});
+      },
+    );
+  }
+
+  Widget _buildCard(
+      int index, Song song, BuildContext context, List<Section> sections) {
+    return Material(
+      child: CardTypeThree(
+        title: orderedSections[index].name,
+        subtitle: song.title,
+        onTap: () {
+          context.push(
+            '/section-screen',
+            extra: {
+              'section': orderedSections[index],
+              'image': widget.repertory.image,
+              'song': song
+            },
+          );
+        },
+        deleteDialogWidget: const DeleteSectionDialog(),
+        onDelete: () async {
+          await ref.read(sectionRepositoryProvider).deleteSection(
+              groupId: widget.repertory.groupId,
+              repertoryId: widget.repertory.id,
+              sectionId: sections[index].id);
+        },
+      ),
     );
   }
 
@@ -128,7 +162,8 @@ class RepertoryScreenState extends ConsumerState<RepertoryScreen> {
         bottomAction: Stack(
           alignment: Alignment.center,
           children: [
-            if (repertory.event != null && repertory.event!.toDate().isAfter(DateTime.now()))
+            if (repertory.event != null &&
+                repertory.event!.toDate().isAfter(DateTime.now()))
               SpinKitRipple(
                 duration: const Duration(seconds: 4),
                 itemBuilder: (context, index) {
@@ -219,5 +254,16 @@ class RepertoryScreenState extends ConsumerState<RepertoryScreen> {
     if (res.hasError) {
       showSnackBar(context: context, message: res.message);
     }
+  }
+
+  void _updatePosition({required List<Section> sections}) async {
+    final res = await ref.read(sectionRepositoryProvider).changeSectionPosition(
+          sections: sections,
+          groupId: widget.repertory.groupId,
+          repertoryId: widget.repertory.id,
+        );
+    orderedSectionsCopy = List.from(sections);
+    setState(() {});
+    showSnackbarResponse(context: context, response: res);
   }
 }

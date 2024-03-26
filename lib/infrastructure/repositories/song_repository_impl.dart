@@ -36,4 +36,9 @@ class SongRepositoryImpl extends SongRepository {
   Stream<Song> streamSong({required String songId}) {
     return datasource.streamSong(songId: songId);
   }
+  
+  @override
+  Future<Song> getSong({required String songId}) {
+    return datasource.getSong(songId: songId);
+  }
 }
