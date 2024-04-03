@@ -24,7 +24,6 @@ class RepertoryScreen extends ConsumerStatefulWidget {
 class RepertoryScreenState extends ConsumerState<RepertoryScreen> {
   List<Section> orderedSections = [];
   List<Section> orderedSectionsCopy = [];
-  bool isOrderedSectionsEmpty = true;
   Song? selectedSong;
 
   @override
@@ -34,10 +33,11 @@ class RepertoryScreenState extends ConsumerState<RepertoryScreen> {
       body: StreamBuilder(
         stream: _streamRepertory(),
         builder: (context, snapshot) {
-          final songs = snapshot.data;
-          if (songs == null) {
+          final repertory = snapshot.data;
+          if (repertory == null) {
             return const Center(child: CustomLoading());
           }
+
           return StreamBuilder(
             stream: _streamSections(),
             builder: (context, snapshot) {
@@ -45,22 +45,12 @@ class RepertoryScreenState extends ConsumerState<RepertoryScreen> {
               if (sections == null) {
                 return const Center(child: CustomLoading());
               }
-              if (sections.isNotEmpty) {
-                sections.sort((a, b) => a.position.compareTo(b.position));
-              }
-              return _buildBody(size, sections, songs);
+              return _buildBody(size, sections, repertory);
             },
           );
         },
       ),
-      floatingActionButton: (!listEquals(orderedSectionsCopy, orderedSections))
-          ? FloatingActionButton.small (
-              child: const Icon(Icons.save),
-              onPressed: () {
-                _updatePosition(sections: orderedSections);
-              },
-            )
-          : const SizedBox(),
+      floatingActionButton: _buildFloatingActionButton(),
     );
   }
 
@@ -83,22 +73,18 @@ class RepertoryScreenState extends ConsumerState<RepertoryScreen> {
     return SliverReorderableList(
       itemCount: orderedSections.length,
       itemBuilder: (context, index) {
-        return ReorderableDragStartListener(
+        return StreamBuilder(
           key: Key('$index'),
-          index: index,
-          child: StreamBuilder(
-            key: Key('$index'),
-            stream: ref
-                .watch(songsRepositoryProvider)
-                .streamSong(songId: orderedSections[index].song),
-            builder: (context, snapshot) {
-              final song = snapshot.data;
-              if (song == null) {
-                return const SizedBox();
-              }
-              return _buildCard(index, song, context, orderedSections);
-            },
-          ),
+          stream: ref
+              .watch(songsRepositoryProvider)
+              .streamSong(songId: orderedSections[index].song),
+          builder: (context, snapshot) {
+            final song = snapshot.data;
+            if (song == null) {
+              return const SizedBox();
+            }
+            return _buildCard(index, song, context, orderedSections);
+          },
         );
       },
       onReorder: (int oldIndex, int newIndex) {
@@ -116,7 +102,7 @@ class RepertoryScreenState extends ConsumerState<RepertoryScreen> {
       int index, Song song, BuildContext context, List<Section> sections) {
     return Material(
       child: CardTypeThree(
-        title: orderedSections[index].name,
+        title: sections[index].name,
         subtitle: song.title,
         onTap: () {
           context.push(
@@ -128,6 +114,11 @@ class RepertoryScreenState extends ConsumerState<RepertoryScreen> {
             },
           );
         },
+        actionWidget: ReorderableDragStartListener(
+          key: Key('$index'),
+          index: index,
+          child: const Icon(Icons.drag_handle),
+        ),
         deleteDialogWidget: const DeleteSectionDialog(),
         onDelete: () async {
           await ref.read(sectionRepositoryProvider).deleteSection(
@@ -137,18 +128,6 @@ class RepertoryScreenState extends ConsumerState<RepertoryScreen> {
         },
       ),
     );
-  }
-
-  Stream<List<Section>> _streamSections() {
-    return ref.watch(sectionRepositoryProvider).streamSections(
-        groupId: widget.repertory.groupId, repertoryId: widget.repertory.id);
-  }
-
-  Stream<Repertory> _streamRepertory() {
-    return ref.watch(repertoryRepositoryProvider).streamRepertory(
-          id: widget.repertory.id,
-          groupId: widget.repertory.groupId,
-        );
   }
 
   CustomSliverAppBar _buildAppBar(
@@ -230,6 +209,33 @@ class RepertoryScreenState extends ConsumerState<RepertoryScreen> {
         ),
       ),
     );
+  }
+
+  Widget _buildFloatingActionButton() {
+    return (!listEquals(orderedSectionsCopy, orderedSections))
+        ? FloatingActionButton.small(
+            child: const Icon(Icons.save),
+            onPressed: () {
+              _updatePosition(sections: orderedSections);
+            },
+          )
+        : const SizedBox();
+  }
+
+
+// OTHERS
+  Stream<List<Section>> _streamSections() {
+    return ref.watch(sectionRepositoryProvider).streamSections(
+          groupId: widget.repertory.groupId,
+          repertoryId: widget.repertory.id,
+        );
+  }
+
+  Stream<Repertory> _streamRepertory() {
+    return ref.watch(repertoryRepositoryProvider).streamRepertory(
+          id: widget.repertory.id,
+          groupId: widget.repertory.groupId,
+        );
   }
 
   void _createSection(Song selectedSong, List<Section?> sections) async {
