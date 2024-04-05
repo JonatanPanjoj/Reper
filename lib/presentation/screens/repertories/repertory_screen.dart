@@ -134,38 +134,56 @@ class RepertoryScreenState extends ConsumerState<RepertoryScreen> {
       Size size, List<Section?> sections, Repertory repertory) {
     final colors = Theme.of(context);
     return CustomSliverAppBar(
-        height: size.height * 0.3,
-        image: widget.repertory.image,
-        title: widget.repertory.name,
-        subtitle: '${sections.length} canciones',
-        bottomAction: Stack(
-          alignment: Alignment.center,
-          children: [
-            if (repertory.event != null &&
-                repertory.event!.toDate().isAfter(DateTime.now()))
-              SpinKitRipple(
-                duration: const Duration(seconds: 4),
-                itemBuilder: (context, index) {
-                  return Container(
-                    decoration: BoxDecoration(
-                      color: primaryDark.withOpacity(0.8),
-                      shape: BoxShape.circle,
-                    ),
-                  );
-                },
-              ),
-            IconButton(
-              color: colors.colorScheme.onSurface,
-              onPressed: () {
-                context.push(
-                  '/add-repertory-event-screen',
-                  extra: repertory,
-                );
-              },
-              icon: const Icon(Icons.calendar_month),
-            ),
-          ],
-        ));
+      height: size.height * 0.3,
+      image: repertory.image,
+      title: repertory.name,
+      subtitle: '${sections.length} canciones',
+      actions: [
+        _buildEventButton(repertory, colors)
+        ,
+      ],
+      bottomAction: _buildEditButton(repertory),
+    );
+  }
+
+  IconButton _buildEditButton(Repertory repertory) {
+    return IconButton(
+        onPressed: () {
+          context.push('/edit-repertory-screen', extra: {'repertory': repertory});
+        },
+        icon: const Icon(Icons.edit),
+      );
+  }
+
+  Stack _buildEventButton(Repertory repertory, ThemeData colors) {
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        if (repertory.event != null &&
+            repertory.event!.toDate().isAfter(DateTime.now()))
+          SpinKitRipple(
+            duration: const Duration(seconds: 4),
+            itemBuilder: (context, index) {
+              return Container(
+                decoration: BoxDecoration(
+                  color: primaryDark.withOpacity(0.8),
+                  shape: BoxShape.circle,
+                ),
+              );
+            },
+          ),
+        IconButton(
+          color: colors.colorScheme.onSurface,
+          onPressed: () {
+            context.push(
+              '/add-repertory-event-screen',
+              extra: repertory,
+            );
+          },
+          icon: const Icon(Icons.calendar_month),
+        ),
+      ],
+    );
   }
 
   SliverToBoxAdapter _buildNoSongsMessage() {
@@ -221,7 +239,6 @@ class RepertoryScreenState extends ConsumerState<RepertoryScreen> {
           )
         : const SizedBox();
   }
-
 
 // OTHERS
   Stream<List<Section>> _streamSections() {
