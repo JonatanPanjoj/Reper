@@ -16,7 +16,7 @@ export 'package:reper/presentation/screens/views/social_view.dart';
 //Groups
 export 'package:reper/presentation/screens/groups/create_group_screen.dart';
 export 'package:reper/presentation/screens/groups/group_screen.dart';
-export 'package:reper/presentation/screens/views/empty_groups.dart';
+export 'package:reper/presentation/widgets/components/shared/empty_groups.dart';
 export 'package:reper/presentation/screens/groups/edit_group_screen.dart';
 
 
@@ -34,3 +34,6 @@ export 'package:reper/presentation/screens/sections/section_screen.dart';
 
 //Notifications
 export 'package:reper/presentation/screens/notifications/notifications_screen.dart';
+
+//User
+export 'package:reper/presentation/screens/users/edit_profile_screen.dart';

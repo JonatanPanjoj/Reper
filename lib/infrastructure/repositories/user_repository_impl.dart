@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:reper/domain/datasources/user_datasource.dart';
 import 'package:reper/domain/entities/entities.dart';
 import 'package:reper/domain/repositories/user_repository.dart';
@@ -33,8 +35,8 @@ class UserRepositoryImpl extends UserRepository {
   }
   
   @override
-  Future<ResponseStatus> updateUser({required AppUser user}) {
-    return datasource.updateUser(user: user);
+  Future<ResponseStatus> updateUser({required AppUser user, Uint8List? image}) {
+    return datasource.updateUser(user: user, image: image);
   }
   
   @override

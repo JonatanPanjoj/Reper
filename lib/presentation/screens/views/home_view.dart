@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:reper/domain/entities/group.dart';
 import 'package:reper/presentation/providers/providers.dart';
-import 'package:reper/presentation/screens/views/empty_groups.dart';
+import 'package:reper/presentation/widgets/components/shared/empty_groups.dart';
 import 'package:reper/presentation/widgets/widgets.dart';
 
 class HomeView extends ConsumerStatefulWidget {

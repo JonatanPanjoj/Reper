@@ -55,7 +55,7 @@ class CustomInput extends StatelessWidget {
               onChanged: onChanged,
               decoration: InputDecoration(
                 hintText: hintText,
-                fillColor: fillColor ?? colors.canvasColor,
+                fillColor: fillColor ?? colors.cardColor,
                 suffixIcon: suffixIcon,
                 filled: true,
                 border: const OutlineInputBorder(borderSide: BorderSide.none),
