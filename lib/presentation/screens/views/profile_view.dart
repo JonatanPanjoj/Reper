@@ -329,7 +329,9 @@ class ProfileViewState extends ConsumerState<ProfileView> {
           top: 180,
           right: 20,
           child: GestureDetector(
-              onTap: () {},
+              onTap: () {
+                context.push('/edit-profile-screen', extra: {'user': user} );
+              },
               child: Container(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 15, vertical: 7),

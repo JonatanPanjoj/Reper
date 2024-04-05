@@ -128,5 +128,14 @@ final appRouter = GoRouter(
         );
       },
     ),
+    GoRoute(
+      path: '/edit-profile-screen',
+      builder: (context, state) {
+        final extras = state.extra as Map<String, dynamic>;
+        return EditProfileScreen(
+          user: extras['user'] as AppUser,
+        );
+      },
+    ),
   ],
 );

@@ -1,11 +1,14 @@
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:reper/config/utils/image_utils.dart';
 import 'package:reper/domain/datasources/user_datasource.dart';
 import 'package:reper/domain/entities/entities.dart';
 
 class FirebaseUserDatasource extends UserDatasource {
   final FirebaseFirestore database = FirebaseFirestore.instance;
+  final String currentUserId = FirebaseAuth.instance.currentUser!.uid;
 
   @override
   Future<ResponseStatus> createUser({
@@ -13,7 +16,10 @@ class FirebaseUserDatasource extends UserDatasource {
     required String uid,
   }) async {
     try {
-      await database.collection('users').doc(uid).set(user.copyWith(uid: uid).toJson());
+      await database
+          .collection('users')
+          .doc(uid)
+          .set(user.copyWith(uid: uid).toJson());
       return ResponseStatus(
           message: 'Usuario Creado con Éxito', hasError: false);
     } on FirebaseException catch (e) {
@@ -37,7 +43,7 @@ class FirebaseUserDatasource extends UserDatasource {
       return ResponseStatus(
         message: 'El nickname $nickname ya esta siendo utilizado',
         hasError: true,
-        extra: {'user':userId},
+        extra: {'user': userId},
       );
     }
   }
@@ -72,7 +78,34 @@ class FirebaseUserDatasource extends UserDatasource {
     Uint8List? image,
   }) async {
     try {
-      await database.collection('users').doc(user.uid).set(user.toJson());
+      final users = await database
+          .collection('users')
+          .where('name', isEqualTo: user.name)
+          .get();
+      if (users.docs.isNotEmpty) {
+        for (var usuario in users.docs) {
+          if (usuario.id != currentUserId) {
+            return ResponseStatus(
+              message: 'El usuario ya está siendo utilizado por otro usuario',
+              hasError: true,
+            ); // El ya está siendo utilizado por otro usuario
+          }
+        }
+      }
+
+      if (image == null) {
+        await database.collection('users').doc(user.uid).set(user.toJson());
+      } else {
+        final urlImage = await uploadImageToStorage(
+          fileName: user.uid,
+          childName: 'profile_images',
+          mediaFile: image,
+        );
+        await database
+            .collection('users')
+            .doc(user.uid)
+            .set(user.copyWith(image: urlImage).toJson());
+      }
       return ResponseStatus(
         message: 'Se actualizó el usuario con éxito',
         hasError: false,
@@ -109,7 +142,7 @@ class FirebaseUserDatasource extends UserDatasource {
           : AppUser.fromJson(snapshot.data()!..addAll({'uid': snapshot.id}));
     });
   }
-  
+
   @override
   Stream<List<AppUser>> streamUserFriends({required List<String> friends}) {
     if (friends.isEmpty) {
@@ -122,5 +155,4 @@ class FirebaseUserDatasource extends UserDatasource {
         .map((snapshot) =>
             snapshot.docs.map((doc) => AppUser.fromJson(doc.data())).toList());
   }
-
 }
