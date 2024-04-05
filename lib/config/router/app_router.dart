@@ -137,5 +137,14 @@ final appRouter = GoRouter(
         );
       },
     ),
+    GoRoute(
+      path: '/edit-repertory-screen',
+      builder: (context, state) {
+        final extras = state.extra as Map<String, dynamic>;
+        return EditRepertoryScreen(
+          repertory: extras['repertory'] as Repertory,
+        );
+      },
+    ),
   ],
 );
