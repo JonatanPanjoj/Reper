@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
-class FloatingSpeedButtons extends StatelessWidget {
+class FloatingSpeedButtons extends StatefulWidget {
   final void Function()? onIncrement;
   final void Function()? onDecrement;
   final void Function()? onPause;
@@ -14,34 +13,30 @@ class FloatingSpeedButtons extends StatelessWidget {
   });
 
   @override
+  State<FloatingSpeedButtons> createState() => _FloatingSpeedButtonsState();
+}
+
+class _FloatingSpeedButtonsState extends State<FloatingSpeedButtons> {
+  bool isIncrement = true;
+
+  @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context);
-    return SpeedDial(
-      mini: true,
-      childrenButtonSize: const Size(45, 45),
-      renderOverlay: false,
-      animatedIcon: AnimatedIcons.play_pause,
-      closeManually: true,
-      children: [
-        SpeedDialChild(
-          backgroundColor: colors.highlightColor,
-          shape: const CircleBorder(),
-          child: const Icon(Icons.arrow_circle_down_rounded),
-          onTap: onIncrement
-        ),
-        SpeedDialChild(
-          backgroundColor: colors.highlightColor,
-          shape: const CircleBorder(),
-          child: const Icon(Icons.pause),
-          onTap:onPause,
-        ),
-        SpeedDialChild(
-          backgroundColor: colors.highlightColor,
-          shape: const CircleBorder(),
-          child: const Icon(Icons.arrow_circle_up_rounded),
-          onTap: onDecrement,
-        ),
-      ],
+    // final colors = Theme.of(context);
+    return FloatingActionButton(
+      shape: const CircleBorder(),
+      onPressed: () {
+        if (widget.onIncrement != null && widget.onPause != null) {
+          if (isIncrement) {
+            widget.onIncrement!();
+            isIncrement = false;
+          } else {
+            widget.onPause!();
+            isIncrement = true;
+          }
+          setState(() {});
+        }
+      },
+      child: isIncrement ? const Icon(Icons.play_arrow) : const Icon(Icons.pause),
     );
   }
 }

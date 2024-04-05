@@ -26,5 +26,17 @@ class SectionRepositoryImpl extends SectionRepository {
   @override
   Future<ResponseStatus> deleteSection({required String groupId, required String repertoryId, required String sectionId}) {
     return datasource.deleteSection(groupId: groupId, repertoryId: repertoryId, sectionId: sectionId);
+  } 
+  
+  @override
+  Future<ResponseStatus> updateSection({required Section section, required String groupId, required String repertoryId}) {
+    return datasource.updateSection(section: section, groupId: groupId, repertoryId: repertoryId);
   }
+  
+  @override
+  Future<ResponseStatus> changeSectionPosition({required List<Section> sections, required String groupId, required String repertoryId}) {
+    return datasource.changeSectionPosition(sections: sections, groupId: groupId, repertoryId: repertoryId);
+  }
+  
+  
 }

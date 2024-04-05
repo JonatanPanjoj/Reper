@@ -13,6 +13,8 @@ abstract class SongDatasource {
 
   Future<ResponseStatus> getUserSongs({required String uid});
 
+  Future<Song> getSong({required String songId});
+
   // //PUBLIC
   // Future<List<Song>> getRecentSongs();
 }

@@ -13,4 +13,6 @@ abstract class SongRepository {
 
   Future<ResponseStatus> getUserSongs({required String uid});
 
+  Future<Song> getSong({required String songId});
+
 }
