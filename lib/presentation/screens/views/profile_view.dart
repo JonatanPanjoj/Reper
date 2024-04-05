@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:reper/config/utils/utils.dart';
 import 'package:reper/domain/entities/app_user.dart';
 import 'package:reper/presentation/providers/providers.dart';
@@ -33,11 +34,12 @@ class ProfileViewState extends ConsumerState<ProfileView> {
             const SizedBox(height: 10),
             _buildSettings(isDarkMode, switchChanged),
             const SizedBox(height: 10),
-            _buildUserSupport(),
+            // _buildUserSupport(),
             const SizedBox(
               height: 10,
             ),
-            _buildLogOut()
+            _buildLogOut(),
+            _buildCurrentVersion()
           ],
         ),
       ),
@@ -46,20 +48,22 @@ class ProfileViewState extends ConsumerState<ProfileView> {
         onPressed: () {
           context.push('/notifications-screen');
         },
-        shape: CircleBorder(),
+        shape: const CircleBorder(),
         child: Stack(
           children: [
-            Icon(Icons.notifications),
+            const Icon(Icons.notifications),
             if (notifications.isNotEmpty)
               Positioned(
-                right: 1  ,
+                right: 1,
                 top: 2,
                 child: SizedBox(
                   height: 9,
                   width: 9,
                   child: Container(
-                    decoration: BoxDecoration(color: colors.colorScheme.error, shape: BoxShape.circle),
-                    // child: Text(notifications.length.toString(), style: TextStyle(fontSize: 8, fontWeight: FontWeight.bold),),
+                    decoration: BoxDecoration(
+                      color: colors.colorScheme.error,
+                      shape: BoxShape.circle,
+                    ),
                   ),
                 ),
               )
@@ -67,6 +71,27 @@ class ProfileViewState extends ConsumerState<ProfileView> {
         ),
       ),
     );
+  }
+
+  FutureBuilder<PackageInfo> _buildCurrentVersion() {
+    return FutureBuilder<PackageInfo>(
+        future: PackageInfo.fromPlatform(),
+        builder: (context, snapshot) {
+          final data = snapshot.data;
+          if (data == null) {
+            return const SizedBox();
+          }
+
+          final currentVersion = data.version;
+
+
+          
+          return Padding(
+            padding: const EdgeInsets.all(10),
+            child: Text('Version $currentVersion'),
+          );
+        },
+      );
   }
 
   Widget _buildLogOut() {
@@ -110,45 +135,47 @@ class ProfileViewState extends ConsumerState<ProfileView> {
           Card(
             child: Padding(
               padding: const EdgeInsets.all(20),
-              child: Column(children: [
-                GestureDetector(
-                  onTap: () {},
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [Text('Ayuda y soporte')],
+              child: Column(
+                children: [
+                  GestureDetector(
+                    onTap: () {},
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [Text('Ayuda y soporte')],
+                    ),
                   ),
-                ),
-                const SizedBox(
-                  height: 15,
-                ),
-                GestureDetector(
-                  onTap: () {},
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [Text('Contáctanos')],
+                  const SizedBox(
+                    height: 15,
                   ),
-                ),
-                const SizedBox(
-                  height: 15,
-                ),
-                GestureDetector(
-                  onTap: () {},
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [Text('Política de Privacidad')],
+                  GestureDetector(
+                    onTap: () {},
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [Text('Contáctanos')],
+                    ),
                   ),
-                ),
-                const SizedBox(
-                  height: 15,
-                ),
-                GestureDetector(
-                  onTap: () {},
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [Text('Cambio de contraseña')],
+                  const SizedBox(
+                    height: 15,
                   ),
-                ),
-              ]),
+                  GestureDetector(
+                    onTap: () {},
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [Text('Política de Privacidad')],
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  GestureDetector(
+                    onTap: () {},
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [Text('Cambio de contraseña')],
+                    ),
+                  ),
+                ],
+              ),
             ),
           )
         ],
@@ -192,7 +219,7 @@ class ProfileViewState extends ConsumerState<ProfileView> {
                       style: TextStyle(fontSize: 15),
                     ),
                     Switch(
-                      value: switchChanged,
+                      value: false,
                       onChanged: (newValue) {
                         setState(() {
                           switchChanged = newValue;
@@ -301,36 +328,36 @@ class ProfileViewState extends ConsumerState<ProfileView> {
                   )
           ],
         ),
-        Positioned(
-          top: 30,
-          left: 20,
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 7),
-            width: 86,
-            height: 29,
-            decoration: BoxDecoration(
-                image: const DecorationImage(
-                  alignment: Alignment(0.8, 0.05),
-                  scale: 30,
-                  image: AssetImage('assets/img/notas-musicales.png'),
-                ),
-                color: const Color.fromRGBO(241, 144, 0, 1),
-                borderRadius: BorderRadius.circular(20)),
-            child: const Text(
-              'Premium',
-              style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 10),
-            ),
-          ),
-        ),
+        // Positioned(
+        //   top: 30,
+        //   left: 20,
+        //   child: Container(
+        //     padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 7),
+        //     width: 86,
+        //     height: 29,
+        //     decoration: BoxDecoration(
+        //         image: const DecorationImage(
+        //           alignment: Alignment(0.8, 0.05),
+        //           scale: 30,
+        //           image: AssetImage('assets/img/notas-musicales.png'),
+        //         ),
+        //         color: const Color.fromRGBO(241, 144, 0, 1),
+        //         borderRadius: BorderRadius.circular(20)),
+        //     child: const Text(
+        //       'Premium',
+        //       style: TextStyle(
+        //           color: Colors.white,
+        //           fontWeight: FontWeight.bold,
+        //           fontSize: 10),
+        //     ),
+        //   ),
+        // ),
         Positioned(
           top: 180,
           right: 20,
           child: GestureDetector(
               onTap: () {
-                context.push('/edit-profile-screen', extra: {'user': user} );
+                context.push('/edit-profile-screen', extra: {'user': user});
               },
               child: Container(
                 padding:
