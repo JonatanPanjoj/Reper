@@ -83,7 +83,7 @@ class RepertoryScreenState extends ConsumerState<RepertoryScreen> {
             if (song == null) {
               return const SizedBox();
             }
-            return _buildCard(index, song, context, orderedSections);
+            return _buildCard(index, song, context, orderedSections, sections);
           },
         );
       },
@@ -99,20 +99,24 @@ class RepertoryScreenState extends ConsumerState<RepertoryScreen> {
   }
 
   Widget _buildCard(
-      int index, Song song, BuildContext context, List<Section> sections) {
+      int index, Song song, BuildContext context, List<Section> sections, List<Section> currentSections) {
     return Material(
       child: CardTypeThree(
         title: sections[index].name,
         subtitle: song.title,
-        onTap: () {
-          context.push(
+        onTap: () async{
+          final bool? hasUpdated = await context.push(
             '/section-screen',
             extra: {
               'section': orderedSections[index],
               'image': widget.repertory.image,
-              'song': song
+              'song': song,
+              'repertory': widget.repertory
             },
           );
+          if(hasUpdated != null){
+            orderedSections = currentSections;
+          }
         },
         actionWidget: ReorderableDragStartListener(
           key: Key('$index'),

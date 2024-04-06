@@ -11,6 +11,7 @@ class CustomSliverAppBar extends ConsumerWidget {
   final bool floating;
   final String image;
   final Widget? bottomAction;
+  final Widget? titleWidget;
   final List<Widget>? actions;
 
   const CustomSliverAppBar({
@@ -21,6 +22,7 @@ class CustomSliverAppBar extends ConsumerWidget {
     required this.image,
     this.floating = true,
     this.bottomAction,
+    this.titleWidget,
     this.actions
   });
 
@@ -73,7 +75,8 @@ class CustomSliverAppBar extends ConsumerWidget {
                 children: [
                   SizedBox(
                     width: size.width * 0.5,
-                    child: Text(
+                    child:
+                    titleWidget ?? Text(
                       title ?? '',
                       style: GoogleFonts.urbanist(fontSize: 25).copyWith(
                           color: colors.colorScheme.onSurface,

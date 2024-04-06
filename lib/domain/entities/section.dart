@@ -42,4 +42,12 @@ class Section {
       song: song ?? this.song,
     );
   }
+
+  factory Section.empty() {
+    return Section(
+        id: '',
+        name: '',
+        song: '',
+        position: 100);
+  }
 }
