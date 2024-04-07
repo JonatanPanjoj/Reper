@@ -8,7 +8,7 @@ import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:reper/config/utils/utils.dart';
 import 'package:reper/domain/entities/entities.dart';
-import 'package:reper/presentation/providers/database/repositories/user_repository_provider.dart';
+import 'package:reper/presentation/providers/providers.dart';
 import 'package:reper/presentation/widgets/widgets.dart';
 
 class EditProfileScreen extends ConsumerStatefulWidget {
@@ -151,11 +151,11 @@ class EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     if (_formKey.currentState!.validate()) {
       isLoading = true;
       setState(() {});
-      final res = await ref.read(userRepositoryProvider).updateUser(
-            user: widget.user.copyWith(
+      final res = await ref.read(userProvider.notifier).updateUser(
+            widget.user.copyWith(
               name: _nameController.text,
             ),
-            image: selectedImage,
+            selectedImage,
           );
       isLoading = false;
       setState(() {});

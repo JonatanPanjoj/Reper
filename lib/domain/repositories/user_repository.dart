@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:reper/domain/entities/entities.dart';
 
 abstract class UserRepository {
@@ -22,7 +20,6 @@ abstract class UserRepository {
 
   Future<ResponseStatus> updateUser({
     required AppUser user,
-    Uint8List? image,
   });
 
     Future<ResponseStatus> updateGroup({

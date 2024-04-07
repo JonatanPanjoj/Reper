@@ -1,14 +1,10 @@
-import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:reper/config/utils/image_utils.dart';
 import 'package:reper/domain/datasources/user_datasource.dart';
 import 'package:reper/domain/entities/entities.dart';
 
 class FirebaseUserDatasource extends UserDatasource {
   final FirebaseFirestore database = FirebaseFirestore.instance;
-  final String currentUserId = FirebaseAuth.instance.currentUser!.uid;
 
   @override
   Future<ResponseStatus> createUser({
@@ -75,7 +71,6 @@ class FirebaseUserDatasource extends UserDatasource {
   @override
   Future<ResponseStatus> updateUser({
     required AppUser user,
-    Uint8List? image,
   }) async {
     try {
       final users = await database
@@ -84,7 +79,7 @@ class FirebaseUserDatasource extends UserDatasource {
           .get();
       if (users.docs.isNotEmpty) {
         for (var usuario in users.docs) {
-          if (usuario.id != currentUserId) {
+          if (usuario.id != user.uid) {
             return ResponseStatus(
               message: 'El usuario ya está siendo utilizado por otro usuario',
               hasError: true,
@@ -93,19 +88,8 @@ class FirebaseUserDatasource extends UserDatasource {
         }
       }
 
-      if (image == null) {
-        await database.collection('users').doc(user.uid).set(user.toJson());
-      } else {
-        final urlImage = await uploadImageToStorage(
-          fileName: user.uid,
-          childName: 'profile_images',
-          mediaFile: image,
-        );
-        await database
-            .collection('users')
-            .doc(user.uid)
-            .set(user.copyWith(image: urlImage).toJson());
-      }
+      await database.collection('users').doc(user.uid).set(user.toJson());
+
       return ResponseStatus(
         message: 'Se actualizó el usuario con éxito',
         hasError: false,
