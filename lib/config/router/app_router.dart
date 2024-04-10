@@ -148,5 +148,11 @@ final appRouter = GoRouter(
         );
       },
     ),
+    GoRoute(
+      path: '/create-song-guide-screen',
+      builder: (context, state) {
+        return const CreateSongGuideScreen();
+      },
+    ),
   ],
 );

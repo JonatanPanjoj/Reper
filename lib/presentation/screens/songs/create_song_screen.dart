@@ -2,6 +2,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_chord/flutter_chord.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -28,12 +29,28 @@ class CreateSongScreenState extends ConsumerState<CreateSongScreen> {
   final TextEditingController _songArtistController = TextEditingController();
   bool isLoading = false;
   bool isPublic = true;
+  String lyricPreview = '';
+
 
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context);
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        elevation: 0,
+        shadowColor: Colors.transparent,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 8.0),
+            child: IconButton.filledTonal(
+              onPressed: () {
+                context.push('/create-song-guide-screen');
+              },
+              icon: const Icon(Icons.question_mark_rounded),
+            ),
+          )
+        ],
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -51,11 +68,10 @@ class CreateSongScreenState extends ConsumerState<CreateSongScreen> {
                   totalSwitches: 2,
                   labels: const ['Public', 'Private'],
                   onToggle: (index) {
-                    if(index == 0){
+                    if (index == 0) {
                       isPublic = true;
-                    } else{
+                    } else {
                       isPublic = false;
-
                     }
                   },
                 ),
@@ -88,15 +104,23 @@ class CreateSongScreenState extends ConsumerState<CreateSongScreen> {
                     }
                     return null;
                   },
+                  onChanged: (value) {
+                    lyricPreview = value.replaceAll('[]', '[');
+                    setState(() {});
+                  },
                 ),
                 const SizedBox(height: 25),
+                _buildPreview(),
+                
+                const SizedBox(height: 25),
                 CustomFilledButton(
-                  text: 'Crea el canción',
+                  text: 'Crea la canción',
                   isLoading: isLoading,
                   onTap: () {
                     _createSong();
                   },
                 ),
+                const SizedBox(height: 25),
               ],
             ),
           ),
@@ -104,6 +128,32 @@ class CreateSongScreenState extends ConsumerState<CreateSongScreen> {
       ),
     );
   }
+
+  Widget _buildPreview() {
+    final colors = Theme.of(context).colorScheme;
+    final size = MediaQuery.of(context).size;
+    return Column(
+      children: [
+        const Text('Vista previa', style: bold20),
+        Card(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+            child: SizedBox(
+              child: LyricsRenderer(
+                horizontalAlignment: CrossAxisAlignment.start,
+                widgetPadding: (size.width * 0.3).round(),
+                lyrics: lyricPreview,
+                textStyle: normal16.copyWith(color: colors.onSurface),
+                chordStyle: bold16.copyWith(color: colors.primary),
+                onTapChord: () {},
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
 
   void _createSong() async {
     if (_formKey.currentState!.validate()) {
@@ -122,7 +172,7 @@ class CreateSongScreenState extends ConsumerState<CreateSongScreen> {
                   : _songArtistController.text,
               images: [],
               pdfFile: '',
-            ), 
+            ),
           );
       isLoading = false;
       setState(() {});
