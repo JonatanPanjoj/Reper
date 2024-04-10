@@ -31,6 +31,8 @@ export 'package:reper/presentation/screens/repertories/edit_repertory_screen.dar
 export 'package:reper/presentation/screens/songs/create_song_screen.dart';
 export 'package:reper/presentation/screens/songs/song_screen.dart';
 export 'package:reper/presentation/screens/songs/edit_song_screen.dart';
+export 'package:reper/presentation/screens/songs/create_song_guide_screen.dart';
+
 
 //Sections
 export 'package:reper/presentation/screens/sections/section_screen.dart';

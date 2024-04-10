@@ -13,6 +13,7 @@ class CustomInput extends StatelessWidget {
   final Color? fillColor;
   final int? maxLines;
   final int? minLines;
+  final bool readOnly;
 
   const CustomInput({
     super.key,
@@ -27,7 +28,8 @@ class CustomInput extends StatelessWidget {
     this.maxLines = 1,
     this.minLines,
     this.hintText,
-    this.onChanged,
+    this.onChanged, 
+    this.readOnly = false,
   });
 
   @override
@@ -45,6 +47,7 @@ class CustomInput extends StatelessWidget {
           ClipRRect(
             borderRadius: BorderRadius.circular(15),
             child: TextFormField(
+              readOnly: readOnly,
               maxLines: maxLines,
               minLines: minLines,
               initialValue: initialValue,
