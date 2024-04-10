@@ -14,11 +14,64 @@
       },
       "oauth_client": [
         {
-          "client_id": "280327690351-aglq11djj3vjq2etcol4kgnna8u2mqun.apps.googleusercontent.com",
+          "client_id": "280327690351-moi6g9qab1qb3ori5cbba60pbj665rlo.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.reper",
-            "certificate_hash": "ad81af0ab4e011ddb8d7aec876291d5fbd2fda6c"
+            "certificate_hash": "b1d522a1e99db7cdbd16d1dd22e33689077af7cb"
+          }
+        },
+        {
+          "client_id": "280327690351-ntl8bcfdmev2a3ard9qgbc02q0atk9rh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.reper",
+            "certificate_hash": "2744e40ed6c59a2057afa121b9fcc5f891868486"
+          }
+        },
+        {
+          "client_id": "280327690351-bvqt9h8q9ntg1tmi7pa0pv164iutmfqv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBFKKLT72UQIzqRZHi2Srcmt2H8kwT1nmw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "280327690351-bvqt9h8q9ntg1tmi7pa0pv164iutmfqv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:280327690351:android:f276955d131c0a5371559a",
+        "android_client_info": {
+          "package_name": "com.jonatanpanjoj.reper"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "280327690351-07dghrbh070kmc4qra5tiet3a4qrscab.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.jonatanpanjoj.reper",
+            "certificate_hash": "b1d522a1e99db7cdbd16d1dd22e33689077af7cb"
+          }
+        },
+        {
+          "client_id": "280327690351-87hg0u5hv33jcok150mtpghvi542do7g.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.jonatanpanjoj.reper",
+            "certificate_hash": "2744e40ed6c59a2057afa121b9fcc5f891868486"
           }
         },
         {
