@@ -1,4 +1,4 @@
-package com.example.reper
+package com.jonatanpanjoj.reper
 
 import io.flutter.embedding.android.FlutterActivity
 
