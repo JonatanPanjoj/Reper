@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:reper/config/theme/theme.dart';
 import 'package:reper/domain/entities/entities.dart';
 import 'package:reper/presentation/providers/database/repositories/songs_repository_provider.dart';
+import 'package:reper/presentation/providers/providers.dart';
 import 'package:reper/presentation/widgets/widgets.dart';
 
 class SongScreen extends ConsumerStatefulWidget {
@@ -24,8 +25,11 @@ class SongScreenState extends ConsumerState<SongScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final AppUser user = ref.watch(userProvider);
     final size = MediaQuery.of(context).size;
     final colors = Theme.of(context).colorScheme;
+    final existInFavorites = user.favorites!.contains(widget.song.id);
+
     return Scaffold(
       body: StreamBuilder(
         stream: ref
@@ -45,11 +49,33 @@ class SongScreenState extends ConsumerState<SongScreen> {
                 actions: [
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: IconButton(
-                      icon: const Icon(Icons.edit),
-                      onPressed: () {
-                        context.push('/edit-song-screen', extra: data);
-                      },
+                    child: Row(
+                      children: [
+                        widget.song.createdBy == user.uid
+                            ? IconButton(
+                                icon: const Icon(Icons.edit),
+                                onPressed: () {
+                                  context.push('/edit-song-screen',
+                                      extra: data);
+                                },
+                              )
+                            : const SizedBox(),
+                        IconButton(
+                          icon: existInFavorites
+                              ? const Icon(
+                                  Icons.favorite,
+                                  color: Colors.red,
+                                )
+                              : const Icon(Icons.favorite_border),
+                          onPressed: () async {
+                            ref.read(userRepositoryProvider).updateFavorites(
+                                  songId: widget.song.id,
+                                  uid: user.uid,
+                                  isAdd: !existInFavorites,
+                                );
+                          },
+                        )
+                      ],
                     ),
                   ),
                 ],

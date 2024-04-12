@@ -10,7 +10,7 @@ class CardTypeThree extends StatefulWidget {
   final int? index;
   final void Function()? onTap;
   final Future<void> Function()? onDelete;
-  final Widget deleteDialogWidget;
+  final Widget? deleteDialogWidget;
   final Widget? actionWidget;
 
   const CardTypeThree({
@@ -21,7 +21,7 @@ class CardTypeThree extends StatefulWidget {
     this.onTap,
     this.index,
     this.onDelete,
-    required this.deleteDialogWidget,
+    this.deleteDialogWidget,
     this.actionWidget
   });
 
@@ -45,14 +45,16 @@ class _CardTypeThreeState extends State<CardTypeThree> {
         duration: animationDuration,
         controller: (controller) => animateController = controller,
         child: FadeIn(
-          child: Dismissible(
+          child: widget.deleteDialogWidget == null
+          ? _buildCard(colors, size)
+          : Dismissible(
             key: ValueKey(widget.index),
             direction: DismissDirection.endToStart,
             background: _buildDismissibleBackground(colors),
             confirmDismiss: (direction) async {
               final res = await showCustomDialog(
                 context: context,
-                alertDialog: widget.deleteDialogWidget,
+                alertDialog: widget.deleteDialogWidget!,
               );
               if (res == true && widget.onDelete != null) {
                 animateController.forward();

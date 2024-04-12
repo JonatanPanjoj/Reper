@@ -32,7 +32,7 @@ class ToneButtons extends StatelessWidget {
             child: Row(
               children: [
                 IconButton(
-                  onPressed: onIncrement,
+                  onPressed: onDecrement,
                   icon: const Icon(Icons.remove),
                 ),
                 const Text(
@@ -40,7 +40,7 @@ class ToneButtons extends StatelessWidget {
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
                 IconButton(
-                  onPressed: onDecrement,
+                  onPressed: onIncrement,
                   icon: const Icon(Icons.add),
                 ),
               ],

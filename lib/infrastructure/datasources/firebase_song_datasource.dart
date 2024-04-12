@@ -92,4 +92,16 @@ class FirebaseSongDatasource extends SongDatasource {
     final snapshot = await _database.collection('songs').doc(songId).get();
     return Song.fromJson(snapshot.data()!);
   }
+
+  @override
+  Stream<List<Song>> streamFavoriteSongs({required List<String> songs}) {
+    return _database
+        .collection('songs')
+        .where('id', whereIn: songs)
+        .snapshots()
+        .map(
+          (snapshot) =>
+              snapshot.docs.map((doc) => Song.fromJson(doc.data())).toList(),
+        );
+  }
 }
