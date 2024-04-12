@@ -34,4 +34,10 @@ abstract class UserDatasource {
   Stream<List<AppUser>> streamUserFriends({
     required List<String> friends,
   });
+
+  Future<ResponseStatus> updateFavorites({
+    required String songId,
+    required String uid,
+    required bool isAdd,
+  });
 }

@@ -15,4 +15,5 @@ abstract class SongRepository {
 
   Future<Song> getSong({required String songId});
 
+  Stream<List<Song>> streamFavoriteSongs({required List<String> songs});
 }

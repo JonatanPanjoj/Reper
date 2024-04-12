@@ -51,4 +51,9 @@ class UserRepositoryImpl extends UserRepository {
   Stream<List<AppUser>> streamUserFriends({required List<String> friends}) {
     return datasource.streamUserFriends(friends: friends);
   }
+  
+  @override
+  Future<ResponseStatus> updateFavorites({required String songId, required String uid, required bool isAdd}) {
+    return datasource.updateFavorites(songId: songId, uid: uid, isAdd: isAdd);
+  }
 }

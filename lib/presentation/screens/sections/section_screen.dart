@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:reper/config/theme/theme.dart';
 import 'package:reper/presentation/providers/database/repositories/section_repository_provider.dart';
+import 'package:reper/presentation/providers/providers.dart';
 import 'package:reper/presentation/widgets/widgets.dart';
 
 import '../../../domain/entities/entities.dart';
@@ -47,7 +48,7 @@ class SectionScreenState extends ConsumerState<SectionScreen> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
+    _sectionNameController.dispose();
     super.dispose();
   }
 
@@ -55,47 +56,13 @@ class SectionScreenState extends ConsumerState<SectionScreen> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final colors = Theme.of(context);
+    final AppUser currentUser = ref.watch(userProvider);
 
     return Scaffold(
       body: CustomScrollView(
         controller: scrollController,
         slivers: [
-          CustomSliverAppBar(
-            title: widget.section.name,
-            subtitle: widget.song.title,
-            height: size.height * 0.25,
-            image: widget.image,
-            bottomAction: IconButton(
-              onPressed: () {
-                isEditNameControllerEnabled = !isEditNameControllerEnabled;
-                if (isEditNameControllerEnabled != true) {
-                  updateSection();
-                }
-                setState(() {});
-              },
-              icon: isEditNameControllerEnabled
-                  ? const Icon(Icons.save)
-                  : const Icon(Icons.edit),
-            ),
-            titleWidget: Form(
-              key: _formKey,
-              child: Padding(
-                padding: const EdgeInsets.only(right: 10.0),
-                child: TextFormField(
-                  controller: _sectionNameController,
-                  enabled: isEditNameControllerEnabled,
-                  style: GoogleFonts.urbanist(fontSize: 20).copyWith(
-                    color: colors.colorScheme.onSurface,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  decoration: InputDecoration(
-                    border:
-                        isEditNameControllerEnabled ? null : InputBorder.none,
-                  ),
-                ),
-              ),
-            ),
-          ),
+          _buildAppBar(size, colors, currentUser),
           SliverList(
             delegate: SliverChildListDelegate(
               [
@@ -130,6 +97,64 @@ class SectionScreenState extends ConsumerState<SectionScreen> {
         onDecrement: _onDecrement,
         onPause: _onPause,
         onIncrement: _onIncrement,
+      ),
+    );
+  }
+
+  CustomSliverAppBar _buildAppBar(
+      Size size, ThemeData colors, AppUser currentUser) {
+    final existInFavorites =
+        currentUser.favorites!.contains(widget.section.song);
+    return CustomSliverAppBar(
+      title: widget.section.name,
+      subtitle: widget.song.title,
+      height: size.height * 0.25,
+      image: widget.image,
+      bottomAction: IconButton(
+        onPressed: () {
+          isEditNameControllerEnabled = !isEditNameControllerEnabled;
+          if (isEditNameControllerEnabled != true) {
+            updateSection();
+          }
+          setState(() {});
+        },
+        icon: isEditNameControllerEnabled
+            ? const Icon(Icons.save)
+            : const Icon(Icons.edit),
+      ),
+      actions: [
+        IconButton(
+          icon: existInFavorites
+              ? const Icon(
+                  Icons.favorite,
+                  color: Colors.red,
+                )
+              : const Icon(Icons.favorite_border),
+          onPressed: () async {
+            ref.read(userRepositoryProvider).updateFavorites(
+                  songId: widget.section.song,
+                  uid: currentUser.uid,
+                  isAdd: !existInFavorites,
+                );
+          },
+        )
+      ],
+      titleWidget: Form(
+        key: _formKey,
+        child: Padding(
+          padding: const EdgeInsets.only(right: 10.0),
+          child: TextFormField(
+            controller: _sectionNameController,
+            enabled: isEditNameControllerEnabled,
+            style: GoogleFonts.urbanist(fontSize: 20).copyWith(
+              color: colors.colorScheme.onSurface,
+              fontWeight: FontWeight.bold,
+            ),
+            decoration: InputDecoration(
+              border: isEditNameControllerEnabled ? null : InputBorder.none,
+            ),
+          ),
+        ),
       ),
     );
   }

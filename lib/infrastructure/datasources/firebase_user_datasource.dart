@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:reper/domain/datasources/user_datasource.dart';
 import 'package:reper/domain/entities/entities.dart';
@@ -138,5 +137,28 @@ class FirebaseUserDatasource extends UserDatasource {
         .snapshots()
         .map((snapshot) =>
             snapshot.docs.map((doc) => AppUser.fromJson(doc.data())).toList());
+  }
+
+  Future<ResponseStatus> updateFavorites(
+      {required String songId,
+      required String uid,
+      required bool isAdd}) async {
+    try {
+      if (isAdd) {
+        await database.collection('users').doc(uid).update({
+          'favorites': FieldValue.arrayUnion([songId]),
+        });
+      } else {
+        await database.collection('users').doc(uid).update({
+          'favorites': FieldValue.arrayRemove([songId]),
+        });
+      }
+      return ResponseStatus(message: 'Actualizado', hasError: false);
+    } on FirebaseException catch (e) {
+      return ResponseStatus(
+          message: e.message ?? 'An exeption occurred', hasError: true);
+    } catch (e) {
+      return ResponseStatus(message: e.toString(), hasError: true);
+    }
   }
 }

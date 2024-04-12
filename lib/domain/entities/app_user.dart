@@ -9,6 +9,7 @@ class AppUser {
   final Timestamp joinedAt;
   final List<String>? groups;
   final List<String>? friends;
+  final List<String>? favorites;
 
   AppUser({
     required this.uid,
@@ -19,6 +20,7 @@ class AppUser {
     required this.joinedAt,
     this.groups,
     this.friends,
+    this.favorites,
   });
 
   AppUser copyWith({
@@ -30,6 +32,7 @@ class AppUser {
     Timestamp? joinedAt,
     List<String>? groups,
     List<String>? friends,
+    List<String>? favorites,
   }) {
     return AppUser(
       uid: uid ?? this.uid,
@@ -40,6 +43,7 @@ class AppUser {
       groups: groups ?? this.groups,
       friends: friends ?? this.friends,
       image: image ?? this.image,
+      favorites: favorites ?? this.favorites,
     );
   }
 
@@ -52,6 +56,7 @@ class AppUser {
       'google_id': googleId,
       'groups': groups,
       'friends': friends,
+      'favorites': favorites,
       'image': image,
     };
   }
@@ -68,6 +73,9 @@ class AppUser {
       ),
       friends: List<String>.from(
         json['friends'] ?? [],
+      ),
+      favorites: List<String>.from(
+        json['favorites'] ?? [],
       ),
       image: json['image'] ?? '',
     );
@@ -96,7 +104,8 @@ class AppUser {
           email == other.email &&
           joinedAt == other.joinedAt &&
           groups == other.groups &&
-          friends == other.friends);
+          friends == other.friends &&
+          favorites == other.favorites);
 
   @override
   int get hashCode =>
@@ -107,5 +116,6 @@ class AppUser {
       email.hashCode ^
       joinedAt.hashCode ^
       groups.hashCode ^
-      friends.hashCode;
+      friends.hashCode ^
+      favorites.hashCode;
 }

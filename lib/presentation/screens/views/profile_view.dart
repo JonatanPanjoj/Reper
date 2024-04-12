@@ -107,6 +107,7 @@ class ProfileViewState extends ConsumerState<ProfileView> {
                 GestureDetector(
                   onTap: () {
                     ref.read(authProvider).signOut();
+                    context.replace('/home/0');
                   },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,

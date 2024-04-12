@@ -25,16 +25,14 @@ class LibraryView extends ConsumerWidget {
             splashFactory: NoSplash.splashFactory,
             tabs: [
               Tab(text: 'Mis Canciones'),
-              Tab(text: 'Mis Listas'),
+              Tab(text: 'Favoritos'),
             ],
           ),
         ),
         body: TabBarView(
           children: [
             _buildMySongsTab(ref, context),
-            const Center(
-              child: Text("Proximamente..."),
-            ),
+            _buildMyFavoriteSongsTab(ref, context)
           ],
         ),
       ),
@@ -82,13 +80,81 @@ class LibraryView extends ConsumerWidget {
                 }
               },
               deleteDialogWidget: const DeleteSectionDialog(),
-              onDelete: () async {
-                
-              },
+              onDelete: () async {},
             );
           },
         )
       ],
+    );
+  }
+
+  Widget _buildMyFavoriteSongsTab(WidgetRef ref, BuildContext context) {
+    final List<String> userSongs = ref.watch(userProvider).favorites!;
+    return userSongs.isNotEmpty
+        ? StreamBuilder(
+            stream: ref
+                .watch(songsRepositoryProvider)
+                .streamFavoriteSongs(songs: userSongs),
+            builder: (context, snapshot) {
+              final songs = snapshot.data;
+              if (songs == null) {
+                return const Center(child: CustomLoading());
+              }
+
+              if (songs.isEmpty) {
+                return const Center(
+                    child: Text('Aún no tienes canciones favoritas'));
+              }
+
+              return CustomScrollView(
+                slivers: [
+                  SliverList.builder(
+                    itemCount: songs.length,
+                    itemBuilder: (context, index) {
+                      return CardTypeThree(
+                        title: songs[index].title,
+                        subtitle: songs[index].artist,
+                        onTap: () {
+                          if (!isaddSongScreen) {
+                            context.push('/song-screen', extra: songs[index]);
+                          } else {
+                            context.pop(songs[index]);
+                          }
+                        },
+                        onDelete: () async {},
+                      );
+                    },
+                  )
+                ],
+              );
+            })
+        : _buildNoFavorites(context);
+  }
+
+  Widget _buildNoFavorites(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.favorite_outline_sharp,
+            size: 60,
+            color: colors.primary,
+          ),
+          Text(
+            'Ohh no!!!',
+            style: TextStyle(fontSize: 30, color: colors.primary),
+          ),
+          const Text(
+            'No tienes canciones favoritas',
+            style: TextStyle(
+              fontSize: 18,
+            ),
+          )
+        ],
+      ),
     );
   }
 }
